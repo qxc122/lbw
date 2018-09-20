@@ -5,6 +5,8 @@
 ## Build generated
 build/
 DerivedData/
+刘伯温/Pods/
+刘伯温/Core/IJKMediaFramework.framework 
 
 ## Various settings
 *.pbxuser
