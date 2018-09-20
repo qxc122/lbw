@@ -18,9 +18,9 @@
 -(void)setLiveModel:(LBGetLivePlatModel *)liveModel{
     
     if([liveModel.livePlatThumb rangeOfString:@"http"].location !=NSNotFound){
-        [self.iconImageView setImageWithURL:[NSURL URLWithString:liveModel.livePlatThumb] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:liveModel.livePlatThumb] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }else{
-        [self.iconImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,liveModel.livePlatThumb]] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,liveModel.livePlatThumb]] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }
     
     self.textLabel.text = liveModel.livePlatTitle;
@@ -38,9 +38,9 @@
     self.numButton.hidden = YES;
     
     if([anchorModel.anchorThumb rangeOfString:@"http"].location !=NSNotFound){
-        [self.iconImageView setImageWithURL:[NSURL URLWithString:anchorModel.anchorThumb] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:anchorModel.anchorThumb] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }else{
-        [self.iconImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,anchorModel.anchorThumb]] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,anchorModel.anchorThumb]] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }
     
 

@@ -206,7 +206,7 @@
 @property(nonatomic, copy)NSString *invitationCode;
 @property (nonatomic,copy)NSString *amount;
 @property (nonatomic,copy)NSString *freezing;
-
+@property (nonatomic,copy)NSString *plateAccount;
 @end
 
 @interface LBGetActivationCardListModel : NSObject

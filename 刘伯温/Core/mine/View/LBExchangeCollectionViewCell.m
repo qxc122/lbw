@@ -19,9 +19,9 @@
 
 -(void)setModel:(LBExchangeModel *)model{
     if([model.goodsThumb rangeOfString:@"http"].location !=NSNotFound){
-        [self.backImageView setImageWithURL:[NSURL URLWithString:model.goodsThumb] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.backImageView sd_setImageWithURL:[NSURL URLWithString:model.goodsThumb] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }else{
-        [self.backImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,model.goodsThumb]] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.backImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,model.goodsThumb]] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }
     
     self.nameLabel.text = model.goodsName;

@@ -25,9 +25,9 @@
     self.nickNameLabel.text = infoModel.name;
     
     if([infoModel.avatar rangeOfString:@"http"].location !=NSNotFound){
-        [self.iconImageView setImageWithURL:[NSURL URLWithString:self.infoModel.avatar] placeholder:[UIImage imageNamed:@"头像"]];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:self.infoModel.avatar] placeholderImage:[UIImage imageNamed:@"头像"]];
     }else{
-        [self.iconImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,infoModel.avatar]] placeholder:[UIImage imageNamed:@"头像"]];
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,infoModel.avatar]] placeholderImage:[UIImage imageNamed:@"头像"]];
     }
     self.fixInfoLabel.hidden = !(infoModel.avatar.length || infoModel.name.length ||infoModel.surname.length || infoModel.address.length ||infoModel.qq.length || infoModel.postcode.length || infoModel.phone.length);
 
@@ -39,6 +39,12 @@
     int teee = [Integral intValue];
     self.glodLabel.text = [NSString stringWithFormat:@"%d个",teee];
     self.moneyLabel.text = [NSString stringWithFormat:@"%.2f元",[infoModel.amount floatValue]+[infoModel.freezing floatValue]];
+    
+    if (infoModel.name.length && infoModel.phone.length && infoModel.address.length && infoModel.qq.length && infoModel.surname.length && infoModel.avatar.length && infoModel.postcode.length) {
+        self.fixInfoLabel.text = @"修改个人信息";
+    } else {
+        self.fixInfoLabel.text = @"请完善个人信息";
+    }
 }
 
 -(instancetype)initWithFrame:(CGRect)frame{

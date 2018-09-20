@@ -85,18 +85,13 @@
         walletVc *VC = [walletVc new];
         [weakSelf.navigationController pushViewController:VC animated:YES];
     };
-    
-//    if (@available(iOS 11.0, *)) {
-//        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-//        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, kTabBarHeight, 0);
-//        self.tableView.estimatedRowHeight = 0;
-//
-//    } else {
-//        self.automaticallyAdjustsScrollViewInsets = NO;
-//    }
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMyInfo) name:@"chageUserInfoNotifi" object:nil];
     self.header.hidden = YES;
     self.empty_type = succes_empty_num;
+    
+    self.myinfoModel = [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
+    self.headView.infoModel = self.myinfoModel;
 }
 - (void)settingButtonClick{
     kWeakSelf(self);
@@ -219,8 +214,6 @@
     }
 }
 
-
-
 - (void)jurisdiction{
     if (!ISLOGIN){
         [LBShowRemendView showRemendViewText:@"您还没有登录，请先登录" andTitleText:@"提示" andEnterText:@"确定" andEnterBlock:^{
@@ -230,8 +223,6 @@
             LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
             LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
             [UIApplication sharedApplication].keyWindow.rootViewController = nav;
-            
-//            [UIApplication sharedApplication].keyWindow.rootViewController = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
         }];
         return;
     }
@@ -245,7 +236,7 @@
 
 - (void)getBaseConfig{
     [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
-        NSLog(@"在首页 基础信息获取成功");
+        NSLog(@"在我的页面 基础信息获取成功");
         LBGetVerCodeModel *model = [LBGetVerCodeModel modelWithJSON:dataDict[@"data"]];
         [NSKeyedArchiver archiveRootObject:model toFile:PATH_base];
     } failure:^(NSInteger errorCode, NSString *msg) {
@@ -262,21 +253,15 @@
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
     [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
+            
             weakSelf.myinfoModel = [LBGetMyInfoModel modelWithJSON:json[@"data"]];
-            
             [NSKeyedArchiver archiveRootObject:weakSelf.myinfoModel toFile:PATH_UESRINFO];
-            
-            
             [[NSUserDefaults standardUserDefaults]setObject:weakSelf.myinfoModel.address forKey:@"DeliveryAddress"];
             [[NSUserDefaults standardUserDefaults]setObject:weakSelf.myinfoModel.integral forKey:@"integral"];
             [[NSUserDefaults standardUserDefaults] setObject:weakSelf.myinfoModel.expirationDate forKey:@"expirationDate"];
             [[NSUserDefaults standardUserDefaults] setBool:(weakSelf.myinfoModel.address.length ||weakSelf.myinfoModel.phone.length||weakSelf.myinfoModel.surname.length) forKey:@"hasFullInfo"];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.headView.infoModel = weakSelf.myinfoModel;
-                [weakSelf.tableView reloadData];
-            });
-        }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
+             NSLog(@"获取个人信息成功");
+            weakSelf.headView.infoModel = weakSelf.myinfoModel;
         }
     } failure:^(NSError *error) {
         NSLog(@"获取个人信息失败");

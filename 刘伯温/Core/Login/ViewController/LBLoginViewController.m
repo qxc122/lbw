@@ -55,32 +55,12 @@
     NSString *app_build = [infoDictionary objectForKey:@"CFBundleVersion"];
     paramDict[@"version"] = app_build;
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
-    
-//    [[ToolHelper shareToolHelper] CP_url_loginWithaccount:self.accontTextField.text password:[self.passworldTextField.text md5String] clientType:@"2" version:app_build sign:[[LBToolModel sharedInstance] getSign:paramDict] success:^(id dataDict, NSString *msg, NSInteger code) {
-//        NSLog(@"sd");
-//    } failure:^(NSInteger errorCode, NSString *msg) {
-//        NSLog(@"sdasdf");
-//        NSLog(@"sdadsf");
-//    }];
-//    return;
-    
-//
-//    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
-//    paramDict[@"account"] = self.accontTextField.text;
-//    paramDict[@"password"] = [self.passworldTextField.text md5String];
-//    paramDict[@"clientType"] = @"2";
-//    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-//    NSString *app_build = [infoDictionary objectForKey:@"CFBundleVersion"];
-//    paramDict[@"version"] = app_build;
-//    paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    [MBProgressHUD showLoadingMessage:@"登陆中..." toView:self.view];
 WeakSelf
     [VBHttpsTool postWithURL:@"login" params:paramDict success:^(id json) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
         if ([json[@"result"] intValue] ==1){
-            [weakSelf uploadFriends];
 
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLogin"];
 
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"type"] forKey:@"type"];
 
@@ -99,20 +79,15 @@ WeakSelf
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_image_open"] forKey:@"chat_image_open"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_username"] forKey:@"chat_username"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_password"] forKey:@"chat_password"];
-            
-            [weakSelf JIMlogin:json[@"data"][@"chat_username"] withPassword:json[@"data"][@"chat_password"]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIWindow *window = [UIApplication sharedApplication].keyWindow;
-                [window removeAllSubviews];
-                window = nil;
-                [UIApplication sharedApplication].keyWindow.rootViewController = [[mainTableVc alloc] init];
-            });
-            
+
+            [weakSelf getMyInfo];
         }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
+            [MBProgressHUD hideHUDForView:weakSelf.view];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
         }
     } failure:^(NSError *error) {
-        NSLog(@"sdf");
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
     }];
 }
 
@@ -208,16 +183,10 @@ WeakSelf
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
     
     WeakSelf
+    [MBProgressHUD showLoadingMessage:@"登陆中..." toView:self.view];
     [VBHttpsTool postWithURL:@"loginEx" params:paramDict success:^(id json) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         if ([json[@"result"] intValue] ==1){
-            
-            [weakSelf uploadFriends];
-            
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLogin"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"type"] forKey:@"type"];
-
-            
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"userID"] forKey:@"userID"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"name"] forKey:@"name"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"gender"] forKey:@"gender"];
@@ -229,17 +198,14 @@ WeakSelf
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"testLend"] forKey:@"testLend"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"invitationCode"] forKey:@"invitationCode"];
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIWindow *window = [UIApplication sharedApplication].keyWindow;
-                [window removeAllSubviews];
-                window = nil;
-                [UIApplication sharedApplication].keyWindow.rootViewController = [[mainTableVc alloc] init];
-            });
+            [weakSelf getMyInfo];
         }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
+            [MBProgressHUD hideHUDForView:weakSelf.view];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
     }];
 }
 
@@ -277,19 +243,38 @@ WeakSelf
     }];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)getMyInfo{
+    kWEAKSELF
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"timestamp"] = [[LBToolModel sharedInstance] getTimestamp];
+    paramDict[@"token"] = TOKEN;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
+    [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            LBGetMyInfoModel *myinfoModel = [LBGetMyInfoModel modelWithJSON:json[@"data"]];
+            [NSKeyedArchiver archiveRootObject:myinfoModel toFile:PATH_UESRINFO];
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLogin"];
+            [[NSUserDefaults standardUserDefaults]setObject:myinfoModel.address forKey:@"DeliveryAddress"];
+            [[NSUserDefaults standardUserDefaults]setObject:myinfoModel.integral forKey:@"integral"];
+            [[NSUserDefaults standardUserDefaults] setObject:myinfoModel.expirationDate forKey:@"expirationDate"];
+            [[NSUserDefaults standardUserDefaults] setBool:(myinfoModel.address.length ||myinfoModel.phone.length||myinfoModel.surname.length) forKey:@"hasFullInfo"];
+
+            [weakSelf uploadFriends];
+            [weakSelf JIMlogin:json[@"data"][@"chat_username"] withPassword:json[@"data"][@"chat_password"]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIWindow *window = [UIApplication sharedApplication].keyWindow;
+                [window removeAllSubviews];
+                window = nil;
+                [UIApplication sharedApplication].keyWindow.rootViewController = [[mainTableVc alloc] init];
+            });
+            
+        }else{
+            [MBProgressHUD hideHUDForView:weakSelf.view];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
+        }
+    } failure:^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
+    }];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 @end

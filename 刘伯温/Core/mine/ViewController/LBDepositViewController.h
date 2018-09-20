@@ -19,4 +19,13 @@
 @property (nonatomic,copy)NSString *plate_homepage;
 @property (nonatomic,copy)NSString *plate_memo;
 
+@property (nonatomic,copy)NSString *plate_account;
+@property (nonatomic,copy)NSString *plate_reg_type;
+
+//"plate_name": "平台名称",
+//"plate_homepage": "平台官网",
+//"plate_memo": "平台备注信息",
+//"plate_account": "平台帐号",
+//"plate_reg_type": "0:不支持一键注册 1：支持一键注册"
+
 @end

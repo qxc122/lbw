@@ -81,8 +81,6 @@
     [IJKFFMoviePlayerController setLogReport:NO];
     [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_INFO];
 #endif
-    
-    
     self.view.autoresizesSubviews = YES;
     [self.view addSubview:self.player.view];
     
@@ -93,7 +91,6 @@
     [self.guangaoView show];
     [self addTopView];
     [self AddGesture];
-    
 }
 - (void)inputKeyboardWillHide{
         [self setBottom:NO];
@@ -141,13 +138,12 @@
     backBtn.layer.shadowRadius = 1;
     [topView addSubview:backBtn];
     
-    
     UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(backBtn.right+10, backBtn.top, 40, 40)];
     iconImageView.layer.cornerRadius = iconImageView.width/2;
     iconImageView.clipsToBounds = YES;
     [topView addSubview:iconImageView];
-    [iconImageView setImageWithURL:[NSURL URLWithString:self.iconUrl] placeholder:[UIImage imageNamed:@"ys_actor_circle_default_img"]];
     
+    [iconImageView sd_setImageWithURL:[NSURL URLWithString:self.iconUrl] placeholderImage:[UIImage imageNamed:@"ys_actor_circle_default_img"]];
     
     UILabel *nickNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(iconImageView.right+10, iconImageView.top+10, 100, 20)];
     nickNameLabel.text = self.nickname;
@@ -155,14 +151,12 @@
     nickNameLabel.textColor =[UIColor whiteColor];
     [topView  addSubview:nickNameLabel];
     
-    
     UIButton *tousu = [UIButton buttonWithType:0];
     self.tousu = tousu;
     [tousu setImage:[UIImage imageNamed:zhibotousu] forState:0];
     [tousu addTarget:self action:@selector(tousuClick) forControlEvents:UIControlEventTouchUpInside];
     [topView addSubview:tousu];
     tousu.frame = CGRectMake(kFullWidth-50.0f, 30.0f, 40.0f, 40.0f);
-    
     
     UIButton *shareButton = [UIButton buttonWithType:0];
     self.shareButton = shareButton;

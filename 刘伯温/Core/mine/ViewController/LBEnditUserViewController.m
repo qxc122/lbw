@@ -130,9 +130,9 @@
                 self.iconImageView.clipsToBounds = YES;
                 [cell addSubview:self.iconImageView];
                 if([self.infoModel.avatar rangeOfString:@"http"].location !=NSNotFound){
-                    [self.iconImageView setImageWithURL:[NSURL URLWithString:self.infoModel.avatar] placeholder:[UIImage imageNamed:@"头像"]];
+                    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:self.infoModel.avatar] placeholderImage:[UIImage imageNamed:@"头像"]];
                 }else{
-                    [self.iconImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,self.infoModel.avatar]] placeholder:[UIImage imageNamed:@"头像"]];
+                    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,self.infoModel.avatar]] placeholderImage:[UIImage imageNamed:@"头像"]];
                 }
             }
         }else if (indexPath.row == 1){

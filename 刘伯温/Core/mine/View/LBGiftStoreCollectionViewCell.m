@@ -22,9 +22,9 @@
 
 -(void)setListModel:(LBGetGoodsListModel *)listModel{
     if([listModel.goodsThumb rangeOfString:@"http"].location !=NSNotFound){
-        [self.backImageView setImageWithURL:[NSURL URLWithString:listModel.goodsThumb] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.backImageView sd_setImageWithURL:[NSURL URLWithString:listModel.goodsThumb] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }else{
-        [self.backImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,listModel.goodsThumb]] placeholder:[UIImage imageNamed:@"ys_channel_defult_up"]];
+        [self.backImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ImageHead,listModel.goodsThumb]] placeholderImage:[UIImage imageNamed:@"ys_channel_defult_up"]];
     }
     
     self.goodsLabel.text = listModel.goodsName;

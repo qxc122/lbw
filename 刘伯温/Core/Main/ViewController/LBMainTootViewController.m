@@ -52,13 +52,13 @@
     }];
     [super viewDidLoad];
     
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:BOOLFORKEY]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:BOOLFORKEY];
-        NSArray *imageNameArray = @[@"splash2",@"介绍图2",@"介绍图3"];
-        DHGuidePageHUD *guidePage = [[DHGuidePageHUD alloc] dh_initWithFrame:self.view.frame imageNameArray:imageNameArray buttonIsHidden:NO];
-        guidePage.slideInto = YES;
-        [WINDOW addSubview:guidePage];
-    }
+//    if (![[NSUserDefaults standardUserDefaults] boolForKey:BOOLFORKEY]) {
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:BOOLFORKEY];
+//        NSArray *imageNameArray = @[@"splash2",@"介绍图2",@"介绍图3"];
+//        DHGuidePageHUD *guidePage = [[DHGuidePageHUD alloc] dh_initWithFrame:self.view.frame imageNameArray:imageNameArray buttonIsHidden:NO];
+//        guidePage.slideInto = YES;
+//        [WINDOW addSubview:guidePage];
+//    }
     
     self.view.backgroundColor = BackGroundColor;
     self.selectIndex = 0;
@@ -85,23 +85,25 @@
     self.page = 1;
     WeakSelf
     self.myCollectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        if(weakSelf.selectIndex == 0){
-            if(weakSelf.anchorListArray.count){
-                [weakSelf.myCollectionView.mj_header endRefreshing];
-            }
-            [weakSelf getAnchorList]; // 获取推介主播
-        }else if(weakSelf.selectIndex == 1){
-            if(weakSelf.livePlatListArray.count){
-                [weakSelf.myCollectionView.mj_header endRefreshing];
-            }else{
-                [weakSelf getLivePlatList]; // 获取直播平台
-            }
-        }else if(weakSelf.selectIndex == 2){
-            [weakSelf getFcousList:YES]; // 我的关注
-            if(weakSelf.fcousListArray.count){
-                [weakSelf.myCollectionView.mj_header endRefreshing];
-            }
-        }
+//        if(weakSelf.selectIndex == 0){
+//            if(weakSelf.anchorListArray.count){
+//                [weakSelf.myCollectionView.mj_header endRefreshing];
+//            }
+//            [weakSelf getAnchorList]; // 获取推介主播
+//        }else if(weakSelf.selectIndex == 1){
+//            if(weakSelf.livePlatListArray.count){
+//                [weakSelf.myCollectionView.mj_header endRefreshing];
+//            }else{
+//                [weakSelf getLivePlatList]; // 获取直播平台
+//            }
+//        }else if(weakSelf.selectIndex == 2){
+//            [weakSelf getFcousList:YES]; // 我的关注
+//            if(weakSelf.fcousListArray.count){
+//                [weakSelf.myCollectionView.mj_header endRefreshing];
+//            }
+//        }
+        [weakSelf.myCollectionView.mj_header endRefreshing];
+        [weakSelf reloadButtonClick];
     }];
 }
 
@@ -161,6 +163,9 @@
 
 #pragma mark 获取我喜欢的主播列表
 - (void)getFcousList:(BOOL)isHead{
+    if (!ISLOGIN) {
+        return;
+    }
     WeakSelf
     if (isHead) {
         self.page = 1;
