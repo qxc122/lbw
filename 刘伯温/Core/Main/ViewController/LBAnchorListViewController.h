@@ -6,12 +6,10 @@
 //  Copyright © 2017年 mac. All rights reserved.
 //
 
-#import "basicVc.h"
+#import "baseUICollectionVC.h"
 
-@interface LBAnchorListViewController : basicVc
+@interface LBAnchorListViewController : baseUICollectionVC
 @property(nonatomic, copy)NSString *livePlatID;
-@property(nonatomic, strong)NSArray *getAdvListArr;
-
 @end
 
 

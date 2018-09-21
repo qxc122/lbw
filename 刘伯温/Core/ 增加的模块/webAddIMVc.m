@@ -25,6 +25,8 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [self.webView loadRequest:request];
     
+    NSLog(@"url =%@",reqUrl);
+    
     if(!self.title){
         self.title = @"彩票";
     }

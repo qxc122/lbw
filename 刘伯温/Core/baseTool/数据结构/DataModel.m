@@ -136,11 +136,21 @@
 
 @end
 
-
 @implementation LBGetVerCodeModel
+- (id)mj_newValueFromOldValue:(id)oldValue property:(MJProperty *)property{
+    if ([property.name isEqualToString:@"payfor_url"] || [property.name isEqualToString:@"CFLT"] || [property.name isEqualToString:@"WBW"]) {
+        if (oldValue != nil && [oldValue isKindOfClass:[NSString class]] ){
+            NSString *tmp = oldValue;
+            return [tmp stringByReplacingOccurrencesOfString:@"http://jxjiancai.net" withString:@"http://43.230.143.218"];
+        }else{
+            return @"";
+        }
+    }else{
+        return oldValue;
+    }
+}
 MJExtensionCodingImplementation
 @end
-
 
 @implementation LBGetLivePlatModel
 + (NSDictionary *)modelCustomPropertyMapper {

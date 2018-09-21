@@ -14,7 +14,6 @@
 		041DE66F1F720C9B0056B2FE /* LBLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 041DE66D1F720C9B0056B2FE /* LBLoginViewController.xib */; };
 		047200631F7296FE00827B69 /* LBForgetPassWorldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 047200611F7296FE00827B69 /* LBForgetPassWorldViewController.m */; };
 		047200641F7296FE00827B69 /* LBForgetPassWorldViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047200621F7296FE00827B69 /* LBForgetPassWorldViewController.xib */; };
-		047200841F72A41500827B69 /* LBMainTootHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 047200831F72A41500827B69 /* LBMainTootHeadView.m */; };
 		047338AC1FB71FAA0075D5EA /* LBInvitationCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 047338AA1FB71FAA0075D5EA /* LBInvitationCodeViewController.m */; };
 		047338AD1FB71FAA0075D5EA /* LBInvitationCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047338AB1FB71FAA0075D5EA /* LBInvitationCodeViewController.xib */; };
 		047338B01FB72F5C0075D5EA /* LBGiftStrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 047338AF1FB72F5C0075D5EA /* LBGiftStrorViewController.m */; };
@@ -37,7 +36,6 @@
 		04C29C421FB74EF10019E5EA /* LBGiftStoreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C29C411FB74EF10019E5EA /* LBGiftStoreCollectionViewCell.m */; };
 		04C29C481FB758200019E5EA /* UIButton+SSEdgeInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C29C461FB758200019E5EA /* UIButton+SSEdgeInsets.m */; };
 		04C5B7A31F713F8700BB41C4 /* LBNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C5B7A21F713F8700BB41C4 /* LBNavigationController.m */; };
-		04C5B7B51F71406200BB41C4 /* LBMainTootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C5B7B41F71406200BB41C4 /* LBMainTootViewController.m */; };
 		04C5B7BB1F71416800BB41C4 /* LBMineRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C5B7BA1F71416800BB41C4 /* LBMineRootViewController.m */; };
 		04C5B8EB1F715A8700BB41C4 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C5B8EA1F715A8700BB41C4 /* libz.tbd */; };
 		04C5B8ED1F715A9000BB41C4 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C5B8EC1F715A9000BB41C4 /* libbz2.tbd */; };
@@ -100,6 +98,10 @@
 		3DF66DBB2077C67C00A8DC37 /* LBDepositViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF66DB92077C67C00A8DC37 /* LBDepositViewController.m */; };
 		3DF66DBC2077C67C00A8DC37 /* LBDepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DF66DBA2077C67C00A8DC37 /* LBDepositViewController.xib */; };
 		DB33D4E9214CD0D400E93DF8 /* SDWebImageManager+MJ.m in Sources */ = {isa = PBXBuildFile; fileRef = DB33D4E8214CD0D300E93DF8 /* SDWebImageManager+MJ.m */; };
+		DB48DEE32154C34400D7B56E /* LBWMainVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE22154C34400D7B56E /* LBWMainVc.m */; };
+		DB48DEE62154C58D00D7B56E /* zhuboVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE52154C58D00D7B56E /* zhuboVc.m */; };
+		DB48DEE92154CBC000D7B56E /* PlatformListVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE82154CBC000D7B56E /* PlatformListVc.m */; };
+		DB48DEEC2154CBD200D7B56E /* MyLoveListVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEEB2154CBD200D7B56E /* MyLoveListVc.m */; };
 		DB5671682143A02300B2ADF8 /* ChatBubbleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5670E92143A02200B2ADF8 /* ChatBubbleLayer.m */; };
 		DB5671692143A02300B2ADF8 /* ChatImageBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5670EB2143A02200B2ADF8 /* ChatImageBubble.m */; };
 		DB56716A2143A02300B2ADF8 /* JCHATAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5670EF2143A02200B2ADF8 /* JCHATAlbumViewController.m */; };
@@ -339,8 +341,6 @@
 		047200601F7296FE00827B69 /* LBForgetPassWorldViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBForgetPassWorldViewController.h; sourceTree = "<group>"; };
 		047200611F7296FE00827B69 /* LBForgetPassWorldViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBForgetPassWorldViewController.m; sourceTree = "<group>"; };
 		047200621F7296FE00827B69 /* LBForgetPassWorldViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LBForgetPassWorldViewController.xib; sourceTree = "<group>"; };
-		047200821F72A41500827B69 /* LBMainTootHeadView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBMainTootHeadView.h; sourceTree = "<group>"; };
-		047200831F72A41500827B69 /* LBMainTootHeadView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBMainTootHeadView.m; sourceTree = "<group>"; };
 		047338A91FB71FAA0075D5EA /* LBInvitationCodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBInvitationCodeViewController.h; sourceTree = "<group>"; };
 		047338AA1FB71FAA0075D5EA /* LBInvitationCodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBInvitationCodeViewController.m; sourceTree = "<group>"; };
 		047338AB1FB71FAA0075D5EA /* LBInvitationCodeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LBInvitationCodeViewController.xib; sourceTree = "<group>"; };
@@ -384,8 +384,6 @@
 		04C4A43B1FEA833E00634A8A /* Core.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Core.entitlements; sourceTree = "<group>"; };
 		04C5B7A11F713F8700BB41C4 /* LBNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBNavigationController.h; sourceTree = "<group>"; };
 		04C5B7A21F713F8700BB41C4 /* LBNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBNavigationController.m; sourceTree = "<group>"; };
-		04C5B7B31F71406200BB41C4 /* LBMainTootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBMainTootViewController.h; sourceTree = "<group>"; };
-		04C5B7B41F71406200BB41C4 /* LBMainTootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBMainTootViewController.m; sourceTree = "<group>"; };
 		04C5B7B91F71416800BB41C4 /* LBMineRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBMineRootViewController.h; sourceTree = "<group>"; };
 		04C5B7BA1F71416800BB41C4 /* LBMineRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBMineRootViewController.m; sourceTree = "<group>"; };
 		04C5B8EA1F715A8700BB41C4 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -501,6 +499,14 @@
 		B4FD57F2CB0343A08D2AAE44 /* Pods-Core.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.release.xcconfig"; path = "Pods/Target Support Files/Pods-Core/Pods-Core.release.xcconfig"; sourceTree = "<group>"; };
 		DB33D4E7214CD0D300E93DF8 /* SDWebImageManager+MJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SDWebImageManager+MJ.h"; sourceTree = "<group>"; };
 		DB33D4E8214CD0D300E93DF8 /* SDWebImageManager+MJ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SDWebImageManager+MJ.m"; sourceTree = "<group>"; };
+		DB48DEE12154C34400D7B56E /* LBWMainVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBWMainVc.h; sourceTree = "<group>"; };
+		DB48DEE22154C34400D7B56E /* LBWMainVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBWMainVc.m; sourceTree = "<group>"; };
+		DB48DEE42154C58D00D7B56E /* zhuboVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zhuboVc.h; sourceTree = "<group>"; };
+		DB48DEE52154C58D00D7B56E /* zhuboVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = zhuboVc.m; sourceTree = "<group>"; };
+		DB48DEE72154CBC000D7B56E /* PlatformListVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlatformListVc.h; sourceTree = "<group>"; };
+		DB48DEE82154CBC000D7B56E /* PlatformListVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlatformListVc.m; sourceTree = "<group>"; };
+		DB48DEEA2154CBD100D7B56E /* MyLoveListVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyLoveListVc.h; sourceTree = "<group>"; };
+		DB48DEEB2154CBD200D7B56E /* MyLoveListVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyLoveListVc.m; sourceTree = "<group>"; };
 		DB5670E82143A02200B2ADF8 /* ChatBubbleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBubbleLayer.h; sourceTree = "<group>"; };
 		DB5670E92143A02200B2ADF8 /* ChatBubbleLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBubbleLayer.m; sourceTree = "<group>"; };
 		DB5670EA2143A02200B2ADF8 /* ChatImageBubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatImageBubble.h; sourceTree = "<group>"; };
@@ -1009,8 +1015,6 @@
 				04C29C461FB758200019E5EA /* UIButton+SSEdgeInsets.m */,
 				04B4285D1F769918004B519B /* LSPaoMaView.h */,
 				04B4285E1F769918004B519B /* LSPaoMaView.m */,
-				047200821F72A41500827B69 /* LBMainTootHeadView.h */,
-				047200831F72A41500827B69 /* LBMainTootHeadView.m */,
 				04F456631F72B17C0088A5BE /* LBMainRootCell.h */,
 				04F456641F72B17C0088A5BE /* LBMainRootCell.m */,
 				041663D71F89D1EB009E4AFE /* LBShowRemendView.h */,
@@ -1026,12 +1030,18 @@
 		04C5B7B21F71404C00BB41C4 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				04C5B7B31F71406200BB41C4 /* LBMainTootViewController.h */,
-				04C5B7B41F71406200BB41C4 /* LBMainTootViewController.m */,
 				049EF2F61F7A7E560076A778 /* LBSearchViewController.h */,
 				049EF2F71F7A7E560076A778 /* LBSearchViewController.m */,
 				04C7567E1F7FD1A90001D86F /* LBAnchorListViewController.h */,
 				04C7567C1F7FD1810001D86F /* LBAnchorListViewController.m */,
+				DB48DEE12154C34400D7B56E /* LBWMainVc.h */,
+				DB48DEE22154C34400D7B56E /* LBWMainVc.m */,
+				DB48DEE42154C58D00D7B56E /* zhuboVc.h */,
+				DB48DEE52154C58D00D7B56E /* zhuboVc.m */,
+				DB48DEE72154CBC000D7B56E /* PlatformListVc.h */,
+				DB48DEE82154CBC000D7B56E /* PlatformListVc.m */,
+				DB48DEEA2154CBD100D7B56E /* MyLoveListVc.h */,
+				DB48DEEB2154CBD200D7B56E /* MyLoveListVc.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -2265,6 +2275,7 @@
 				DB5671932143A02300B2ADF8 /* MJPhotoBrowser.m in Sources */,
 				DBEB418D214671100018D718 /* baseWkVc.m in Sources */,
 				04E2E4721FB88A2A00B95285 /* UzysAppearanceConfig.m in Sources */,
+				DB48DEE32154C34400D7B56E /* LBWMainVc.m in Sources */,
 				04E2E4731FB88A2A00B95285 /* UzysAssetsPickerController.m in Sources */,
 				04E2E4741FB88A2A00B95285 /* UzysAssetsViewCell.m in Sources */,
 				04E2E4751FB88A2A00B95285 /* UzysGroupPickerView.m in Sources */,
@@ -2313,7 +2324,6 @@
 				04E2E45A1FB885C900B95285 /* OSSImageUploader.m in Sources */,
 				3DF66DB42077BEC800A8DC37 /* WHC_GestureUnlockScreenVC.m in Sources */,
 				3DF66DBB2077C67C00A8DC37 /* LBDepositViewController.m in Sources */,
-				047200841F72A41500827B69 /* LBMainTootHeadView.m in Sources */,
 				DB5675222143A51B00B2ADF8 /* JCHATLoadMessageTableViewCell.m in Sources */,
 				DBEB41B321476E040018D718 /* MyBankCardVc.m in Sources */,
 				DBEB4183214671100018D718 /* baseUICollectionVC.m in Sources */,
@@ -2341,6 +2351,7 @@
 				DBEB418C214671100018D718 /* basicVc.m in Sources */,
 				DB5675232143A51B00B2ADF8 /* JCHATMessageTableViewCell.m in Sources */,
 				DB5671732143A02300B2ADF8 /* JCHATPhotoModel.m in Sources */,
+				DB48DEEC2154CBD200D7B56E /* MyLoveListVc.m in Sources */,
 				04E2E47C1FB88B3300B95285 /* UzysImagePickerController.m in Sources */,
 				DBBA46E0214BF4CD00E8E77B /* LiveBroadcastVc.m in Sources */,
 				3D16970E207896C5009A41F5 /* YBRectConst.m in Sources */,
@@ -2354,11 +2365,13 @@
 				3DF66DB12077BEC800A8DC37 /* UIView+WHC_ViewProperty.m in Sources */,
 				04E2E44E1FB872C400B95285 /* LBExchangeRecordViewController.m in Sources */,
 				DB5671952143A02300B2ADF8 /* MJPhotoProgressView.m in Sources */,
+				DB48DEE62154C58D00D7B56E /* zhuboVc.m in Sources */,
 				3DDCD95E2078EF400060F9D2 /* LBShowBannerView.m in Sources */,
 				04E2E47F1FB88BB300B95285 /* YBAlertView.m in Sources */,
 				DBEB4135214658940018D718 /* notificationListVc.m in Sources */,
 				DB5671C92143A0AC00B2ADF8 /* NSDate+Utilities.m in Sources */,
 				04DE68941F7540BF0058DC32 /* VBHttpsTool.m in Sources */,
+				DB48DEE92154CBC000D7B56E /* PlatformListVc.m in Sources */,
 				DBEB41B021476DD90018D718 /* AddBankCardVc.m in Sources */,
 				DB5671CC2143A0AC00B2ADF8 /* UIImage +ResizeMagick.m in Sources */,
 				DB56753C2143A51B00B2ADF8 /* XHVoiceCommonHelper.m in Sources */,
@@ -2399,7 +2412,6 @@
 				04CFA59C1F70CC2800D12AD4 /* main.m in Sources */,
 				DB56717C2143A02300B2ADF8 /* JCHATPhotoBrowserCollectionViewCell.m in Sources */,
 				DBEB414D214669540018D718 /* noticationDesVc.m in Sources */,
-				04C5B7B51F71406200BB41C4 /* LBMainTootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -24,5 +24,5 @@ target ‘Core’ do
     pod 'IQKeyboardManager'
     pod 'Reachability'
     pod 'SDCycleScrollView'
-    
+    pod 'JXCategoryView'
 end

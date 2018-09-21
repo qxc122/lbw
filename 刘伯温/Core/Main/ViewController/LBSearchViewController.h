@@ -8,8 +8,8 @@
 
 
 
-#import "basicVc.h"
+#import "baseUICollectionVC.h"
 
-@interface LBSearchViewController : basicVc
+@interface LBSearchViewController : baseUICollectionVC
 
 @end

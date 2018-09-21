@@ -7,6 +7,8 @@
 //
 
 #import "basicVc.h"
+#import "LBShowRemendView.h"
+#import "LBLoginViewController.h"
 
 @interface basicVc ()
 
@@ -36,18 +38,18 @@
     UIBarButtonItem* leftBarutton = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(popSelf)];
     self.navigationItem.leftBarButtonItem = leftBarutton;
 }
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [self hideBottomBarWhenPush];
-    }
-    return self;
-}
-- (void)hideBottomBarWhenPush
-{
-    self.hidesBottomBarWhenPushed = YES;
-}
+//- (instancetype)init
+//{
+//    self = [super init];
+//    if (self) {
+//        [self hideBottomBarWhenPush];
+//    }
+//    return self;
+//}
+//- (void)hideBottomBarWhenPush
+//{
+//    self.hidesBottomBarWhenPushed = YES;
+//}
 - (void)popSelf{
 //    if (self.presentingViewController) {
 //        [self dismissViewControllerAnimated:YES completion:nil];
@@ -79,5 +81,36 @@
 }
 - (void)dealloc{
     NSLog(@"%s",__func__);
+}
+
+- (void)login{
+    [LBShowRemendView showRemendViewText:@"您还没有登录，请先登录" andTitleText:@"提示" andEnterText:@"确定" andEnterBlock:^{
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window removeAllSubviews];
+        window = nil;
+        LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
+        LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
+        [UIApplication sharedApplication].keyWindow.rootViewController = nav;
+    }];
+}
+
+
+- (void)joinMembership{
+    kWeakSelf(self);
+    [LBRemendToolView showRemendViewText:[NSString stringWithFormat:@"您还不是会员，现在去充值吗"] andTitleText:@"赚钱APP" andEnterText:@"确认" andCancelText:@"取消" andEnterBlock:^{
+        LBRechargerViewController *VC = [[LBRechargerViewController alloc] initWithNibName:@"LBRechargerViewController" bundle:nil];
+        [weakself.navigationController pushViewController:VC animated:YES];
+    } andCancelBlock:^{
+        
+    }];
+}
+- (void)RenewalFee{
+    kWeakSelf(self);
+    [LBRemendToolView showRemendViewText:[NSString stringWithFormat:@"您的会员已经到期，现在去充值吗"] andTitleText:@"赚钱APP" andEnterText:@"确认" andCancelText:@"取消" andEnterBlock:^{
+        LBRechargerViewController *VC = [[LBRechargerViewController alloc] initWithNibName:@"LBRechargerViewController" bundle:nil];
+        [weakself.navigationController pushViewController:VC animated:YES];
+    } andCancelBlock:^{
+        
+    }];
 }
 @end

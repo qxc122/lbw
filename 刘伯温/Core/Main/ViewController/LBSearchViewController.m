@@ -12,9 +12,8 @@
 #import "LBRechargerViewController.h"
 #import "LiveBroadcastVc.h"
 
-@interface LBSearchViewController ()<UICollectionViewDataSource, UICollectionViewDelegate,UITextFieldDelegate>
+@interface LBSearchViewController ()<UITextFieldDelegate>
 @property (nonatomic, strong)UITextField *textField;
-@property(nonatomic, strong)UICollectionView *myCollectionView;
 @property(nonatomic, strong)NSMutableArray *anchorListArray;
 
 @end
@@ -23,10 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = BackGroundColor;
-    
     self.anchorListArray = [NSMutableArray array];
-
+    self.registerCoCells  =@[@"LBMainRootCell"];
     
     self.textField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0,CGHeightMT(200) , 35)];
     self.textField.backgroundColor = [UIColor whiteColor];
@@ -47,26 +44,8 @@
     [searchButton setImage:[UIImage imageNamed:@"搜索"] forState:0];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:searchButton];
     self.navigationItem.rightBarButtonItem = rightItem;
-    
-    CGFloat leftPading = 10;
-    
-    CGFloat cellW = (kFullWidth-leftPading*2)/3;
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-    layout.itemSize = CGSizeMake(cellW, cellW+20);
-    layout.minimumInteritemSpacing = leftPading;
-    layout.minimumLineSpacing = leftPading;
-    
-    _myCollectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    _myCollectionView.backgroundColor = [UIColor whiteColor];
-    _myCollectionView.delegate = self;
-    _myCollectionView.dataSource = self;
-    _myCollectionView.showsVerticalScrollIndicator = NO;
-    _myCollectionView.showsHorizontalScrollIndicator = NO;
-    [_myCollectionView registerClass:[LBMainRootCell class] forCellWithReuseIdentifier:@"LBMainRootCell"];
-    [self.view addSubview:_myCollectionView];
-
-    
+    self.NodataTitle = @" ";
+    self.empty_type = succes_empty_num;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textFiel{
@@ -77,36 +56,32 @@
 - (void)serachAnchor{
     [self.textField resignFirstResponder];
     if (!self.textField.text.length){
-        [MBProgressHUD showMessage:@"搜索不能为空" finishBlock:nil];
+        [MBProgressHUD showMessage:@"搜索不能为空" view:self.view];
         return;
     }
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showLoadingMessage:@"搜索中..." toView:self.view];
     WeakSelf
-    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
-    paramDict[@"keyword"] = self.textField.text;
-    paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
-    [VBHttpsTool postWithURL:@"serachAnchor" params:paramDict success:^(id json) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-        if ([json[@"result"] intValue] == 1){
-            [weakSelf.anchorListArray removeAllObjects];
-            LBAnchorListModelList *dataList = [LBAnchorListModelList mj_objectWithKeyValues:json];
-            if (!dataList.data.count){
-                [MBProgressHUD showMessage:@"暂无改主播" finishBlock:nil];
-            }
-            [weakSelf.anchorListArray addObjectsFromArray:dataList.data];
-            [weakSelf.myCollectionView reloadData];
-
+    [[ToolHelper shareToolHelper] serachAnchorWithkeyword:self.textField.text success:^(id json, NSString *msg, NSInteger code) {
+        [weakSelf.anchorListArray removeAllObjects];
+        LBAnchorListModelList *dataList = [LBAnchorListModelList mj_objectWithKeyValues:json];
+        [weakSelf.anchorListArray addObjectsFromArray:dataList.data];
+        if (weakSelf.anchorListArray.count) {
+            weakSelf.NodataTitle = @"";
+        } else {
+            weakSelf.NodataTitle = @"暂无该主播";
         }
-    } failure:^(NSError *error) {
-        
+        [weakSelf ColoadNewDataEndHeadsuccessSet:nil code:[json[@"result"] intValue]  footerIsShow:NO hasMore:nil];
+        [weakSelf.collectionView reloadData];
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+    } failure:^(NSInteger errorCode, NSString *msg) {
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [weakSelf ColoadNewDataEndHeadfailureSet:nil errorCode:errorCode];
     }];
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.anchorListArray.count;
-
 }
 
 - (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -124,17 +99,14 @@
         NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
         NSDateFormatter *format = [[NSDateFormatter alloc] init];
         format.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        NSDate *oneDate = [format dateFromString:expirationDate];
+        NSDate *oneData = [format dateFromString:expirationDate];
         NSString *type = [[NSUserDefaults standardUserDefaults] objectForKey:@"type"];
-
-        WeakSelf
+        
         if ([type isEqualToString:@"0"]){
-            [LBRemendToolView showRemendViewText:[NSString stringWithFormat:@"您的会员已经到期，现在去充值吗"] andTitleText:@"刘伯温" andEnterText:@"确认" andCancelText:@"取消" andEnterBlock:^{
-                LBRechargerViewController *VC = [[LBRechargerViewController alloc] initWithNibName:@"LBRechargerViewController" bundle:nil];
-                [weakSelf.navigationController pushViewController:VC animated:YES];
-            } andCancelBlock:^{
-                
-            }];
+            [self joinMembership];
+            return;
+        }else if([NSDate date].timeIntervalSince1970 >= oneData.timeIntervalSince1970){
+            [self RenewalFee];
             return;
         }
     }
@@ -148,50 +120,6 @@
     vc.nickname = model.anchorName;
     [self.navigationController pushViewController:vc animated:YES];
 }
--(int)compareOneDay:(NSDate *)oneDay withAnotherDay:(NSDate *)anotherDay
-
-{
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    
-    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
-    
-    NSString *oneDayStr = [dateFormatter stringFromDate:oneDay];
-    
-    NSString *anotherDayStr = [dateFormatter stringFromDate:anotherDay];
-    
-    NSDate *dateA = [dateFormatter dateFromString:oneDayStr];
-    
-    NSDate *dateB = [dateFormatter dateFromString:anotherDayStr];
-    
-    NSComparisonResult result = [dateA compare:dateB];
-    
-    NSLog(@"date1 : %@, date2 : %@", oneDay, anotherDay);
-    
-    if (result == NSOrderedDescending) {
-        
-        //NSLog(@"Date1  is in the future");
-        
-        return 1;
-        
-    }
-    
-    else if (result ==NSOrderedAscending){
-        
-        //NSLog(@"Date1 is in the past");
-        
-        return -1;
-        
-    }
-    
-    //NSLog(@"Both dates are the same");
-    
-    return 0;
-    
-    
-    
-}
-
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.textField resignFirstResponder];
@@ -201,19 +129,17 @@
     [self serachAnchor];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark----UICollectionViewDelegateFlowLayout
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat cellW = (kFullWidth-10*2)/3;
+    return CGSizeMake(cellW,cellW+20);
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    return 10.0;
 }
-*/
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
+    return 10.0;
+}
 
 @end

@@ -32,6 +32,8 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [self.webView loadRequest:request];
 
+    
+    NSLog(@"url =%@",reqUrl);
 }
 - (void)likeButtonClick{
     [self.navigationController popViewControllerAnimated:NO];

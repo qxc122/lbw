@@ -44,7 +44,7 @@ blue:((float)(rgbValue & 0xFF)) / 255.0 alpha:(a)]
 #define PROPORTION_HEIGHT  SCREENHEIGHT/667.0
 #define PROPORTION_WIDTH   SCREENWIDTH/375.0
 
-#define IPoneX (SCREENHEIGHT == 812)
+#define IPoneX (SCREENHEIGHT >= 812)
 #define isPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #ifdef DEBUG
@@ -58,7 +58,7 @@ blue:((float)(rgbValue & 0xFF)) / 255.0 alpha:(a)]
 #define PIC_nodata   @"nodata"
 
 #define STR_Nonetwork @"\n请打开Wifi或移动数据"
-#define STR_Loadfailure @"\n加载失败，请重试"
+#define STR_Loadfailure @"\n加载失败，请点此处重试"
 #define STR_nodata   @"没有数据"
 
 

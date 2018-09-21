@@ -21,6 +21,7 @@
 #import "LBExchangeGoldView.h"
 #import "notificationListVc.h"
 #import "walletVc.h"
+#import "MyLoveListVc.h"
 @interface LBMineRootViewController()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, strong)NSArray *titleArr;
 @property(nonatomic, strong)NSArray *imageArr;
@@ -56,16 +57,7 @@
     headView.clickEnditBlock = ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!ISLOGIN){
-                [LBShowRemendView showRemendViewText:@"您还没有登录，请先登录" andTitleText:@"提示" andEnterText:@"确定" andEnterBlock:^{
-                    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-                    [window removeAllSubviews];
-                    window = nil;
-                    LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-                    LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
-                    [UIApplication sharedApplication].keyWindow.rootViewController = nav;
-                    
-//                    [UIApplication sharedApplication].keyWindow.rootViewController = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-                }];
+                [self login];
                 return;
             }
             LBEnditUserViewController *VC = [LBEnditUserViewController new];
@@ -97,16 +89,7 @@
     kWeakSelf(self);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!ISLOGIN){
-            [LBShowRemendView showRemendViewText:@"您还没有登录，请先登录" andTitleText:@"提示" andEnterText:@"确定" andEnterBlock:^{
-                UIWindow *window = [UIApplication sharedApplication].keyWindow;
-                [window removeAllSubviews];
-                window = nil;
-                LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-                LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
-                [UIApplication sharedApplication].keyWindow.rootViewController = nav;
-                
-                //                    [UIApplication sharedApplication].keyWindow.rootViewController = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-            }];
+            [self login];
             return;
         }
         LBSettingViewController *VC = [LBSettingViewController new];
@@ -182,8 +165,8 @@
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"转换现金"]) {
         LBDepositViewController *VC = [[LBDepositViewController alloc]initWithNibName:@"LBDepositViewController" bundle:nil];
-        [self.navigationController pushViewController:VC animated:YES];
         VC.amount = [NSString stringWithFormat:@"%.2f",[self.myinfoModel.amount floatValue]+[self.myinfoModel.freezing floatValue]];
+        [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"在线客服"]) {
         NSString *url = @"https://kf1.learnsaas.com/chat/chatClient/chatbox.jsp?companyID=814050&configID=62885&jid=3341006926&s=1";
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
@@ -201,9 +184,13 @@
         VC.title = @"历史记录";
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"我关注的主播"]) {
-        LBPlayListViewController *VC = [LBPlayListViewController new];
+//        LBPlayListViewController *VC = [LBPlayListViewController new];
+//        VC.title = @"关注的主播";
+//        VC.inerName = @"getFcousList";
+//        [self.navigationController pushViewController:VC animated:YES];
+        
+        MyLoveListVc *VC = [MyLoveListVc new];
         VC.title = @"关注的主播";
-        VC.inerName = @"getFcousList";
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"意见反馈"]) {
         LBFeedBackViewController *VC = [LBFeedBackViewController new];
@@ -216,14 +203,7 @@
 
 - (void)jurisdiction{
     if (!ISLOGIN){
-        [LBShowRemendView showRemendViewText:@"您还没有登录，请先登录" andTitleText:@"提示" andEnterText:@"确定" andEnterBlock:^{
-            UIWindow *window = [UIApplication sharedApplication].keyWindow;
-            [window removeAllSubviews];
-            window = nil;
-            LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-            LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
-            [UIApplication sharedApplication].keyWindow.rootViewController = nav;
-        }];
+        [self login];
         return;
     }
 }
@@ -237,7 +217,7 @@
 - (void)getBaseConfig{
     [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
         NSLog(@"在我的页面 基础信息获取成功");
-        LBGetVerCodeModel *model = [LBGetVerCodeModel modelWithJSON:dataDict[@"data"]];
+        LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
         [NSKeyedArchiver archiveRootObject:model toFile:PATH_base];
     } failure:^(NSInteger errorCode, NSString *msg) {
 
@@ -254,7 +234,7 @@
     [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
             
-            weakSelf.myinfoModel = [LBGetMyInfoModel modelWithJSON:json[@"data"]];
+            weakSelf.myinfoModel = [LBGetMyInfoModel mj_objectWithKeyValues:json[@"data"]];
             [NSKeyedArchiver archiveRootObject:weakSelf.myinfoModel toFile:PATH_UESRINFO];
             [[NSUserDefaults standardUserDefaults]setObject:weakSelf.myinfoModel.address forKey:@"DeliveryAddress"];
             [[NSUserDefaults standardUserDefaults]setObject:weakSelf.myinfoModel.integral forKey:@"integral"];

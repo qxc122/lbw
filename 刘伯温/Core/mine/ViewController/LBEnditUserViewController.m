@@ -62,7 +62,8 @@
     signoutButton.layer.cornerRadius = 7;
     signoutButton.clipsToBounds = YES;
     
-    [self getMyInfo];
+//    [self getMyInfo];
+    self.myinfoModel = [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
 }
 
 - (void)signoutButtonClick{
@@ -317,7 +318,7 @@
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
     [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
-            weakSelf.myinfoModel = [LBGetMyInfoModel modelWithJSON:json[@"data"]];
+            weakSelf.myinfoModel = [LBGetMyInfoModel mj_objectWithKeyValues:json[@"data"]];
             [weakSelf.tableView reloadData];
             [[NSUserDefaults standardUserDefaults] setBool:(weakSelf.myinfoModel.address.length ||weakSelf.myinfoModel.phone.length||weakSelf.myinfoModel.surname.length) forKey:@"hasFullInfo"];
         }else{

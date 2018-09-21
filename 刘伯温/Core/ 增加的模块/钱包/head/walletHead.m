@@ -13,7 +13,6 @@
 @property(nonatomic, weak)UILabel *one;
 @property (nonatomic,weak)UILabel *two;
 @property (nonatomic,weak)UILabel *three;
-
 @end
 
 
@@ -66,5 +65,9 @@
     }
     return self;
 }
-
+- (void)setData:(LBGetMyInfoModel *)data{
+    _data = data;
+    self.two.text = [NSString stringWithFormat:@"%.2f",[data.amount floatValue]+[data.freezing floatValue]];
+    self.three.text = [NSString stringWithFormat:@"不可提现金额(%.2f)",[data.freezing floatValue]];
+}
 @end

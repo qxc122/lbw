@@ -10,4 +10,11 @@
 
 @interface baseUICollectionVC : baseUiTableView
 @property (nonatomic,strong) NSArray  *registerCoCells; //需要注册的cell
+@property (nonatomic,weak) UICollectionView *collectionView;
+
+- (void)ColoadNewDataEndHeadsuccessSet:(UICollectionView *)TableView code:(NSInteger)code footerIsShow:(BOOL)footerIsShow  hasMore:(NSString *)hasMore;
+- (void)ColoadNewDataEndHeadfailureSet:(UICollectionView *)TableView errorCode:(NSInteger)errorCode;
+
+- (void)ColoadMoreDataEndFootsuccessSet:(UICollectionView *)TableView  hasMore:(NSString *)hasMore;
+- (void)ColoadMoreDataEndFootfailureSet:(UICollectionView *)TableView errorCode:(NSInteger)errorCode msg:(NSString *)msg;
 @end

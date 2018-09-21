@@ -9,6 +9,10 @@
 #import "basicVc.h"
 #import "MJRefresh.h"
 #import "ToolHelper.h"
+#import "LBShowRemendView.h"
+#import "LBLoginViewController.h"
+#import "LiveBroadcastVc.h"
+#import "LBShowRemendView.h"
 
 typedef NS_ENUM(NSInteger, empty_num)
 {
@@ -37,4 +41,6 @@ typedef NS_ENUM(NSInteger, empty_num)
 
 - (void)loadMoreDataEndFootsuccessSet:(UITableView *)TableView  hasMore:(NSString *)hasMore;
 - (void)loadMoreDataEndFootfailureSet:(UITableView *)TableView errorCode:(NSInteger)errorCode msg:(NSString *)msg;
+
+- (void)set_MJRefreshFooter;
 @end

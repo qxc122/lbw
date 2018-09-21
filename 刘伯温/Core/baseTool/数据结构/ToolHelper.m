@@ -400,9 +400,31 @@ singleM(ToolHelper);
     NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
     paramDict[@"token"] = TOKEN;
     paramDict[@"row"] = @"20";
-    paramDict[@"page"] = page;
+    paramDict[@"page"] = [NSNumber numberWithInt:[page intValue]];
     paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
     [VBHttpsTool postWithURL:@"getFcousList" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            successBlock(json,json[@"info"],[json[@"result"] intValue]);
+        }else{
+            failureBlock([json[@"result"] intValue],json[@"info"]);
+        }
+    } failure:^(NSError *error) {
+        failureBlock(error.code,error.userInfo.description);
+    }];
+}
+
+#pragma --mark 平台的 主播列表
+- (void)getFcousListWithPage:(NSString *)page
+                  livePlatID:(NSString *)livePlatID
+                     success:(RequestSuccess)successBlock
+                     failure:(RequestFailure)failureBlock{
+
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"timestamp"] = [[LBToolModel sharedInstance] getTimestamp];
+    paramDict[@"livePlatID"] = livePlatID;
+    paramDict[@"page"] = [NSNumber numberWithInt:[page intValue]];
+    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
+    [VBHttpsTool postWithURL:@"getAnchorList" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
             successBlock(json,json[@"info"],[json[@"result"] intValue]);
         }else{
@@ -453,6 +475,25 @@ singleM(ToolHelper);
     }];
 }
 
+
+#pragma --mark 搜索主播
+- (void)serachAnchorWithkeyword:(NSString *)keyword
+                     success:(RequestSuccess)successBlock
+                     failure:(RequestFailure)failureBlock{
+    
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"keyword"] = keyword;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
+    [VBHttpsTool postWithURL:@"serachAnchor" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            successBlock(json,json[@"info"],[json[@"result"] intValue]);
+        }else{
+            failureBlock([json[@"result"] intValue],json[@"info"]);
+        }
+    } failure:^(NSError *error) {
+        failureBlock(error.code,error.userInfo.description);
+    }];
+}
 
 #ifdef DEBUG
 - (void)networkStateChange{

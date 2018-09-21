@@ -80,7 +80,6 @@
 }
 
 
-
 - (void)paomaAnimate{
     
     if (!isStop) {

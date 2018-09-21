@@ -66,15 +66,15 @@
 }
 - (void)loadNewData{
 }
+#pragma -mark<加载更多数据>
+- (void)loadMoreData{
+    
+}
 
 #pragma -mark<mj_footer  头部>
 - (void)set_MJRefreshFooter{
     MJRefreshFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
     self.footer = footer;
-}
-#pragma -mark<加载更多数据>
-- (void)loadMoreData{
-
 }
 
 - (void)setRegisterCells:(NSArray *)registerCells{
@@ -149,6 +149,7 @@
             if (footerIsShow) {
                 if(!self.footer){
                     [self set_MJRefreshFooter];
+                    self.tableView.mj_footer = self.footer;
                 }
                 if ([hasMore isEqualToString:@"1"]) {
                     self.footer.hidden = NO;

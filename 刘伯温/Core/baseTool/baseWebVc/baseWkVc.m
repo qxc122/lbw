@@ -80,6 +80,9 @@
     
     self.webView.opaque = NO;
     [self setNavBtn];
+    
+    
+        NSLog(@"url =%@",reqUrl);
 }
 
 - (void)hideBottomBarWhenPush
@@ -209,16 +212,7 @@
 - (void)signButtonClick{
     
     if (!ISLOGIN){
-        [LBShowRemendView showRemendViewText:@"您还没有登录，请先登录" andTitleText:@"提示" andEnterText:@"确定" andEnterBlock:^{
-            UIWindow *window = [UIApplication sharedApplication].keyWindow;
-            [window removeAllSubviews];
-            window = nil;
-            LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-            LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
-            [UIApplication sharedApplication].keyWindow.rootViewController = nav;
-            
-            //            [UIApplication sharedApplication].keyWindow.rootViewController = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
-        }];
+        [self login];
         return;
     }
     

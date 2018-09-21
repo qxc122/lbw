@@ -161,17 +161,17 @@
     
     [self.placeHolderTextColor set];
     
+      if (!self.font) {
+          self.font = [UIFont systemFontOfSize:12];
+      }
+      if (!self.placeHolderTextColor) {
+          self.placeHolderTextColor = [UIColor whiteColor];
+      }
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_0) {
       NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
       paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
       paragraphStyle.alignment = self.textAlignment;
       
-        if (!self.font) {
-            self.font = [UIFont systemFontOfSize:12];
-        }
-        if (!self.placeHolderTextColor) {
-            self.placeHolderTextColor = [UIColor whiteColor];
-        }
       [self.placeHolder drawInRect:placeHolderRect
                     withAttributes:@{ NSFontAttributeName : self.font,
                                       NSForegroundColorAttributeName : self.placeHolderTextColor,

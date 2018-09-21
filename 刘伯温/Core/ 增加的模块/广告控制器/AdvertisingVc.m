@@ -109,12 +109,11 @@
     [self removeTimer];
 }
 
-
 - (void)getBaseConfig{
     kWeakSelf(self);
     [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
         NSLog(@"在广告页 基础信息获取成功");
-        LBGetVerCodeModel *model = [LBGetVerCodeModel modelWithJSON:dataDict[@"data"]];
+        LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
         [NSKeyedArchiver archiveRootObject:model toFile:PATH_base];
         
         [weakself  setSkip];

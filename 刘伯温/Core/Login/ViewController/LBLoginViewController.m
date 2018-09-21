@@ -198,6 +198,11 @@ WeakSelf
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"testLend"] forKey:@"testLend"];
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"invitationCode"] forKey:@"invitationCode"];
             
+            
+            [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_forbidden"] forKey:@"chat_forbidden"];
+            [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_image_open"] forKey:@"chat_image_open"];
+            [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_username"] forKey:@"chat_username"];
+            [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"chat_password"] forKey:@"chat_password"];
             [weakSelf getMyInfo];
         }else{
             [MBProgressHUD hideHUDForView:weakSelf.view];
@@ -251,7 +256,7 @@ WeakSelf
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
     [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
-            LBGetMyInfoModel *myinfoModel = [LBGetMyInfoModel modelWithJSON:json[@"data"]];
+            LBGetMyInfoModel *myinfoModel = [LBGetMyInfoModel mj_objectWithKeyValues:json[@"data"]];
             [NSKeyedArchiver archiveRootObject:myinfoModel toFile:PATH_UESRINFO];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLogin"];
             [[NSUserDefaults standardUserDefaults]setObject:myinfoModel.address forKey:@"DeliveryAddress"];

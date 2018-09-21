@@ -114,4 +114,15 @@ singleH(ToolHelper);
 #pragma mark 获取基本配置信息
 - (void)getBaseConfigSuccess:(RequestSuccess)successBlock
                      failure:(RequestFailure)failureBlock;
+
+#pragma --mark 平台的 主播列表
+- (void)getFcousListWithPage:(NSString *)page
+                  livePlatID:(NSString *)livePlatID
+                     success:(RequestSuccess)successBlock
+                     failure:(RequestFailure)failureBlock;
+
+#pragma --mark 搜索主播
+- (void)serachAnchorWithkeyword:(NSString *)keyword
+                        success:(RequestSuccess)successBlock
+                        failure:(RequestFailure)failureBlock;
 @end

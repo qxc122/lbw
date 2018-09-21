@@ -7,7 +7,6 @@
 //
 
 #import "mainTableVc.h"
-#import "LBMainTootViewController.h"
 #import "baseWkVc.h" 
 #import "LBNavigationController.h"
 #import "LBMineRootViewController.h"
@@ -16,10 +15,10 @@
 #import "LBShowRemendView.h"
 #import "LBLoginViewController.h"
 #import "AdvertisingVc.h"
+#import "LBWMainVc.h"
 @interface mainTableVc ()<UITabBarControllerDelegate>
 @property (nonatomic,strong) NSString *appUrl;
 
-@property (nonatomic,strong) LBMainTootViewController *mainVC;
 @end
 
 @implementation mainTableVc
@@ -72,9 +71,7 @@
 }
 - (void)setUpChildVC {
 
-    
-    LBMainTootViewController *mainVC = [LBMainTootViewController new];
-    self.mainVC = mainVC;
+    LBWMainVc *mainVC = [LBWMainVc new];
     [self setChildVC:mainVC title:@"VIP俱乐" image:@"tab_live" selectedImage:@"tab_live_press"];
     
     baseWkVc *webVC3 = [baseWkVc new];

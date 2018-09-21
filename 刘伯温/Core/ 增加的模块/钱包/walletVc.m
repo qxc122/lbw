@@ -32,12 +32,16 @@
     walletHead *head = [[walletHead alloc]initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 120)];
     self.head = head;
     self.tableView.tableHeaderView = head;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadNewData) name:@"chageUserInfoNotifi" object:nil];
 }
+
 - (void)loadNewData{
     kWeakSelf(self);
     [[ToolHelper shareToolHelper]getUserInfosuccess:^(id dataDict, NSString *msg, NSInteger code) {
         LBGetMyInfoModel *data = [LBGetMyInfoModel mj_objectWithKeyValues:dataDict[@"data"]];
         [NSKeyedArchiver archiveRootObject:data toFile:PATH_UESRINFO];
+        weakself.head.data = data;
         [weakself loadNewDataEndHeadsuccessSet:nil code:code footerIsShow:NO hasMore:nil];
         weakself.header.hidden = YES;
     } failure:^(NSInteger errorCode, NSString *msg) {
@@ -68,9 +72,9 @@
         [self selectBuyCard];
     } else if ([rowTitle isEqualToString:@"转换现金"]) {
         LBDepositViewController *VC = [[LBDepositViewController alloc]initWithNibName:@"LBDepositViewController" bundle:nil];
-        [self.navigationController pushViewController:VC animated:YES];
         LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
         VC.amount = [NSString stringWithFormat:@"%.2f",[data.amount floatValue]+[data.freezing floatValue]];
+        [self.navigationController pushViewController:VC animated:YES];
     }
 }
 

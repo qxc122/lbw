@@ -23,10 +23,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *line;
 
 @property (nonatomic,strong)NSArray *listArr;
-@property (nonatomic,assign)BOOL isSelectPlate;
 @property (nonatomic,assign)NSInteger   selectIndex;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *TopSpaceing;
 
+@property (nonatomic,strong)LBGetHappyPlateListModel *Selemodel;
 @end
 
 @implementation LBDepositViewController
@@ -37,36 +37,43 @@
     }
     if (!titleArr.count)return;
 
-    
     CGRect absoluteRect = [self.listButton convertRect:self.listButton.bounds toView:WINDOW];
     CGPoint relyPoint = CGPointMake(absoluteRect.origin.x + absoluteRect.size.width, absoluteRect.origin.y + absoluteRect.size.height);
     [YBPopupMenu showAtPoint:relyPoint titles:titleArr icons:titleArr menuWidth:200 delegate:self];
 }
 - (IBAction)enterClick:(id)sender {
     NSString *message;
-    if (!self.isSelectPlate){
+    NSString *tmp = self.moneyTextField.text;//转入的金额
+    if (!self.Selemodel){
         message = @"请选择转入平台";
-    }else if ([self.amount intValue] < [self.moneyTextField.text intValue]){
+    }else if ([self.amount intValue] <= 0){
         message = @"余额不足";
+    }else if ([self.amount intValue] < [self.moneyTextField.text intValue] || [self.moneyTextField.text intValue] <= 0){
+        if (self.Selemodel.plate_account.length) {
+            if ([self.amount intValue] < [self.moneyTextField.text intValue]){
+                message = @"余额不足";
+            }else if([self.moneyTextField.text intValue] <= 0){
+                message = @"请输入画有效金额";
+            }
+        }
     }else if (!self.accontTextField.text.length){
-        message = @"请输入平台账号";
-    }else if (!self.nameTextField.text.length){
-        message = @"请输入姓名";
-    }else if ([self.moneyTextField.text floatValue] <= 0){
-        message = @"转入金额必须大于0";
+        if (![self.Selemodel.plate_reg_type isEqualToString:@"1"]) {
+            message = @"请输入平台账号";
+        }
     }
-//    else if (!self.nameTextField.text.length){
-//        message = @"请输入平台密码";
-//    }
     if (message.length){
         [MBProgressHUD showPrompt:message toView:self.view];
          return;
     }
     [self.view endEditing:NO];
-
+    
+    if (!self.Selemodel.plate_account.length && [self.Selemodel.plate_reg_type isEqualToString:@"1"]) {
+        tmp = self.amount;
+    }
+    
     WeakSelf
-    LBGetHappyPlateListModel *model = self.listArr[self.selectIndex];
-    [LBRemendToolView showRemendViewText:[NSString stringWithFormat:@"您将%@元转入平台[%@]，平台账号[%@]，确定信息正确？",self.moneyTextField.text,model.plate_name,self.accontTextField.text] andTitleText:@"转账" andEnterText:@"确定转账" andCancelText:@"取消" andEnterBlock:^{
+    
+    [LBRemendToolView showRemendViewText:[NSString stringWithFormat:@"您将%@元转入平台[%@]，平台账号[%@]，确定信息正确？",tmp,self.Selemodel.plate_name,self.accontTextField.text] andTitleText:@"转账" andEnterText:@"确定转账" andCancelText:@"取消" andEnterBlock:^{
         [weakSelf loadData];
     } andCancelBlock:^{
         
@@ -78,9 +85,9 @@
     NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
     paramDict[@"token"] = TOKEN;
     
-    if ([self.next.titleLabel.text containsString:@"全额度"]) {
+    if (!self.Selemodel.plate_account.length && [self.Selemodel.plate_reg_type isEqualToString:@"1"]) {
         paramDict[@"amount"] = self.amount;
-    } else {
+    }else{
         paramDict[@"amount"] = self.moneyTextField.text;
     }
     paramDict[@"plate"] = self.listButton.titleLabel.text;
@@ -99,9 +106,20 @@
             [LBShowRemendView showRemendViewText:@"提交成功！请稍待几分钟，后台在审核处理" andTitleText:@"转帐" andEnterText:@"知道了" andEnterBlock:^{
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             }];
+            
+            if (!weakSelf.Selemodel.plate_account.length && [weakSelf.Selemodel.plate_reg_type isEqualToString:@"1"]) {
+                weakSelf.amount = @"0";
+            }else{
+                weakSelf.amount = [NSString stringWithFormat:@"%.2f",[weakSelf.amount floatValue] - [self.moneyTextField.text floatValue]];
+            }
+
+            weakSelf.amountLabel.text = [NSString stringWithFormat:@"%@元",weakSelf.amount];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"chageUserInfoNotifi" object:nil];
         }else{
             [MBProgressHUD hideHUDForView:weakSelf.view];
-            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
+//
+//            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
+            [weakSelf prompt:json[@"info"]];
         }
     } failure:^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view];
@@ -109,31 +127,43 @@
     }];
 }
 
+- (void)prompt:(NSString *)tmp{
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:tmp preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"马上联系在线客服" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *url = @"https://kf1.learnsaas.com/chat/chatClient/chatbox.jsp?companyID=814050&configID=62885&jid=3341006926&s=1";
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+        }
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)ybPopupMenuDidSelectedAtIndex:(NSInteger)index ybPopupMenu:(YBPopupMenu *)ybPopupMenu{
     if (!self.listArr.count)return;
-    self.isSelectPlate = YES;
     self.selectIndex = index;
     LBGetHappyPlateListModel *model = self.listArr[index];
     [self.listButton setTitle:model.plate_name forState:0];
     self.accontTextField.text = model.plate_account;
-    
-//    model.plate_reg_type = @"1";
+    self.Selemodel = model;
     
     if (model.plate_account.length) {
         self.accontTextField.hidden = YES;
+        [self.next setTitle:@"确认提交" forState:UIControlStateNormal];
+        self.moneyTextField.hidden = NO;
     } else {
         if ([model.plate_reg_type isEqualToString:@"1"]) {
             self.accontTextField.hidden = YES;
+            [self.next setTitle:@"一键注册并全额度转入" forState:UIControlStateNormal];
+            self.moneyTextField.hidden = YES;
         } else {
             self.accontTextField.hidden = NO;
+            [self.next setTitle:@"确认提交" forState:UIControlStateNormal];
+            self.moneyTextField.hidden = NO;
         }
-    }
-    if (self.accontTextField.hidden && !model.plate_account.length) {
-        [self.next setTitle:@"一键注册并全额度转入" forState:UIControlStateNormal];
-        self.moneyTextField.hidden = YES;
-    } else {
-        [self.next setTitle:@"确认提交" forState:UIControlStateNormal];
-        self.moneyTextField.hidden = NO;
     }
 }
 

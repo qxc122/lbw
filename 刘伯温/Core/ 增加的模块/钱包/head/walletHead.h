@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface walletHead : UIView
-
+@property (nonatomic,strong)LBGetMyInfoModel *data;
 @end

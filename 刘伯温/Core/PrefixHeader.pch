@@ -25,6 +25,10 @@
 #import "LBNavigationController.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
+
+#import "LBRechargerViewController.h"
+#import "LBAnchorListViewController.h"
+#import "LBRemendToolView.h"
 #import "NSString+Add.h"
 #import "UIImageView+WebCache.h"
 #import <JMessage/JMessage.h>

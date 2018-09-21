@@ -28,6 +28,7 @@ PODS:
   - JCore (1.2.2)
   - JMessage (3.7.0):
     - JCore (~> 1.0)
+  - JXCategoryView (1.0.7)
   - Masonry (1.1.0)
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
@@ -63,6 +64,7 @@ DEPENDENCIES:
   - GPUImage (~> 0.1.7)
   - IQKeyboardManager
   - JMessage
+  - JXCategoryView
   - Masonry
   - MBProgressHUD
   - MJExtension
@@ -88,6 +90,7 @@ SPEC REPOS:
     - IQKeyboardManager
     - JCore
     - JMessage
+    - JXCategoryView
     - Masonry
     - MBProgressHUD
     - MJExtension
@@ -119,6 +122,7 @@ SPEC CHECKSUMS:
   IQKeyboardManager: 79c57795f5c2408d259d37b9da2ed07efcbb5225
   JCore: f14c0549968a63c22e246a4875aa9d428446f373
   JMessage: 90c194ca878a1724694da320aad4867b489276e9
+  JXCategoryView: 90943e0139fd125dd45afe237536d76fb5db225a
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
@@ -132,6 +136,6 @@ SPEC CHECKSUMS:
   UMessage: 07a2837c79d8bc440b4818f22d611e620f0a81c7
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: ca2cb2ae1f31a4315cb0e765195d63281a9f17e6
+PODFILE CHECKSUM: 184b1322780f9b915151176ad8b85440f71f0873
 
 COCOAPODS: 1.5.3

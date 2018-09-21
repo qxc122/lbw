@@ -268,6 +268,9 @@
     [super viewDidDisappear:animated];
     if (self.scrollTimer) {
         [self stopAnimating];
+        [self removeMovieNotificationObservers];
+        [self removeTimer];
+        [[UIApplication sharedApplication] removeObserver:self forKeyPath:@"idleTimerDisabled"];
         if ([self.navigationController.childViewControllers containsObject:self]) {
             if (self.player.isPlaying) {
                 [self.player pause];
@@ -275,9 +278,6 @@
         } else {
             [self.player shutdown];
         }
-        [self removeMovieNotificationObservers];
-        [self removeTimer];
-        [[UIApplication sharedApplication] removeObserver:self forKeyPath:@"idleTimerDisabled"];
     }
 }
 - (void)loadStateDidChange:(NSNotification*)notification

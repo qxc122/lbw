@@ -13,7 +13,7 @@
 #import <CoreTelephony/CTCellularData.h>
 
 @interface baseUICollectionVC ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
-@property (nonatomic,weak) UICollectionView *collectionView;
+
 @end
 
 
@@ -85,5 +85,58 @@
 }
 - (void)reload{
     [self.collectionView reloadData];
+}
+
+
+
+- (void)ColoadNewDataEndHeadsuccessSet:(UICollectionView *)TableView code:(NSInteger)code footerIsShow:(BOOL)footerIsShow hasMore:(NSString *)hasMore{
+    self.empty_type = code;
+    if (self.header.isRefreshing) {
+        [self.header endRefreshingWithCompletionBlock:^{
+            [self.collectionView reloadData];
+            if (footerIsShow) {
+                if(!self.footer){
+                    [self set_MJRefreshFooter];
+                    self.collectionView.mj_footer = self.footer;
+                }
+                if ([hasMore isEqualToString:@"1"]) {
+                    self.footer.hidden = NO;
+                    if (self.footer.state == MJRefreshStateNoMoreData) {
+                        [self.footer resetNoMoreData];
+                    }
+                }else{
+                    self.footer.hidden = YES;
+                }
+                self.Pagenumber++;
+            }
+        }];
+    }
+}
+- (void)ColoadNewDataEndHeadfailureSet:(UICollectionView *)TableView errorCode:(NSInteger)errorCode{
+    self.empty_type = errorCode;
+    kWeakSelf(self);
+    [self.header endRefreshingWithCompletionBlock:^{
+        [weakself.collectionView reloadData];
+    }];
+    if(self.footer){
+        self.footer.hidden = YES;
+    }
+}
+
+- (void)ColoadMoreDataEndFootsuccessSet:(UICollectionView *)TableView  hasMore:(NSString *)hasMore{
+    [self.footer endRefreshing];
+    if ([hasMore isEqualToString:@"1"]) {
+        self.footer.hidden = NO;
+        if (self.footer.state == MJRefreshStateNoMoreData) {
+            [self.footer resetNoMoreData];
+        }
+    }else{
+        self.footer.hidden = YES;
+    }
+    self.Pagenumber++;
+    [TableView reloadData];
+}
+- (void)ColoadMoreDataEndFootfailureSet:(UICollectionView *)TableView errorCode:(NSInteger)errorCode msg:(NSString *)msg{
+    [self.footer endRefreshing];
 }
 @end
