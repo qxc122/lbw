@@ -7,64 +7,44 @@
 //
 
 #import "LBAnchorListViewController.h"
-
 #import "LBMainRootCell.h"
 #import <MJRefresh.h>
 #import "SDCycleScrollView.h"
-#import "LSPaoMaView.h"
 #import "LiveBroadcastVc.h"
 #import "LBRemendToolView.h"
 #import "LBRechargerViewController.h"
+#import <JhtMarquee/JhtVerticalMarquee.h>
+#import <JhtMarquee/JhtHorizontalMarquee.h>
+
 @interface LBAnchorListViewController ()<SDCycleScrollViewDelegate>
 @property(nonatomic, strong)SDCycleScrollView *SDscrollView;
-@property(nonatomic, strong)NSMutableArray *anchorListArray;
-@property(nonatomic, assign)int page;
-
-@property(nonatomic, strong)LSPaoMaView *maView;
 @property (nonatomic, strong) NSMutableArray *dataloop;
+@property (nonatomic, weak) JhtHorizontalMarquee *horizontalMarquee;
 @end
 
 @implementation LBAnchorListViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.registerCoCells  =@[@"LBMainRootCell"];
-    self.anchorListArray = [NSMutableArray array];
-
-    [self setupView];
-
-    [self.header beginRefreshing];
-}
-
-- (void)setupView{
-    UIButton *reloadButton = [UIButton buttonWithType:0];
-    reloadButton.size = CGSizeMake(20, 20);
-    [reloadButton setImage:[UIImage imageNamed:@"action_refresh"] forState:0];
-    [reloadButton addTarget:self action:@selector(reloadButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
-    self.navigationItem.rightBarButtonItem = rightItem;
-
+    self.NodataTitle = @"该平台暂无主播";
     self.dataloop = [NSMutableArray array];
     SDCycleScrollView *SDscrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, kFullWidth, adjuctFloat(150)) delegate:self placeholderImage:[UIImage imageNamed:@"placeholder"]];
     [self.view addSubview:(self.SDscrollView=SDscrollView)];
     LBGetAdvListModelAll *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_guanggao];
     [self setGetAdvListArr:data];
     
-    UIImageView *hornImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5+SDscrollView.bottom, 20, 20)];
+    UIImageView *hornImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, SDscrollView.bottom, 20, 20)];
     hornImageView.image = [UIImage imageNamed:@"喇叭"];
     [self.view addSubview:hornImageView];
-    
-    LBGetVerCodeModel *database =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    LSPaoMaView *maView = [[LSPaoMaView alloc] initWithFrame:CGRectMake(30, hornImageView.top, kFullWidth-30, 20) title:database.msg];
-    maView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:maView];
+    [self setPaoMaDeng];
     
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view);
         make.right.equalTo(self.view);
-        make.top.equalTo(maView.mas_bottom);
+        make.top.equalTo(self.horizontalMarquee.mas_bottom);
         make.bottom.equalTo(self.view);
     }];
+    [self.header beginRefreshing];
 }
 #pragma mark 设置轮播广告
 -(void)setGetAdvListArr:(LBGetAdvListModelAll *)getAdvListArr{
@@ -80,16 +60,14 @@
     }
     self.SDscrollView.imageURLStringsGroup = SDArry;
 }
-- (void)reloadButtonClick{
-    [self.header beginRefreshing]; // 获取主播列表
-}
+
 - (void)loadNewData{
     WeakSelf
     self.Pagenumber = 1;
     [[ToolHelper shareToolHelper] getFcousListWithPage:[NSString stringWithFormat:@"%ld",(long)self.Pagenumber] livePlatID:self.livePlatID success:^(id json, NSString *msg, NSInteger code) {
         NSArray *arr = [NSArray modelArrayWithClass:[LBAnchorListModel class] json:json[@"data"]];
-        [weakSelf.anchorListArray removeAllObjects];
-        [weakSelf.anchorListArray addObjectsFromArray:arr];
+        [weakSelf.arry removeAllObjects];
+        [weakSelf.arry addObjectsFromArray:arr];
         
         BOOL isShow = NO;
         NSString *more = nil;
@@ -114,7 +92,7 @@
 //    self.Pagenumber++;
     [[ToolHelper shareToolHelper] getFcousListWithPage:[NSString stringWithFormat:@"%ld",(long)self.Pagenumber] livePlatID:self.livePlatID success:^(id json, NSString *msg, NSInteger code) {
         NSArray *arr = [NSArray modelArrayWithClass:[LBAnchorListModel class] json:json[@"data"]];
-        [weakSelf.anchorListArray addObjectsFromArray:arr];
+        [weakSelf.arry addObjectsFromArray:arr];
         NSString *more = nil;
         if (arr.count >= 40) {
             more = @"1";
@@ -127,64 +105,35 @@
     }];
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return self.anchorListArray.count;
-}
 
-- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    LBMainRootCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"LBMainRootCell" forIndexPath:indexPath];
-    cell.anchorModel = self.anchorListArray[indexPath.row];
-    return cell;
-}
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    LBAnchorListModel *model = self.anchorListArray[indexPath.row];
-
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if ([data.isFree intValue]){
-        NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
-        NSDateFormatter *format = [[NSDateFormatter alloc] init];
-        format.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        NSDate *oneData = [format dateFromString:expirationDate];
-        NSString *type = [[NSUserDefaults standardUserDefaults] objectForKey:@"type"];
-        
-        if ([type isEqualToString:@"0"]){
-            [self joinMembership];
-            return;
-        }else if([NSDate date].timeIntervalSince1970 >= oneData.timeIntervalSince1970){
-            [self RenewalFee];
-            return;
-        }
-    }
-    LiveBroadcastVc *vc =[LiveBroadcastVc new];
-    vc.anchorLiveUrl = model.anchorLiveUrl;
-    
-    vc.anchorID = model.anchorID;
-    vc.livePlatID = model.livePlatID;
-    vc.iconUrl = model.anchorThumb;
-    vc.nickname = model.anchorName;
-    [self.navigationController pushViewController:vc animated:YES];
-    
-}
-
-#pragma mark----UICollectionViewDelegateFlowLayout
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGFloat cellW = (kFullWidth-10*2)/3;
-    return CGSizeMake(cellW,cellW+20);
-}
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    return 10.0;
-}
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return 10.0;
-}
 - (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index{
     LBGetAdvListModel *model = self.dataloop[index];
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:model.linkUrl]]) {
         [[UIApplication sharedApplication]openURL:[NSURL URLWithString:model.linkUrl]];
     }
+}
+
+
+#pragma mark 设置跑马灯
+- (void)setPaoMaDeng{
+    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+    JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, SCREENWIDTH-30, 20) withSingleScrollDuration:data.msg.length*0.15];
+    self.horizontalMarquee = horizontalMarquee;
+    horizontalMarquee.textColor = MainColor;
+    horizontalMarquee.font = [UIFont systemFontOfSize:14];
+    [self.view addSubview:horizontalMarquee];
+    self.horizontalMarquee.text = data.msg;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    // 开启跑马灯
+    [_horizontalMarquee marqueeOfSettingWithState:MarqueeStart_H];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    // 关闭跑马灯
+    [_horizontalMarquee marqueeOfSettingWithState:MarqueeShutDown_H];
 }
 @end

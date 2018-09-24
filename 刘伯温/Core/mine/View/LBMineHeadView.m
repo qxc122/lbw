@@ -33,7 +33,9 @@
 
     if ([infoModel.type isEqualToString:@"0"]) {
         self.isVipLabel.text = @"您还没有开通会员";
+        self.levelImageView.hidden = YES;
     } else {
+        self.levelImageView.hidden = NO;
         self.isVipLabel.text = infoModel.expirationDate;
     }
     int teee = [Integral intValue];

@@ -12,6 +12,7 @@ DerivedData/
 zip/
 pic/
 profile/
+other/
 
 ## Various settings
 *.pbxuser

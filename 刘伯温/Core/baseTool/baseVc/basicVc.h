@@ -22,4 +22,7 @@
 
 - (void)joinMembership;
 - (void)RenewalFee;
+
+#pragma mark --签到
+- (void)basicVcsignButtonClick;
 @end

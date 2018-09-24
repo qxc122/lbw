@@ -6,11 +6,11 @@
 //  Copyright © 2018年 mac. All rights reserved.
 //
 
-#import "baseUICollectionVC.h"
+#import "AnchorBaseVc.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MyLoveListVc : baseUICollectionVC
+@interface MyLoveListVc : AnchorBaseVc
 
 @end
 

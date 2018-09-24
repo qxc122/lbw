@@ -8,8 +8,8 @@
 
 
 
-#import "baseUICollectionVC.h"
+#import "AnchorBaseVc.h"
 
-@interface LBSearchViewController : baseUICollectionVC
+@interface LBSearchViewController : AnchorBaseVc
 
 @end

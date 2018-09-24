@@ -210,33 +210,7 @@
 
 #pragma mark --签到
 - (void)signButtonClick{
-    
-    if (!ISLOGIN){
-        [self login];
-        return;
-    }
-    
-    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
-    paramDict[@"timestamp"] = [[LBToolModel sharedInstance] getTimestamp];
-    paramDict[@"token"] = TOKEN;
-    paramDict[@"jd"] = Longitude;
-    paramDict[@"wd"] = Latitude;
-    paramDict[@"address"] = Address;
-    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
-    WeakSelf
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [VBHttpsTool postWithURL:@"sign" params:paramDict success:^(id json) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-        if ([json[@"result"] intValue] == 1){
-            [LBShowRemendView showRemendViewText:[NSString stringWithFormat:@"签到成功，您将获得%@金币奖励",[[NSUserDefaults standardUserDefaults]objectForKey:@"singReward"]] andTitleText:@"签到" andEnterText:@"我知道了" andEnterBlock:^{
-                
-            }];
-        }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
-        }
-    } failure:^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-    }];
+    [self basicVcsignButtonClick];
 }
 
 

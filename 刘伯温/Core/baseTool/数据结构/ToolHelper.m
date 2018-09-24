@@ -30,15 +30,15 @@
 
 
 @implementation ToolHelper
-- (void)addArry:(NSArray *)arry{
-    if (arry) {
-        [self.list addObjectsFromArray:arry];
-    }
-    if (self.list.count>50) {
-        self.list = [[self.list subarrayWithRange:NSMakeRange(self.list.count-50, 50)] mutableCopy];
-    }
-    NSLog(@"%ld",self.list.count);
-}
+//- (void)addArry:(NSArray *)arry{
+//    if (arry) {
+//        [self.list addObjectsFromArray:arry];
+//    }
+//    if (self.list.count>50) {
+//        self.list = [[self.list subarrayWithRange:NSMakeRange(self.list.count-50, 50)] mutableCopy];
+//    }
+//    NSLog(@"%ld",self.list.count);
+//}
 - (instancetype)init
 {
     self = [super init];
@@ -49,7 +49,7 @@
 #endif
         self.reachability = [Reachability reachabilityForInternetConnection];
         [self.reachability startNotifier];
-        self.list = [NSMutableArray array];
+//        self.list = [NSMutableArray array];
     }
     return self;
 }
@@ -494,6 +494,29 @@ singleM(ToolHelper);
         failureBlock(error.code,error.userInfo.description);
     }];
 }
+
+
+#pragma --mark 获取播放历史
+- (void)getPlayeListWithPage:(NSString *)page
+                        success:(RequestSuccess)successBlock
+                        failure:(RequestFailure)failureBlock{
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"token"] = TOKEN;
+    paramDict[@"row"] = @"20";
+    paramDict[@"page"] = page;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
+    [VBHttpsTool postWithURL:@"getPlayeList" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            successBlock(json,json[@"info"],[json[@"result"] intValue]);
+        }else{
+            failureBlock([json[@"result"] intValue],json[@"info"]);
+        }
+    } failure:^(NSError *error) {
+        failureBlock(error.code,error.userInfo.description);
+    }];
+}
+
+
 
 #ifdef DEBUG
 - (void)networkStateChange{

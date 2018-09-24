@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,7 +14,6 @@
                 <outlet property="accontTextField" destination="ktS-nK-PU8" id="ncA-07-aku"/>
                 <outlet property="next" destination="6ge-RW-dJB" id="2ch-Ao-7Mb"/>
                 <outlet property="passworldTextField" destination="c0g-EK-N73" id="PnQ-WS-5fl"/>
-                <outlet property="qqButton" destination="6gf-8f-cu3" id="zRp-Q9-qUX"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -92,34 +90,6 @@
                         <action selector="forgetPassWordClick:" destination="-1" eventType="touchUpInside" id="iQL-Qp-5hs"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sE2-cs-75v">
-                    <rect key="frame" x="134" y="283" width="108" height="76"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="108" id="6ee-oQ-aAl"/>
-                        <constraint firstAttribute="height" constant="76" id="92Z-Pg-d4Z"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-40" minY="50" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="21" minY="-20" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="微信登录" image="ssdk_oks_classic_wechat">
-                        <color key="titleColor" red="0.1529411765" green="0.1529411765" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                    </state>
-                    <connections>
-                        <action selector="wechatLoginClick:" destination="-1" eventType="touchUpInside" id="9Tu-uF-X5j"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6gf-8f-cu3">
-                    <rect key="frame" x="257" y="283" width="53.5" height="76"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-50" minY="50" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="10" minY="-20" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="QQ登录" image="ssdk_oks_classic_qq">
-                        <color key="titleColor" red="0.1529411765" green="0.1529411765" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                    </state>
-                    <connections>
-                        <action selector="qqLoginClick:" destination="-1" eventType="touchUpInside" id="YpU-gH-ThP"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mPk-sX-QtO">
                     <rect key="frame" x="19" y="223" width="72" height="30"/>
                     <constraints>
@@ -136,27 +106,18 @@
             </subviews>
             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
             <constraints>
-                <constraint firstItem="sE2-cs-75v" firstAttribute="top" secondItem="6gf-8f-cu3" secondAttribute="top" id="6Zy-zg-3N3"/>
                 <constraint firstAttribute="trailing" secondItem="2mx-i8-ufs" secondAttribute="trailing" constant="20" id="BXH-3k-csW"/>
                 <constraint firstItem="2mx-i8-ufs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="ETu-8d-iWQ"/>
                 <constraint firstAttribute="trailing" secondItem="qe5-cg-Soo" secondAttribute="trailing" constant="20" id="FBu-H2-Vw8"/>
                 <constraint firstItem="mPk-sX-QtO" firstAttribute="top" secondItem="6ge-RW-dJB" secondAttribute="bottom" constant="19" id="KrQ-3j-Pf2"/>
-                <constraint firstItem="sE2-cs-75v" firstAttribute="baseline" secondItem="6gf-8f-cu3" secondAttribute="firstBaseline" id="P6F-qI-g6S"/>
                 <constraint firstItem="mPk-sX-QtO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="19" id="TYz-cy-KlS"/>
-                <constraint firstItem="sE2-cs-75v" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="VK7-Gd-KAC"/>
                 <constraint firstItem="qe5-cg-Soo" firstAttribute="top" secondItem="6ge-RW-dJB" secondAttribute="bottom" constant="19" id="Xxg-HZ-ifq"/>
-                <constraint firstItem="6gf-8f-cu3" firstAttribute="leading" secondItem="sE2-cs-75v" secondAttribute="trailing" constant="15" id="bha-nh-NnG"/>
                 <constraint firstItem="6ge-RW-dJB" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="19" id="cH9-aC-DYY"/>
                 <constraint firstItem="2mx-i8-ufs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="19" id="cTr-Cy-OLV"/>
-                <constraint firstItem="sE2-cs-75v" firstAttribute="top" secondItem="6ge-RW-dJB" secondAttribute="bottom" constant="79" id="oAJ-0T-ypq"/>
                 <constraint firstItem="6ge-RW-dJB" firstAttribute="top" secondItem="2mx-i8-ufs" secondAttribute="bottom" constant="30" id="ok7-it-gJc"/>
                 <constraint firstAttribute="trailing" secondItem="6ge-RW-dJB" secondAttribute="trailing" constant="20" id="xen-vP-38d"/>
             </constraints>
             <point key="canvasLocation" x="35.5" y="53.5"/>
         </view>
     </objects>
-    <resources>
-        <image name="ssdk_oks_classic_qq" width="46" height="45"/>
-        <image name="ssdk_oks_classic_wechat" width="46" height="45"/>
-    </resources>
 </document>

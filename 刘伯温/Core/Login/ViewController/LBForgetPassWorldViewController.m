@@ -51,7 +51,7 @@
         VC.isEnterVC = YES;
         VC.codeStr = self.codeStr;
         VC.phoneNun = self.phoneNun;
-        [self presentViewController:VC animated:YES completion:nil];
+        [self.navigationController pushViewController:VC animated:YES];
         
     }
 }
@@ -65,19 +65,27 @@
 //    paramDict[@"newPassword"] = [self.passwordTextField.text md5String];
     paramDict[@"verCode"] = self.codeStr;
     paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
+    [MBProgressHUD showLoadingMessage:@"修改中..." toView:self.view];
+    kWeakSelf(self);
     [VBHttpsTool postWithURL:@"forgetPassword" params:paramDict success:^(id json) {
+        [MBProgressHUD hideHUDForView:weakself.view];
         if ([json[@"result"] intValue] ==1){
-            [MBProgressHUD showMessage:@"修改成功" finishBlock:nil];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [MBProgressHUD showPrompt:@"修改成功"];
+            [weakself.navigationController popToRootViewControllerAnimated:YES];
+        }else{
+            [MBProgressHUD showPrompt:@"请重试" toView:weakself.view];
         }
     } failure:^(NSError *error) {
-        
+        [MBProgressHUD hideHUDForView:weakself.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakself.view];
     }];
+
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"修改密码";
     self.enterButton.backgroundColor = MainColor;
     if (self.isEnterVC){
         [self.enterButton setTitle:@"确定" forState:0];
@@ -102,7 +110,7 @@
 
 - (void)codeButtonClick{
     if (self.phoneNumTextField.text.length !=11){
-        [MBProgressHUD showMessage:@"手机号码格式不正确" finishBlock:nil];
+        [MBProgressHUD showPrompt:@"手机号码格式不正确" toView:self.view];
         return;
     }
     [self countDownWithTime:120 countDownBlock:^(int timeLeft) {
@@ -115,18 +123,24 @@
         self.codeButton.enabled = YES;
     }];
     
+    [MBProgressHUD showLoadingMessage:@"发送中..." toView:self.view];
+    
     
     NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
     paramDict[@"phone"] = self.phoneNumTextField.text;
     paramDict[@"type"] = @"1";
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
+    kWeakSelf(self);
     [VBHttpsTool postWithURL:@"getVerCode" params:paramDict success:^(id json) {
+        [MBProgressHUD hideHUDForView:weakself.view];
         if ([json[@"result"] intValue] ==1){
+            [MBProgressHUD showPrompt:@"发送成功" toView:weakself.view];
         }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakself.view];
         }
     } failure:^(NSError *error) {
-        
+        [MBProgressHUD hideHUDForView:weakself.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakself.view];
     }];
 }
 
@@ -161,19 +175,4 @@
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:NO];
 }
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 @end

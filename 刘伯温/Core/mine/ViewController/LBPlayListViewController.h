@@ -6,9 +6,9 @@
 //  Copyright © 2017年 mac. All rights reserved.
 //
 
-#import "basicVc.h"
+#import "AnchorBaseVc.h"
 
-@interface LBPlayListViewController : basicVc
-@property(nonatomic, copy)NSString *inerName;
+@interface LBPlayListViewController : AnchorBaseVc
+
 
 @end

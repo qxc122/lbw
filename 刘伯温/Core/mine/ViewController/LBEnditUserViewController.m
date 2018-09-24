@@ -71,22 +71,13 @@
     [window removeAllSubviews];
     window = nil;
     
+    
     LBLoginViewController *vc = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
     LBNavigationController *nav = [[LBNavigationController alloc]initWithRootViewController:vc];
     [UIApplication sharedApplication].keyWindow.rootViewController = nav;
-    
-//    [UIApplication sharedApplication].keyWindow.rootViewController = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
+
+    [[ChatTool shareChatTool] StopWork];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isLogin"];
-    
-    //退出当前登录的用户
-    [JMSGUser logout:^(id resultObject, NSError *error) {
-        if (!error) {
-            //退出登录成功
-            [[ToolHelper shareToolHelper].list  removeAllObjects];
-        } else {
-            //退出登录失败
-        }
-    }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

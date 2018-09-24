@@ -25,7 +25,7 @@
 #import "LBNavigationController.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
-
+#import "ChatTool.h"
 #import "LBRechargerViewController.h"
 #import "LBAnchorListViewController.h"
 #import "LBRemendToolView.h"

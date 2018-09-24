@@ -17,7 +17,9 @@
 #import "mainTableVc.h"
 @interface LBLoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *accontTextField;
-@property (weak, nonatomic) IBOutlet UIButton *qqButton;
+@property (weak, nonatomic)  UIButton *qqButton;
+@property (weak, nonatomic)  UIButton *WXButton;
+
 @property (weak, nonatomic) IBOutlet UITextField *passworldTextField;
 @property (weak, nonatomic) IBOutlet UIButton *next;
 @end
@@ -60,8 +62,6 @@
 WeakSelf
     [VBHttpsTool postWithURL:@"login" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
-
-
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"type"] forKey:@"type"];
 
             [[NSUserDefaults standardUserDefaults] setObject:json[@"data"][@"userID"] forKey:@"userID"];
@@ -92,51 +92,16 @@ WeakSelf
 }
 
 - (void)JIMlogin:(NSString *)username withPassword:(NSString *)passWord{
-    WeakSelf(self);
-    [JMSGUser loginWithUsername:username password:passWord completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            //登录成功
-            NSLog(@"IM 登陆成功");
-            [weakSelf updateUserInfo];
-        } else {
-            //登录失败
-            NSLog(@"IM 登陆失败");
-        }
-    }];
+    [[ChatTool shareChatTool] IMLogin];
 }
-- (void)updateUserInfo{
-    NSString *avatar = [[NSUserDefaults standardUserDefaults] objectForKey:@"avatar"];
-    if (avatar) {
-        SDWebImageDownloader *manager = [SDWebImageDownloader sharedDownloader];
-        [manager downloadImageWithURL:[NSURL URLWithString:avatar] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-            
-        } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
-            if (image) {
-                // do something with image
-                JMSGUserInfo *userInfo = [[JMSGUserInfo alloc] init];
-                userInfo.nickname = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
-                userInfo.avatarData = UIImagePNGRepresentation(image);
-                [JMSGUser updateMyInfoWithUserInfo:userInfo completionHandler:^(id resultObject, NSError *error) {
-                    if (!error) {
-                        //登录成功
-                        NSLog(@"IM  信息 更新成功");
-                    } else {
-                        //登录失败
-                        NSLog(@"IM 信息 更新失败");
-                    }
-                }];
-            }
-            
-        }];
-    }
-}
-- (IBAction)wechatLoginClick:(id)sender {
+
+- (void)wechatLoginClick:(id)sender {
     WeakSelf
     [LBOtherLoginTool otherLoginType:WxLognin LoginResult:^(NSDictionary *result) {
         [weakSelf loginEx:result];
     }];
 }
-- (IBAction)qqLoginClick:(id)sender {
+- (void)qqLoginClick:(id)sender {
     WeakSelf
     [LBOtherLoginTool otherLoginType:QQLogin LoginResult:^(NSDictionary *result) {
         [weakSelf loginEx:result];
@@ -160,7 +125,7 @@ WeakSelf
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.passworldTextField.secureTextEntry = YES;
-    self.qqButton.hidden = YES;
+//    self.qqButton.hidden = YES;
     self.next.backgroundColor =MainColor;
     
     self.title = @"登陆";
@@ -168,8 +133,53 @@ WeakSelf
     UIImage* image = [[UIImage imageNamed:Navigation_bar_return_button] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UIBarButtonItem* leftBarutton = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(popSelf)];
     self.navigationItem.leftBarButtonItem = leftBarutton;
-}
+    
+    UILabel *qq =[UILabel new];
+    [self.view addSubview:qq];
+    qq.font = [UIFont systemFontOfSize:15];
+    qq.textColor = [UIColor darkTextColor];
+    qq.text = @"QQ登陆";
 
+    
+    UILabel *wx =[UILabel new];
+    [self.view addSubview:wx];
+    wx.font = [UIFont systemFontOfSize:15];
+    wx.textColor = [UIColor darkTextColor];
+    wx.text = @"微信登陆";
+
+    CGFloat width = 90;
+    UIButton *qqButton = [UIButton new];
+    self.qqButton = qqButton;
+    [qqButton setImage:[UIImage imageNamed:@"ssdk_oks_classic_qq"] forState:UIControlStateNormal];
+    [qqButton addTarget:self action:@selector(qqLoginClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:qqButton];
+    [qqButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.next.mas_bottom).offset(70);
+        make.left.equalTo(self.view.mas_centerX);
+        make.width.equalTo(@(width));
+        make.height.equalTo(@(width));
+    }];
+    [qq mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.qqButton);
+        make.centerX.equalTo(self.qqButton);
+    }];
+    
+    UIButton *WXButton = [UIButton new];
+    self.WXButton = WXButton;
+    [WXButton setImage:[UIImage imageNamed:@"ssdk_oks_classic_wechat"] forState:UIControlStateNormal];
+    [WXButton addTarget:self action:@selector(wechatLoginClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:WXButton];
+    [WXButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.next.mas_bottom).offset(70);
+        make.right.equalTo(self.view.mas_centerX);
+        make.width.equalTo(@(width));
+        make.height.equalTo(@(width));
+    }];
+    [wx mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.WXButton);
+        make.centerX.equalTo(self.WXButton);
+    }];
+}
 
 - (void)loginEx:(NSDictionary *)userInfo{
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];

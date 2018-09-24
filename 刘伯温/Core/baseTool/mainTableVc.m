@@ -30,6 +30,7 @@
     [self setUpChildVC];
     [self upadateApp];
     self.delegate = self;
+    [[ChatTool shareChatTool] StartWork];
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];

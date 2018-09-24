@@ -24,6 +24,7 @@
 @property(nonatomic,strong)IJKFFMoviePlayerController * player;
 
 @property(nonatomic,strong)UIActivityIndicatorView *indicator;
+@property(nonatomic,weak)UIButton *NOAnchor;
 
 @property(nonatomic, strong)zhiboAndWebVc *zhiboAndWebVcvc;
 @property(nonatomic, strong)JCHATConversationViewController *chatRoom;
@@ -50,9 +51,6 @@
 @property(nonatomic, strong)UIButton *paseButton;
 
 @property (nonatomic,strong) NSTimer *scrollTimer;
-
-
-@property(nonatomic, assign)BOOL didPromptNotOnLine;
 @end
 
 @implementation LiveBroadcastVc
@@ -71,7 +69,7 @@
     self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.player.view.frame = self.view.bounds;
     self.player.scalingMode = IJKMPMovieScalingModeAspectFill; //缩放模式
-    self.player.shouldAutoplay = YES; //开启自动播放
+    self.player.shouldAutoplay = NO; //开启自动播放
     
 #ifdef DEBUG
     [IJKFFMoviePlayerController setLogReport:YES];
@@ -84,16 +82,31 @@
     self.view.autoresizesSubviews = YES;
     [self.view addSubview:self.player.view];
     
+    [self installMovieNotificationObservers];
     [self addChatRecodVc];
     [self addBottomView];
     [self addindicator];
+    UIButton *NOAnchor =[UIButton new];
+    [self.view addSubview:NOAnchor];
+    [NOAnchor setTitle:@"该主播已下线" forState:UIControlStateNormal];
+    self.NOAnchor = NOAnchor;
+    [self.NOAnchor mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view);
+        make.centerY.equalTo(self.view);
+        make.height.equalTo(@40);
+        make.width.equalTo(@130);
+    }];
+    [NOAnchor addTarget:self action:@selector(popSelf) forControlEvents:UIControlEventTouchUpInside];
+    NOAnchor.hidden = YES;
     [self AddguangaoView];
     [self.guangaoView show];
     [self addTopView];
     [self AddGesture];
+    [self.player prepareToPlay];
+    NSLog(@"准备链接中");
 }
 - (void)inputKeyboardWillHide{
-        [self setBottom:NO];
+    [self setBottom:NO];
 }
 - (void)inputKeyboardWillShow{
     [self setBottom:YES];
@@ -245,40 +258,38 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     if (!self.scrollTimer) {
-        [self installMovieNotificationObservers];
         if (self.player.isPreparedToPlay) {
-            if (!self.player.isPlaying) {
-                [self.player play];
-            }
-        } else {
-            if (!self.player.isPlaying) {
+            [self.player play];
+            [self stopAnimating];
+            [self setTopBtnEnable:YES];
+            NSLog(@"准备播放");
+        }else if(!self.player.isPlaying){
+            if (self.NOAnchor.hidden) {
                 [self startAnimating];
-                [self.player prepareToPlay];
+                NSLog(@"还在链接中");
             }
         }
+        [self installMovieNotificationObservers];
         [self creatTimer];
         [[UIApplication sharedApplication] addObserver:self forKeyPath:@"idleTimerDisabled" options:NSKeyValueObservingOptionNew context:nil];
     }
 }
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    [self RemoveKeyboard];
-}
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     if (self.scrollTimer) {
-        [self stopAnimating];
-        [self removeMovieNotificationObservers];
         [self removeTimer];
         [[UIApplication sharedApplication] removeObserver:self forKeyPath:@"idleTimerDisabled"];
         if ([self.navigationController.childViewControllers containsObject:self]) {
             if (self.player.isPlaying) {
                 [self.player pause];
+                NSLog(@"暂停");
             }
-        } else {
-            [self.player shutdown];
         }
     }
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self RemoveKeyboard];
 }
 - (void)loadStateDidChange:(NSNotification*)notification
 {
@@ -290,9 +301,15 @@
     IJKMPMovieLoadState loadState = _player.loadState;
     
     if ((loadState & IJKMPMovieLoadStatePlaythroughOK) != 0) {
+        if ([self.navigationController.topViewController isEqual:self]) {
+            [self.player play];
+            NSLog(@"链接 成功");
+        }
+        NSLog(@"播放");
+        [self stopAnimating];
+        [self setTopBtnEnable:YES];
         NSLog(@"loadStateDidChange: IJKMPMovieLoadStatePlaythroughOK: %d\n", (int)loadState);
     } else if ((loadState & IJKMPMovieLoadStateStalled) != 0) {
-        [self startAnimating];
         NSLog(@"loadStateDidChange: IJKMPMovieLoadStateStalled: %d\n", (int)loadState);
     } else {
         NSLog(@"loadStateDidChange: ???: %d\n", (int)loadState);
@@ -309,6 +326,7 @@
     switch (reason)
     {
         case IJKMPMovieFinishReasonPlaybackEnded:
+//            [self TheAnchorIsNot];
             NSLog(@"playbackStateDidChange: IJKMPMovieFinishReasonPlaybackEnded: %d\n", reason);
             break;
             
@@ -318,6 +336,7 @@
             
         case IJKMPMovieFinishReasonPlaybackError:
             [self TheAnchorIsNot];
+            NSLog(@"主播不在 TheAnchorIsNot");
             NSLog(@"playbackStateDidChange: IJKMPMovieFinishReasonPlaybackError: %d\n", reason);
             break;
             
@@ -348,12 +367,10 @@
             break;
         }
         case IJKMPMoviePlaybackStatePlaying: {
-            [self stopAnimating];
             NSLog(@"IJKMPMoviePlayBackStateDidChange %d: playing", (int)_player.playbackState);
             break;
         }
         case IJKMPMoviePlaybackStatePaused: {
-            [self startAnimating];
             NSLog(@"IJKMPMoviePlayBackStateDidChange %d: paused", (int)_player.playbackState);
             break;
         }
@@ -423,18 +440,8 @@
 }
 
 - (void)TheAnchorIsNot{
-    if (self.guangaoView.num>0) {
-        [self performSelector:@selector(TheAnchorIsNot) withObject:nil afterDelay:self.guangaoView.num];
-    }else{
-        [self PromptThatTheAnchorHasBeenOffline];
-    }
-}
-- (void)PromptThatTheAnchorHasBeenOffline{
-    if(!self.didPromptNotOnLine){
-        self.didPromptNotOnLine = YES;
-        [MBProgressHUD showPrompt:@"该主播已下线"];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+    [self stopAnimating];
+    self.NOAnchor.hidden = NO;
 }
 - (void)addindicator{
     _indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
@@ -445,13 +452,14 @@
     [self.view addSubview:_indicator];
 }
 - (void)startAnimating{
+    NSLog(@"开始动画");
     self.indicator.hidden = NO;
     [self.indicator startAnimating];
 }
 - (void)stopAnimating{
-    [self setTopBtnEnable:YES];
-    self.indicator.hidden = YES;
+    NSLog(@"结束动画");
     [self.indicator stopAnimating];
+    self.indicator.hidden = YES;
 }
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if (![UIApplication sharedApplication].idleTimerDisabled) {
@@ -696,7 +704,11 @@
 }
 
 - (void)dealloc{
+    [self removeMovieNotificationObservers];
     [self removeTimer];
+    [self.player shutdown];
+    
+    NSLog(@"销毁了。dealloc");
 }
 
 - (void )AddguangaoView{

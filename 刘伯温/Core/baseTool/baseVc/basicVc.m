@@ -113,4 +113,38 @@
         
     }];
 }
+
+
+#pragma mark --签到
+- (void)basicVcsignButtonClick{
+    
+    if (!ISLOGIN){
+        [self login];
+        return;
+    }
+    
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"timestamp"] = [[LBToolModel sharedInstance] getTimestamp];
+    paramDict[@"token"] = TOKEN;
+    paramDict[@"jd"] = Longitude;
+    paramDict[@"wd"] = Latitude;
+    paramDict[@"address"] = Address;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
+    WeakSelf
+    [MBProgressHUD showLoadingMessage:@"加载中..." toView:self.view];
+    [VBHttpsTool postWithURL:@"sign" params:paramDict success:^(id json) {
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        if ([json[@"result"] intValue] == 1){
+            LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+            [LBShowRemendView showRemendViewText:[NSString stringWithFormat:@"签到成功，您将获得%@金币奖励",data.singReward] andTitleText:@"签到" andEnterText:@"我知道了" andEnterBlock:^{
+                
+            }];
+        }else{
+            [MBProgressHUD showMessage:json[@"info"] view:weakSelf.view];
+        }
+    } failure:^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [MBProgressHUD showMessage:@"请重试" view:weakSelf.view];
+    }];
+}
 @end

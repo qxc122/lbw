@@ -29,9 +29,9 @@ typedef void (^RequestProgress)(NSProgress *uploadProgress);
 
 
 @interface ToolHelper : NSObject
-@property (strong, nonatomic) NSMutableArray *list;
-@property (assign, nonatomic) BOOL IskJMSGNetworkOK;
-- (void)addArry:(NSArray *)arry;
+//@property (strong, nonatomic) NSMutableArray *list;
+//@property (assign, nonatomic) BOOL IskJMSGNetworkOK;
+//- (void)addArry:(NSArray *)arry;
 
 singleH(ToolHelper);
 
@@ -125,4 +125,9 @@ singleH(ToolHelper);
 - (void)serachAnchorWithkeyword:(NSString *)keyword
                         success:(RequestSuccess)successBlock
                         failure:(RequestFailure)failureBlock;
+
+#pragma --mark 获取播放历史
+- (void)getPlayeListWithPage:(NSString *)page
+                     success:(RequestSuccess)successBlock
+                     failure:(RequestFailure)failureBlock;
 @end

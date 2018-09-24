@@ -220,50 +220,12 @@
 }
 
 - (void)signButtonClick{
-      LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    
-    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
-    paramDict[@"timestamp"] = [[LBToolModel sharedInstance] getTimestamp];
-    paramDict[@"token"] = TOKEN;
-    paramDict[@"jd"] = Longitude;
-    paramDict[@"wd"] = Latitude;
-    paramDict[@"address"] = Address;
-    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
-    WeakSelf
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [VBHttpsTool postWithURL:@"sign" params:paramDict success:^(id json) {
-        if ([json[@"result"] intValue] == 1){
-            [LBShowRemendView showRemendViewText:[NSString stringWithFormat:@"签到成功，您将获得%@金币奖励",data.singReward] andTitleText:@"签到" andEnterText:@"我知道了" andEnterBlock:^{
-                
-            }];
-        }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
-        }
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-    } failure:^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-    }];
+    [self basicVcsignButtonClick];
 }
 
 - (void)listButtonClick{
     LBExchangeRecordViewController *VC = [LBExchangeRecordViewController new];
     [self.navigationController pushViewController:VC animated:YES];
 }
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

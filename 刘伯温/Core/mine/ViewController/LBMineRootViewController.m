@@ -180,15 +180,9 @@
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"点播历史"]) {
         LBPlayListViewController *VC = [LBPlayListViewController new];
-        VC.inerName = @"getPlayeList";
         VC.title = @"历史记录";
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"我关注的主播"]) {
-//        LBPlayListViewController *VC = [LBPlayListViewController new];
-//        VC.title = @"关注的主播";
-//        VC.inerName = @"getFcousList";
-//        [self.navigationController pushViewController:VC animated:YES];
-        
         MyLoveListVc *VC = [MyLoveListVc new];
         VC.title = @"关注的主播";
         [self.navigationController pushViewController:VC animated:YES];

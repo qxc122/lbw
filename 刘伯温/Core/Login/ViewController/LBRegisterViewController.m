@@ -27,6 +27,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"注册";
     self.nextBtn.backgroundColor = MainColor;
     UIButton *codeButton = [UIButton buttonWithType:0];
     codeButton.frame = CGRectMake(0, 4, 100, self.codeTextField.height-8);

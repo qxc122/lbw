@@ -30,7 +30,6 @@
 		04B38DE31F795187009ACB97 /* LBRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B38DE11F795187009ACB97 /* LBRegisterViewController.m */; };
 		04B38DE41F795187009ACB97 /* LBRegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04B38DE21F795187009ACB97 /* LBRegisterViewController.xib */; };
 		04B4285C1F76947A004B519B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04B4285B1F76947A004B519B /* Launch Screen.storyboard */; };
-		04B4285F1F769918004B519B /* LSPaoMaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B4285E1F769918004B519B /* LSPaoMaView.m */; };
 		04B428621F76A094004B519B /* LBFeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B428611F76A094004B519B /* LBFeedBackViewController.m */; };
 		04B428651F76A0EE004B519B /* PlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B428631F76A0ED004B519B /* PlaceholderTextView.m */; };
 		04C29C421FB74EF10019E5EA /* LBGiftStoreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C29C411FB74EF10019E5EA /* LBGiftStoreCollectionViewCell.m */; };
@@ -102,6 +101,9 @@
 		DB48DEE62154C58D00D7B56E /* zhuboVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE52154C58D00D7B56E /* zhuboVc.m */; };
 		DB48DEE92154CBC000D7B56E /* PlatformListVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE82154CBC000D7B56E /* PlatformListVc.m */; };
 		DB48DEEC2154CBD200D7B56E /* MyLoveListVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEEB2154CBD200D7B56E /* MyLoveListVc.m */; };
+		DB48DEEE2155E76700D7B56E /* JhtMarquee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB48DEED2155E76700D7B56E /* JhtMarquee.framework */; };
+		DB48DEF12156194800D7B56E /* AnchorBaseVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEF02156194800D7B56E /* AnchorBaseVc.m */; };
+		DB48DEF421565F1D00D7B56E /* ChatTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEF321565F1D00D7B56E /* ChatTool.m */; };
 		DB5671682143A02300B2ADF8 /* ChatBubbleLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5670E92143A02200B2ADF8 /* ChatBubbleLayer.m */; };
 		DB5671692143A02300B2ADF8 /* ChatImageBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5670EB2143A02200B2ADF8 /* ChatImageBubble.m */; };
 		DB56716A2143A02300B2ADF8 /* JCHATAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5670EF2143A02200B2ADF8 /* JCHATAlbumViewController.m */; };
@@ -371,8 +373,6 @@
 		04B38DE11F795187009ACB97 /* LBRegisterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBRegisterViewController.m; sourceTree = "<group>"; };
 		04B38DE21F795187009ACB97 /* LBRegisterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LBRegisterViewController.xib; sourceTree = "<group>"; };
 		04B4285B1F76947A004B519B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		04B4285D1F769918004B519B /* LSPaoMaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSPaoMaView.h; sourceTree = "<group>"; };
-		04B4285E1F769918004B519B /* LSPaoMaView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSPaoMaView.m; sourceTree = "<group>"; };
 		04B428601F76A094004B519B /* LBFeedBackViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBFeedBackViewController.h; sourceTree = "<group>"; };
 		04B428611F76A094004B519B /* LBFeedBackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBFeedBackViewController.m; sourceTree = "<group>"; };
 		04B428631F76A0ED004B519B /* PlaceholderTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaceholderTextView.m; sourceTree = "<group>"; };
@@ -507,6 +507,11 @@
 		DB48DEE82154CBC000D7B56E /* PlatformListVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlatformListVc.m; sourceTree = "<group>"; };
 		DB48DEEA2154CBD100D7B56E /* MyLoveListVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyLoveListVc.h; sourceTree = "<group>"; };
 		DB48DEEB2154CBD200D7B56E /* MyLoveListVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyLoveListVc.m; sourceTree = "<group>"; };
+		DB48DEED2155E76700D7B56E /* JhtMarquee.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JhtMarquee.framework; sourceTree = "<group>"; };
+		DB48DEEF2156194800D7B56E /* AnchorBaseVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnchorBaseVc.h; sourceTree = "<group>"; };
+		DB48DEF02156194800D7B56E /* AnchorBaseVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnchorBaseVc.m; sourceTree = "<group>"; };
+		DB48DEF221565F1D00D7B56E /* ChatTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatTool.h; sourceTree = "<group>"; };
+		DB48DEF321565F1D00D7B56E /* ChatTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatTool.m; sourceTree = "<group>"; };
 		DB5670E82143A02200B2ADF8 /* ChatBubbleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatBubbleLayer.h; sourceTree = "<group>"; };
 		DB5670E92143A02200B2ADF8 /* ChatBubbleLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBubbleLayer.m; sourceTree = "<group>"; };
 		DB5670EA2143A02200B2ADF8 /* ChatImageBubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatImageBubble.h; sourceTree = "<group>"; };
@@ -824,6 +829,7 @@
 				04C5B8FB1F715ADB00BB41C4 /* MediaPlayer.framework in Frameworks */,
 				04C5B8F91F715AD300BB41C4 /* CoreVideo.framework in Frameworks */,
 				04C5B8F71F715AC500BB41C4 /* CoreMedia.framework in Frameworks */,
+				DB48DEEE2155E76700D7B56E /* JhtMarquee.framework in Frameworks */,
 				04C5B8F51F715ABB00BB41C4 /* CoreGraphics.framework in Frameworks */,
 				04C5B8F31F715AB000BB41C4 /* AVFoundation.framework in Frameworks */,
 				04C5B8F11F715AA600BB41C4 /* AudioToolbox.framework in Frameworks */,
@@ -1013,8 +1019,6 @@
 			children = (
 				04C29C471FB758200019E5EA /* UIButton+SSEdgeInsets.h */,
 				04C29C461FB758200019E5EA /* UIButton+SSEdgeInsets.m */,
-				04B4285D1F769918004B519B /* LSPaoMaView.h */,
-				04B4285E1F769918004B519B /* LSPaoMaView.m */,
 				04F456631F72B17C0088A5BE /* LBMainRootCell.h */,
 				04F456641F72B17C0088A5BE /* LBMainRootCell.m */,
 				041663D71F89D1EB009E4AFE /* LBShowRemendView.h */,
@@ -1036,6 +1040,8 @@
 				04C7567C1F7FD1810001D86F /* LBAnchorListViewController.m */,
 				DB48DEE12154C34400D7B56E /* LBWMainVc.h */,
 				DB48DEE22154C34400D7B56E /* LBWMainVc.m */,
+				DB48DEEF2156194800D7B56E /* AnchorBaseVc.h */,
+				DB48DEF02156194800D7B56E /* AnchorBaseVc.m */,
 				DB48DEE42154C58D00D7B56E /* zhuboVc.h */,
 				DB48DEE52154C58D00D7B56E /* zhuboVc.m */,
 				DB48DEE72154CBC000D7B56E /* PlatformListVc.h */,
@@ -1071,6 +1077,7 @@
 		04CFA5991F70CC2800D12AD4 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				DB48DEED2155E76700D7B56E /* JhtMarquee.framework */,
 				DBBA46D9214BF3A800E8E77B /* IJKMediaFramework.framework */,
 				04C4A43B1FEA833E00634A8A /* Core.entitlements */,
 				DBEB419721468CE60018D718 /*  增加的模块 */,
@@ -1251,6 +1258,8 @@
 			isa = PBXGroup;
 			children = (
 				DB5671A82143A05400B2ADF8 /* JChatConstants.h */,
+				DB48DEF221565F1D00D7B56E /* ChatTool.h */,
+				DB48DEF321565F1D00D7B56E /* ChatTool.m */,
 				DB56756C2143BB4F00B2ADF8 /* Resources */,
 				DB56745C2143A51B00B2ADF8 /* Controller */,
 				DB5671B92143A0AC00B2ADF8 /* Category */,
@@ -2284,6 +2293,7 @@
 				DBEB4191214671100018D718 /* UIColor+Add.m in Sources */,
 				DB5675162143A51B00B2ADF8 /* JCHATChatModel.m in Sources */,
 				3DF66DB72077BEC800A8DC37 /* WHC_PswInputView.m in Sources */,
+				DB48DEF12156194800D7B56E /* AnchorBaseVc.m in Sources */,
 				04E2E4771FB88A2A00B95285 /* UzysWrapperPickerController.m in Sources */,
 				DB56716C2143A02300B2ADF8 /* JCHATPhotoBrowserViewController.m in Sources */,
 				04E2E4781FB88A2B00B95285 /* VPImageCropperViewController.m in Sources */,
@@ -2365,6 +2375,7 @@
 				3DF66DB12077BEC800A8DC37 /* UIView+WHC_ViewProperty.m in Sources */,
 				04E2E44E1FB872C400B95285 /* LBExchangeRecordViewController.m in Sources */,
 				DB5671952143A02300B2ADF8 /* MJPhotoProgressView.m in Sources */,
+				DB48DEF421565F1D00D7B56E /* ChatTool.m in Sources */,
 				DB48DEE62154C58D00D7B56E /* zhuboVc.m in Sources */,
 				3DDCD95E2078EF400060F9D2 /* LBShowBannerView.m in Sources */,
 				04E2E47F1FB88BB300B95285 /* YBAlertView.m in Sources */,
@@ -2385,7 +2396,6 @@
 				04E2E44B1FB86ACC00B95285 /* LBRemendToolView.m in Sources */,
 				DB56716A2143A02300B2ADF8 /* JCHATAlbumViewController.m in Sources */,
 				04C756891F7FE9DF0001D86F /* LBActivationListViewController.m in Sources */,
-				04B4285F1F769918004B519B /* LSPaoMaView.m in Sources */,
 				DBEB41492146679E0018D718 /* notificationCell.m in Sources */,
 				3DF66DB62077BEC800A8DC37 /* WHC_PlateView.m in Sources */,
 				04B428651F76A0EE004B519B /* PlaceholderTextView.m in Sources */,

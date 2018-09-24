@@ -35,22 +35,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     
-
     mainTableVc *vc = [mainTableVc new];
     vc.isaidong = @"1";
     self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:vc];
     [self.window makeKeyAndVisible];
-    
-//    UIViewController *NaVC = vc;
-//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ConfigurationKey"]){
-//        WHC_GestureUnlockScreenVC  * unlockVC = [WHC_GestureUnlockScreenVC new];
-//        unlockVC.unlockType = ClickNumberType;
-//        [vc  presentViewController:unlockVC animated:NO completion:nil];
-//        NaVC = vc.presentedViewController;
-//    }
-//    AdvertisingVc *AdvertisingVcvc =[AdvertisingVc new];
-//    [NaVC presentViewController:AdvertisingVcvc animated:NO completion:nil];
-    
+
     BOOL tmp;;
 #ifdef DEBUG
     tmp = NO;
@@ -69,10 +58,14 @@
     UMConfigInstance.channelId = @"";
     [MobClick startWithConfigure:UMConfigInstance];//配置以上参数后调用此方法初始化SDK！
     [MobClick setAppVersion:XcodeAppVersion]; //参数为NSString * 类型,自定义app版本信息，如果不设置，默认从CFBundleVersion里取
-    
+
+#ifdef DEBUG
     /* 打开调试日志 */
     [[UMSocialManager defaultManager] openLog:NO];
-    
+#else
+    /* 打开调试日志 */
+    [[UMSocialManager defaultManager] openLog:NO];
+#endif
     /* 设置友盟appkey */
     [[UMSocialManager defaultManager] setUmSocialAppkey:USHARE_APPKEY];
     
@@ -96,22 +89,12 @@
     }];
     [self configUSharePlatforms];
     [self startLocation];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(kJMSGNetworkSucces)
-                                                 name:kJMSGNetworkDidLoginNotification
-                                               object:nil];
     return YES;
-}
-#pragma mark --聊天室链接成功
-- (void)kJMSGNetworkSucces{
-    NSLog(@"kJMSGNetworkSucces");
-    [ToolHelper shareToolHelper].IskJMSGNetworkOK = YES;
 }
 - (void)configUSharePlatforms
 {
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1106359145" appSecret:@"7y8n0clYufA1qgys" redirectURL:@"http://www.umeng.com/social"];
-    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_Qzone appKey:@"1106359145" appSecret:@"7y8n0clYufA1qgys" redirectURL:@"http://www.umeng.com/social"];
+    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1107782599" appSecret:@"OXkVbGrd8Jsyu54b" redirectURL:@"http://www.umeng.com/social"];
+    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_Qzone appKey:@"1107782599" appSecret:@"OXkVbGrd8Jsyu54b" redirectURL:@"http://www.umeng.com/social"];
     [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:@"wx813be7b408c68019" appSecret:@"b0927db2cae4f8c7ae3afa3dd5c7fae6" redirectURL:@"http://www.umeng.com/social"];
 }
 
@@ -183,20 +166,6 @@
     //关闭U-Push自带的弹出框
     [UMessage setAutoAlert:NO];
     [UMessage didReceiveRemoteNotification:userInfo];
-    
-    //    self.userInfo = userInfo;
-    //    //定制自定的的弹出框
-    //    if([UIApplication sharedApplication].applicationState == UIApplicationStateActive)
-    //    {
-    //        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"标题"
-    //                                                            message:@"Test On ApplicationStateActive"
-    //                                                           delegate:self
-    //                                                  cancelButtonTitle:@"确定"
-    //                                                  otherButtonTitles:nil];
-    //
-    //        [alertView show];
-    //
-    //    }
 }
 
 //iOS10新增：处理前台收到通知的代理方法
@@ -291,21 +260,21 @@
              
              NSString *address = [NSString stringWithFormat:@"%@,%@,%@",placemark.administrativeArea,city,placemark.subLocality];
              [[NSUserDefaults standardUserDefaults] setObject:address forKey:@"address"];
-             DDLog(@"address =======%@%@%@%@%@",placemark.administrativeArea,city,placemark.subLocality,placemark.thoroughfare,placemark.subThoroughfare);
+//             DDLog(@"address =======%@%@%@%@%@",placemark.administrativeArea,city,placemark.subLocality,placemark.thoroughfare,placemark.subThoroughfare);
 
              
          }
-         else if (error == nil && [array count] == 0)
-         {
-             DDLog(@"No results were returned.");
-         }
-         else if (error != nil)
-         {
-             DDLog(@"An error occurred = %@", error);
-         }
+//         else if (error == nil && [array count] == 0)
+//         {
+//             DDLog(@"No results were returned.");
+//         }
+//         else if (error != nil)
+//         {
+//             DDLog(@"An error occurred = %@", error);
+//         }
+         
+         [_locationManager stopUpdatingLocation];
      }];
-    
-    
     //系统会一直更新数据，直到选择停止更新，因为我们只需要获得一次经纬度即可，所以获取之后就停止更新
 }
 

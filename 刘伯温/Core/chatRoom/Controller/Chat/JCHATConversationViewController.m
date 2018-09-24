@@ -23,7 +23,7 @@
 #import "webAddIMVc.h"
 #import "ChatRecordCell.h"
 #import "mainTableVc.h"
-@interface JCHATConversationViewController () {
+@interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate> {
 @private
     BOOL isNoOtherMessage;
     NSInteger messageOffset;
@@ -73,7 +73,7 @@
     self.title = @"聊天室";
     [self setupView];
     [self addNotification];
-    [self addDelegate];
+//    [self addDelegate];
     [self getGroupMemberListWithGetMessageFlag:YES];
     self.moreViewBottomConstrait.constant = IMkTabBarHeight;
     self.view.backgroundColor= [UIColor whiteColor];
@@ -85,12 +85,9 @@
     if ([self.zhibojian isEqualToString:@"1"]) {
         [self zhibojianSet];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(kJMSGNetworkSucces)
-                                                 name:kJMSGNetworkDidLoginNotification
-                                               object:nil];
     [self TipsInChatRoomConnection];
+    
+    [ChatTool shareChatTool].delegate = self;
 }
 #pragma  mark 聊天室连接成功之间添加蒙板
 - (void)TipsInChatRoomConnection{
@@ -143,7 +140,6 @@
     [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateSelected];
     
     if(self.toolBarContainer.toolbar.textView){
-//        self.toolBarContainer.toolbar.textView.placeHolderTextColor = [UIColor grayColor];
         self.toolBarContainer.toolbar.textView.placeHolder = @"说点什么吧...";
     }
 }
@@ -195,130 +191,38 @@
         [self.navigationController pushViewController:self.CPwebVc animated:NO];
     }
 }
-- (void)IMLogin{
-    NSString *userName = [[NSUserDefaults standardUserDefaults] objectForKey:@"chat_username"];
-    NSString *passWord = [[NSUserDefaults standardUserDefaults] objectForKey:@"chat_password"];
-    kWEAKSELF
-    [JMSGUser loginWithUsername:userName password:passWord completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            //登录成功
-            NSLog(@"IM 登陆成功");
-            [weakSelf getMyChatRoomListCompletionHandler];
-        } else {
-            //登录失败
-            NSLog(@"IM 登陆失败");
-             [weakSelf performSelector:@selector(IMLogin) withObject:nil afterDelay:0.3];
-        }
-    }];
-}
-
-- (void)getMyChatRoomListCompletionHandler{
-    kWEAKSELF
-    [JMSGChatRoom getMyChatRoomListCompletionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            if ([resultObject isKindOfClass:[NSArray class]]) {
-                NSArray *ttmp = resultObject;
-                NSLog(@"聊天室 获取成功");
-                if (ttmp.count) {
-                     NSLog(@"已经加入了聊天室");
-                    if([ToolHelper shareToolHelper].list.count > 0){
-                        JMSGChatRoom *tmp = ttmp.firstObject;
-                        weakSelf.conversation = [JMSGConversation chatRoomConversationWithRoomId:tmp.roomID];
-                        
-                        LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-                        if ([data.main_room_forbidden isEqualToString:@"0"]) {
-                            weakSelf.maskBtn.hidden = YES;
-                        }
-                        
-                        [weakSelf onReceiveChatRoomConversation:weakSelf.conversation messages:[ToolHelper shareToolHelper].list];
-                         NSLog(@"有了历史记录");
-                        
-                        if (weakSelf.maskBtn.tag == 4) {
-                            [MBProgressHUD showPrompt:@"聊天室链接成功～" toView:self.view];
-                        }
-                    }else{
-                        NSLog(@"还没有历史记录 退出重新加入聊天室");
-                        [weakSelf IMLogout];
-                    }
-                }else{
-                    //去加入聊天室
-                    NSLog(@" 还没有加入任何聊天室 去加入聊天室");
-                    [weakSelf addChatRoom];
-//                    [weakSelf performSelector:@selector(addChatRoom) withObject:nil afterDelay:0.3];
-                }
-            }
-        }else{
-            [weakSelf performSelector:@selector(getMyChatRoomListCompletionHandler) withObject:nil afterDelay:0.3];
-            NSLog(@"聊天室 获取失败 %@",error.description);
-        }
-    }];
-}
-- (void)IMLogout{
-    kWEAKSELF
-    NSLog(@"推出 聊天室 中");
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    [JMSGChatRoom leaveChatRoomWithRoomId:data.main_room_id completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            NSLog(@"推出 聊天室成功");
-            weakSelf.conversation = nil;
-            [weakSelf addChatRoom];
-        }else{
-            NSLog(@"推出 聊天室失败 %@",error.description);
-            //            [weakSelf IMLogout];
-            [weakSelf performSelector:@selector(IMLogout) withObject:nil afterDelay:0.1];
-        }
-    }];
-}
-- (void)addChatRoom{
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    kWEAKSELF
-    [JMSGChatRoom enterChatRoomWithRoomId:data.main_room_id completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            NSLog(@"加入聊天室成功");
-            weakSelf.conversation = resultObject;
-            
-            LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-            if ([data.main_room_forbidden isEqualToString:@"0"]) {
-                weakSelf.maskBtn.hidden = YES;
-            }
-
-            if (weakSelf.maskBtn.tag == 4) {
-                [MBProgressHUD showPrompt:@"聊天室链接成功～" toView:self.view];
-            }
-        }else{
-            NSLog(@"加入聊天室失败 %@",error.description);
-            [weakSelf performSelector:@selector(addChatRoom) withObject:nil afterDelay:0.3];
-        }
-    }];
-}
-- (void)kJMSGNetworkSucces{
-    NSLog(@"kJMSGNetworkSucces");
-    if (![ToolHelper shareToolHelper].IskJMSGNetworkOK) {
-        [ToolHelper shareToolHelper].IskJMSGNetworkOK = YES;
-        [self IMRecordPull];
-    }
-}
 
 - (void)viewWillAppear:(BOOL)animated {
     DDLogDebug(@"Event - viewWillAppear");
     [super viewWillAppear:animated];
     [self.toolBarContainer.toolbar drawRect:self.toolBarContainer.toolbar.frame];
 
-    if ([ToolHelper shareToolHelper].IskJMSGNetworkOK) {
-        [self IMRecordPull];
-    }
+
     LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
     if ([data.main_room_forbidden isEqualToString:@"1"]) {
         self.maskBtn.hidden = NO;
     }
-}
-- (void)IMRecordPull{
-    if (!self.conversation) {
-        [self IMLogin];
-    }else{
-        [self RefreshMessage];
+    if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
+        [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
     }
 }
+
+
+- (void)ChatToolonReceiveChatRoomConversation:(JMSGConversation *)conversation
+                                     messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
+    [self onReceiveChatRoomConversation:conversation messages:messages];
+}
+
+- (void)ChatToolkJMSGNetworkSucces{
+    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+    if (![data.main_room_forbidden isEqualToString:@"1"]) {
+        self.maskBtn.hidden = YES;
+    }
+    if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
+        [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
+    }
+}
+
 - (void)RefreshMessage{
     kWEAKSELF
     [_conversation refreshTargetInfoFromServer:^(id resultObject, NSError *error) {
@@ -372,7 +276,7 @@
     [self.toolBarContainer.toolbar.textView removeObserver:self forKeyPath:@"contentSize"];
     //remove delegate
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAlertToSendImage object:self];
-    [JMessage removeDelegate:self withConversation:_conversation];
+//    [JMessage removeDelegate:self withConversation:_conversation];
     NSLog(@"dealloc CHatROOM\n\n\n\n\n\n\n\n");
 }
 
@@ -506,14 +410,7 @@
 - (void)onReceiveChatRoomConversation:(JMSGConversation *)conversation
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     
-    [[ToolHelper shareToolHelper] addArry:messages];
-//    NSArray *array = messages;
-//    NSString *info = [NSString stringWithFormat:@"receive chat room message count:%lu \n, %@", (unsigned long)array.count, array];
-//    NSLog(@"info=%@",info);
-    
-//    if (messages.count > 20) {
-//        messages = [messages subarrayWithRange:NSMakeRange(messages.count-20, 20)];
-//    }
+
     NSLog(@"tmo");
     for (JMSGMessage *message in messages) {
 //        JMSGMessage *message = [JMSGMessage alloc];

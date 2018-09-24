@@ -12,26 +12,28 @@
 #import "SDCycleScrollView.h"
 #import "PlatformListVc.h"
 #import "MyLoveListVc.h"
-#import "LSPaoMaView.h"
 #import "LBSearchViewController.h"
 #import "LBShowRemendView.h"
 #import "LBLoginViewController.h"
+#import <JhtMarquee/JhtVerticalMarquee.h>
+#import <JhtMarquee/JhtHorizontalMarquee.h>
+
 #define WindowsSize [UIScreen mainScreen].bounds.size
 
 
 @interface LBWMainVc () <JXCategoryViewDelegate,SDCycleScrollViewDelegate>
 @property (nonatomic, assign) NSInteger currentIndex;
-//@property (nonatomic, assign) BOOL isNeedIndicatorPositionChangeItem;
 @property (nonatomic, strong) JXCategoryTitleView *categoryView;
 @property (nonatomic, strong) UIScrollView *scrollView;
-//@property (nonatomic, assign) BOOL shouldHandleScreenEdgeGesture;
 
 @property(nonatomic, strong)SDCycleScrollView *SDscrollView;
 @property (nonatomic, strong) NSArray *titles;
-@property(nonatomic, strong)LSPaoMaView *maView;
 @property(nonatomic, assign)NSInteger selectIndex;
 
 @property (nonatomic, strong) NSMutableArray *dataloop;
+
+
+@property (nonatomic, weak) JhtHorizontalMarquee *horizontalMarquee;
 @end
 
 
@@ -48,6 +50,11 @@
     LBGetAdvListModelAll *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_guanggao];
     [self setGetAdvListArr:data];
     [self getAdvList];
+    
+    UIImageView *hornImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, self.SDscrollView.frame.size.height, 20, 20)];
+    hornImageView.image = [UIImage imageNamed:@"喇叭"];
+    [self.view addSubview:hornImageView];
+    
     LBGetVerCodeModel *dataPMD =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
     if (dataPMD) {
         [self setPaoMaDeng];
@@ -202,20 +209,7 @@
     }
     self.SDscrollView.imageURLStringsGroup = SDArry;
 }
-#pragma mark 设置跑马灯
-- (void)setPaoMaDeng{
-    if (!self.maView) {
-        UIImageView *hornImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, self.SDscrollView.frame.size.height, 20, 20)];
-        hornImageView.image = [UIImage imageNamed:@"喇叭"];
-        [self.view addSubview:hornImageView];
-        
-        LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        LSPaoMaView *maView = [[LSPaoMaView alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, kFullWidth-30, 20) title:data.msg];
-        self.maView = maView;
-        maView.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:(self.maView=maView)];
-    }
-}
+
 
 #pragma mark 搜素主播
 - (void)searchButtonClick{
@@ -229,34 +223,7 @@
 
 #pragma mark  签到
 - (void)signButtonClick{
-    
-    if (!ISLOGIN){
-        [self login];
-        return;
-    }
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    
-    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
-    paramDict[@"timestamp"] = [[LBToolModel sharedInstance] getTimestamp];
-    paramDict[@"token"] = TOKEN;
-    paramDict[@"jd"] = Longitude;
-    paramDict[@"wd"] = Latitude;
-    paramDict[@"address"] = Address;
-    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
-    WeakSelf
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [VBHttpsTool postWithURL:@"sign" params:paramDict success:^(id json) {
-        if ([json[@"result"] intValue] == 1){
-            [LBShowRemendView showRemendViewText:[NSString stringWithFormat:@"签到成功，您将获得%@金币奖励",data.singReward] andTitleText:@"签到" andEnterText:@"我知道了" andEnterBlock:^{
-                
-            }];
-        }else{
-            [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
-        }
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-    } failure:^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
-    }];
+    [self basicVcsignButtonClick];
 }
 
 
@@ -291,13 +258,28 @@
     }
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//    [self.maView start];
-//}
-//
-//- (void)viewWillDisappear:(BOOL)animated{
-//    [super viewWillDisappear:animated];
-//    [self.maView stop];
-//}
+#pragma mark 设置跑马灯
+- (void)setPaoMaDeng{
+    if (!self.horizontalMarquee) {
+        LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+        JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, SCREENWIDTH-30, 20) withSingleScrollDuration:data.msg.length*0.15];
+        self.horizontalMarquee = horizontalMarquee;
+        horizontalMarquee.textColor = MainColor;
+        horizontalMarquee.font = [UIFont systemFontOfSize:14];
+        [self.view addSubview:horizontalMarquee];
+        self.horizontalMarquee.text = data.msg;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    // 开启跑马灯
+    [_horizontalMarquee marqueeOfSettingWithState:MarqueeStart_H];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    // 关闭跑马灯
+    [_horizontalMarquee marqueeOfSettingWithState:MarqueeShutDown_H];
+}
 @end
