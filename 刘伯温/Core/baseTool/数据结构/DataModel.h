@@ -134,6 +134,8 @@
 @end
 
 
+
+
 @interface LBAnchorListModel : NSObject
 @property(nonatomic, copy)NSString *ID;
 @property(nonatomic, copy)NSString *livePlatID;
@@ -144,6 +146,7 @@
 @property(nonatomic, copy)NSString *playerTimes;
 @property(nonatomic, copy)NSString *lineState;
 @end
+
 
 
 @interface LBGetAdvListModelAll : NSObject

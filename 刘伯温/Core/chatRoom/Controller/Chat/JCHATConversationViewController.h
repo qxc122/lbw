@@ -6,7 +6,8 @@
 //  Copyright (c) 2014年 Apple. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+//#import <UIKit/UIKit.h>
+#import "basicVc.h"
 #import "JCHATToolBar.h"
 #import "JCHATMoreView.h"
 #import "JCHATRecordAnimationView.h"
@@ -25,7 +26,7 @@
 static NSInteger const messagePageNumber = 25;
 static NSInteger const messagefristPageNumber = 20;
 
-@interface JCHATConversationViewController : UIViewController <
+@interface JCHATConversationViewController : basicVc <
 UITableViewDataSource,
 UITableViewDelegate,
 SendMessageDelegate,
@@ -74,5 +75,12 @@ UITextViewDelegate>{
 
 
 @property(strong, nonatomic) NSString *zhibojian; //在直播间的标志
+
+@property(assign, nonatomic) BOOL sendPng; //最右边替换成发送图片
+
+
 @property(strong, nonatomic) NSString *returnzhibojian; //石否返回直播间的
+
+
+@property(assign, nonatomic) BOOL gotoZhiBoVc; //是否需要跳转到直播间的按钮  //默认为NO 不需要
 @end

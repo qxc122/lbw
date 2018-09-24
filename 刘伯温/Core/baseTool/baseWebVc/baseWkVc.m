@@ -80,12 +80,18 @@
     [webView loadRequest:request];
 
     [MBProgressHUD showLoadingMessage:@"正在努力加载中..." toView:self.view];
+    [self sendFront];
     
     self.webView.opaque = NO;
     [self setNavBtn];
     
     
 //        NSLog(@"url =%@",reqUrl);
+}
+
+
+- (void)sendFront{
+    
 }
 
 - (void)hideBottomBarWhenPush
@@ -160,6 +166,7 @@
         if ([navigationAction.request.URL.absoluteString hasSuffix:@"regist/Login"]) {
             [MBProgressHUD hideHUDForView:self.view];
             [MBProgressHUD showLoadingMessage:@"登陆成功，精彩马上呈现～" toView:self.view];
+            [self sendFront];
         } else if ([navigationAction.request.URL.absoluteString containsString:@"location"]) {
             [MBProgressHUD hideHUDForView:self.view];
             self.islogSuccessfully = YES;
@@ -236,9 +243,11 @@
 - (void)reloadButtonClick{
     if (self.webView.isLoading) {
         [MBProgressHUD showPrompt:@"正在加载中,请稍后刷新！" toView:self.view];
+        [self sendFront];
     }else{
         [self.webView reloadFromOrigin];
         [MBProgressHUD showLoadingMessage:@"正在刷新中..." toView:self.view];
+        [self sendFront];
     }
 }
 

@@ -79,6 +79,7 @@
     [self setChildVC:webVC3 title:@"娱乐城" image:@"tab_lbw" selectedImage:@"tab_lbw_press"];
     
     JCHATConversationViewController *webVC = [JCHATConversationViewController new];
+    webVC.gotoZhiBoVc = YES;
     [self setChildVC:webVC title:@"聊天室" image:@"tab_lt" selectedImage:@"tab_lt_press"];
     
     baseWkVc *webVC2 = [baseWkVc new];

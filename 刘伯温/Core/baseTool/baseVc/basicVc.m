@@ -140,11 +140,11 @@
                 
             }];
         }else{
-            [MBProgressHUD showMessage:json[@"info"] view:weakSelf.view];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
         }
     } failure:^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view];
-        [MBProgressHUD showMessage:@"请重试" view:weakSelf.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
     }];
 }
 @end

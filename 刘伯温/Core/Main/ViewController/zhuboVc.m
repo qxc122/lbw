@@ -29,6 +29,9 @@
     WeakSelf
     [[ToolHelper shareToolHelper] getReAnchorListSuccess:^(id json, NSString *msg, NSInteger code) {
         NSArray *arr = [NSArray modelArrayWithClass:[LBAnchorListModel class] json:json[@"data"]];
+        if (arr.count) {
+            [NSKeyedArchiver archiveRootObject:arr.firstObject toFile:PATH_OF_ZHUBO];
+        }
         [weakSelf.arry removeAllObjects];
         [weakSelf.arry addObjectsFromArray:arr];
         [weakSelf ColoadNewDataEndHeadsuccessSet:nil code:[json[@"result"] intValue]  footerIsShow:NO hasMore:nil];

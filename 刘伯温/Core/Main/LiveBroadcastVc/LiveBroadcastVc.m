@@ -193,16 +193,27 @@
     [self setTopBtnEnable:NO];
 }
 - (void)setTopBtnEnable:(BOOL)enable{
-    self.tousu.enabled = enable;
-    self.shareButton.enabled = enable;
-    self.attentionButton.enabled = enable;
+//    self.tousu.enabled = enable;
+//    self.shareButton.enabled = enable;
+//    self.attentionButton.enabled = enable;
 }
 #pragma mark 打开聊天室
 - (void)ChatRoomButtonClick{
-    if (!self.chatRoom) {
-        self.chatRoom = [JCHATConversationViewController new];
+    UIViewController *chatRoom;
+    for (UIViewController *tmp  in self.navigationController.childViewControllers) {
+        if ([tmp isKindOfClass:[JCHATConversationViewController class]]) {
+            chatRoom = tmp;
+            break;
+        }
     }
-    [self.navigationController pushViewController:self.chatRoom animated:YES];
+    if (chatRoom) {
+        [self.navigationController popToViewController:chatRoom animated:YES];
+    } else {
+        if (!self.chatRoom) {
+            self.chatRoom = [JCHATConversationViewController new];
+        }
+        [self.navigationController pushViewController:self.chatRoom animated:YES];
+    }
 }
 - (void)addBottomView{
     UIButton *ChatRoomButton = [UIButton buttonWithType:0];
@@ -550,19 +561,19 @@
         [MBProgressHUD hideHUDForView:weakSelf.view];
         if ([json[@"result"] intValue]==1){
             if (weakSelf.isAttention){
-                [MBProgressHUD showMessage:@"取消关注成功" toView:weakSelf.view];
+                [MBProgressHUD showPrompt:@"取消关注成功" toView:weakSelf.view];
                 [weakSelf.attentionButton setImage:[UIImage imageNamed:@"关注"] forState:0];
             }else{
-                [MBProgressHUD showMessage:@"关注成功" toView:weakSelf.view];
+                [MBProgressHUD showPrompt:@"关注成功" toView:weakSelf.view];
                 [weakSelf.attentionButton setImage:[UIImage imageNamed:@"关注-select"] forState:0];
             }
             weakSelf.isAttention =!weakSelf.isAttention;
         }else{
-            [MBProgressHUD showMessage:json[@"info"] toView:weakSelf.view];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
         }
     } failure:^(NSError *error) {
         [MBProgressHUD hideHUDForView:weakSelf.view];
-        [MBProgressHUD showMessage:@"请重试" toView:weakSelf.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
     }];
 }
 

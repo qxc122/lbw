@@ -112,6 +112,24 @@
 }
 @end
 
+
+@implementation LBAnchorListModelList
++ (NSDictionary *)mj_replacedKeyFromPropertyName{
+    /* 返回的字典，key为模型属性名，value为转化的字典的多级key */
+    return @{
+             @"arry" : @"data",
+             };
+}
++ (NSDictionary *)mj_objectClassInArray
+{
+    return @{
+             @"arry" : @"LBAnchorListModel",
+             };
+}
+@end
+
+
+
 @implementation WithdrawalOne
 
 @end
@@ -161,24 +179,10 @@ MJExtensionCodingImplementation
 
 
 @implementation LBAnchorListModel
+MJExtensionCodingImplementation
 + (NSDictionary *)modelCustomPropertyMapper {
     
     return@{@"ID" :@"id"};
-}
-@end
-
-
-
-@implementation LBAnchorListModelList
-+ (NSDictionary *)modelCustomPropertyMapper {
-    
-    return@{@"ID" :@"id"};
-}
-+ (NSDictionary *)mj_objectClassInArray
-{
-    return @{
-             @"data" : @"LBAnchorListModel",
-             };
 }
 @end
 

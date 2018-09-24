@@ -35,6 +35,7 @@
     UIButton *_rightBtn;
     NSMutableDictionary *_refreshAvatarUsersDic;
 }
+@property(weak, nonatomic) UIButton *btn0;
 @property(weak, nonatomic) UIButton *btn1;
 @property(weak, nonatomic) UIButton *btn2;
 
@@ -48,9 +49,11 @@
 
 - (void)customBackButton
 {
-    UIImage* image = [[UIImage imageNamed:Navigation_bar_return_button] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UIBarButtonItem* leftBarutton = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(popSelf)];
-    self.navigationItem.leftBarButtonItem = leftBarutton;
+    if(self.navigationController.childViewControllers.count >1){
+        UIImage* image = [[UIImage imageNamed:Navigation_bar_return_button] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIBarButtonItem* leftBarutton = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(popSelf)];
+        self.navigationItem.leftBarButtonItem = leftBarutton;
+    }
 }
 - (void)popSelf{
     if ([self.returnzhibojian isEqualToString:@"1"]) {
@@ -59,10 +62,9 @@
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.sendPng = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
     _refreshAvatarUsersDic = [NSMutableDictionary dictionary];
     _allMessageDic = [NSMutableDictionary dictionary];
@@ -79,11 +81,12 @@
     self.view.backgroundColor= [UIColor whiteColor];
     [self addTwoView];
     
-    if(self.navigationController.childViewControllers.count >1){
-        [self customBackButton];
-    }
+
     if ([self.zhibojian isEqualToString:@"1"]) {
         [self zhibojianSet];
+    }
+    if (self.sendPng) {
+        [self changePngForaddButton];
     }
     [self TipsInChatRoomConnection];
     
@@ -121,6 +124,7 @@
     }
 }
 - (void)zhibojianSet{
+    self.sendPng = YES;
     self.toolBarContainer.toolbar.zhibojian = self.zhibojian;
     [self.messageTableView registerClass:[ChatRecordCell class] forCellReuseIdentifier:NSStringFromClass([ChatRecordCell class])];
     self.view.backgroundColor = [UIColor clearColor];
@@ -136,18 +140,27 @@
     [self.toolBarContainer.toolbar.voiceButton setImage:[UIImage imageNamed:LIVECHATPNG] forState:UIControlStateHighlighted];
     [self.toolBarContainer.toolbar.voiceButton setImage:[UIImage imageNamed:LIVECHATPNG] forState:UIControlStateSelected];
 
-    [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateNormal];
-    [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateHighlighted];
-    [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateSelected];
+    if (self.sendPng) {
+        [self changePngForaddButton];
+    }
     
     if(self.toolBarContainer.toolbar.textView){
         self.toolBarContainer.toolbar.textView.placeHolder = @"说点什么吧...";
     }
 }
+
+- (void)changePngForaddButton{
+    [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateNormal];
+    [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateHighlighted];
+    [self.toolBarContainer.toolbar.addButton setImage:[UIImage imageNamed:@"ic_send_24px"] forState:UIControlStateSelected];
+}
+
 - (void)addTwoView{
+
+    
     UIButton *btn1 = [UIButton new];
-    self.btn1 = btn1;
     [self.view addSubview:btn1];
+    self.btn1 = btn1;
     btn1.restorationIdentifier = IM_VIEW_money;
     [btn1 setImage:[UIImage imageNamed:IM_VIEW_money] forState:UIControlStateNormal];
     [btn1 addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -159,17 +172,42 @@
     [btn2 setImage:[UIImage imageNamed:IM_VIEW_swith] forState:UIControlStateNormal];
     [btn2 addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    CGFloat width = 50;
+    
+    if (self.gotoZhiBoVc) {
+        UIButton *btn0 = [UIButton new];
+        [self.view addSubview:btn0];
+        self.btn0 = btn0;
+        btn0.restorationIdentifier = zhiboAndWebVcPNG;
+        [btn0 setImage:[UIImage imageNamed:zhiboAndWebVcPNG] forState:UIControlStateNormal];
+        [btn0 addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    CGFloat width = 40;
+    
+    if (self.gotoZhiBoVc) {
+        [self.btn0 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.view).offset(-15);
+            make.bottom.equalTo(self.view).offset(-55-IMkTabBarHeight);
+            make.height.equalTo(@(width));
+            make.width.equalTo(@(width));
+        }];
+    }
+    
     [btn2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-20);
-        make.bottom.equalTo(self.view).offset(-55-IMkTabBarHeight);
+        if (self.gotoZhiBoVc) {
+            make.right.equalTo(self.btn0);
+            make.bottom.equalTo(self.btn0.mas_top).offset(-15);
+        } else {
+            make.right.equalTo(self.view).offset(-15);
+            make.bottom.equalTo(self.view).offset(-55-IMkTabBarHeight);
+        }
         make.height.equalTo(@(width));
         make.width.equalTo(@(width));
     }];
     
     [btn1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(btn2);
-        make.bottom.equalTo(btn2.mas_top).offset(-20);
+        make.bottom.equalTo(btn2.mas_top).offset(-15);
         make.height.equalTo(@(width));
         make.width.equalTo(@(width));
     }];
@@ -185,6 +223,34 @@
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
         }
+    }else if ([btn.restorationIdentifier isEqualToString:zhiboAndWebVcPNG]) {
+        LBAnchorListModel *model =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_OF_ZHUBO];
+        
+        LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+        if ([data.isFree intValue]){
+            NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
+            NSDateFormatter *format = [[NSDateFormatter alloc] init];
+            format.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            NSDate *oneData = [format dateFromString:expirationDate];
+            NSString *type = [[NSUserDefaults standardUserDefaults] objectForKey:@"type"];
+            
+            if ([type isEqualToString:@"0"]){
+                [self joinMembership];
+                return;
+            }else if([NSDate date].timeIntervalSince1970 >= oneData.timeIntervalSince1970){
+                [self RenewalFee];
+                return;
+            }
+        }
+        NSLog(@"%@\n\n\n\n\n\nhhhhhhhhh",model.anchorLiveUrl);
+        LiveBroadcastVc *vc =[LiveBroadcastVc new];
+        vc.anchorLiveUrl = model.anchorLiveUrl;
+        
+        vc.anchorID = model.anchorID;
+        vc.livePlatID = model.livePlatID;
+        vc.iconUrl = model.anchorThumb;
+        vc.nickname = model.anchorName;
+        [self.navigationController pushViewController:vc animated:YES];
     } else {
         if (!self.CPwebVc) {
             self.CPwebVc = [webAddIMVc new];
@@ -192,6 +258,8 @@
         [self.navigationController pushViewController:self.CPwebVc animated:NO];
     }
 }
+
+
 
 - (void)viewWillAppear:(BOOL)animated {
     DDLogDebug(@"Event - viewWillAppear");
@@ -1122,7 +1190,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 
 #pragma mark --按下功能响应
 - (void)pressMoreBtnClick:(UIButton *)btn {
-    if ([self.zhibojian isEqualToString:@"1"]) {
+    if (self.sendPng) {
         if (self.toolBarContainer.toolbar.textView.text) {
             [self sendText:self.toolBarContainer.toolbar.textView.text];
             self.toolBarContainer.toolbar.textView.text = nil;

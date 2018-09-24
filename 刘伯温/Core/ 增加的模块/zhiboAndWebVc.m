@@ -9,7 +9,7 @@
 #import "zhiboAndWebVc.h"
 
 @interface zhiboAndWebVc ()
-
+@property (nonatomic,weak) UIButton *likeButton;
 @end
 
 @implementation zhiboAndWebVc
@@ -18,6 +18,7 @@
     [super viewDidLoad];
     self.fd_prefersNavigationBarHidden = YES;
     UIButton *likeButton = [UIButton buttonWithType:0];
+    self.likeButton  =likeButton;
     likeButton.frame = CGRectMake(SCREENWIDTH - SCREENWIDTH/10-width_zhibo*0.5, kFullHeight-kTabBarHeight, width_zhibo, width_zhibo);
     [likeButton setBackgroundImage:[UIImage imageNamed:zhiboAndWebVcPNG] forState:0];
     [likeButton setBackgroundImage:[UIImage imageNamed:zhiboAndWebVcPNG] forState:UIControlStateHighlighted];
@@ -38,5 +39,7 @@
 - (void)likeButtonClick{
     [self.navigationController popViewControllerAnimated:NO];
 }
-
+- (void)sendFront{
+    [self.view bringSubviewToFront:self.likeButton];
+}
 @end

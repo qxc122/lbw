@@ -37,6 +37,8 @@
 #define PATH_base   [PATH_OF_DOCUMENT stringByAppendingPathComponent:@"PATH_base"]
 #define PATH_guanggao   [PATH_OF_DOCUMENT stringByAppendingPathComponent:@"PATH_guanggao"]
 
+#define PATH_OF_ZHUBO   [PATH_OF_DOCUMENT stringByAppendingPathComponent:@"PATH_OF_ZHUBO"]   //缓存一个主播
+
 
 //GlobalParameter *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_APPCOMMONGLOBAL];
 //[self openEachWkVcWithId:data.qrCodeInsUrl];  
