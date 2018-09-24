@@ -15,6 +15,8 @@
 @interface baseWkVc ()<WKNavigationDelegate,WKUIDelegate>
 
 @property (weak,nonatomic) UIProgressView *pro1;
+
+@property (assign,nonatomic) BOOL islogSuccessfully;
 @end
 
 @implementation baseWkVc
@@ -63,7 +65,7 @@
     if (self.tabBarController.selectedIndex == 1){
         reqUrl = dataBase.WBW;
         self.title = dataBase.tab_cpTitle;
-        
+        self.islogSuccessfully = YES;
     }else if (self.tabBarController.selectedIndex == 3){
         reqUrl = dataBase.CFLT;
         if(ISLOGIN){
@@ -71,6 +73,7 @@
             reqUrl = [reqUrl stringByAppendingString:token];
         }
         self.title = dataBase.tab_ltTitle;
+        self.islogSuccessfully = NO;
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
@@ -82,7 +85,7 @@
     [self setNavBtn];
     
     
-        NSLog(@"url =%@",reqUrl);
+//        NSLog(@"url =%@",reqUrl);
 }
 
 - (void)hideBottomBarWhenPush
@@ -144,11 +147,26 @@
     } else if (object == self.webView && [keyPath isEqualToString:@"title"] ) {
         if (self.webView.title.length) {
 //            self.title = self.webView.title;
-            [self.navigationItem setTitle:self.webView.title];
+//            [self.navigationItem setTitle:self.webView.title];
         }
     }else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
+    MJExtensionLog(@"navigationAction.request.URL.absoluteString=%@ \n",navigationAction.request.URL.absoluteString);
+    if (ISLOGIN) {
+        if ([navigationAction.request.URL.absoluteString hasSuffix:@"regist/Login"]) {
+            [MBProgressHUD hideHUDForView:self.view];
+            [MBProgressHUD showLoadingMessage:@"登陆成功，精彩马上呈现～" toView:self.view];
+        } else if ([navigationAction.request.URL.absoluteString containsString:@"location"]) {
+            [MBProgressHUD hideHUDForView:self.view];
+            self.islogSuccessfully = YES;
+        }
+    }
+
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 //alert 警告框
@@ -205,7 +223,9 @@
 //    [MBProgressHUD showPrompt:@"请刷新试试" toView:self.view];
 }
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation{
-    [MBProgressHUD hideHUDForView:self.view];
+    if (self.islogSuccessfully) {
+        [MBProgressHUD hideHUDForView:self.view];
+    }
 }
 
 #pragma mark --签到
@@ -213,10 +233,13 @@
     [self basicVcsignButtonClick];
 }
 
-
 - (void)reloadButtonClick{
-    [MBProgressHUD showLoadingMessage:@"正在努力加载中..." toView:self.view];
-    [self.webView reloadFromOrigin];
+    if (self.webView.isLoading) {
+        [MBProgressHUD showPrompt:@"正在加载中,请稍后刷新！" toView:self.view];
+    }else{
+        [self.webView reloadFromOrigin];
+        [MBProgressHUD showLoadingMessage:@"正在刷新中..." toView:self.view];
+    }
 }
 
 - (void)leftBackButtonClick{

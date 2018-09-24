@@ -26,7 +26,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:PNG_bar_right] style:UIBarButtonItemStylePlain target:self action:@selector(rightClick)];
 }
 - (void)loadNewData{
-
     NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
     paramDict[@"last_id"] = [NSNumber numberWithInt:0];
     paramDict[@"token"] = TOKEN;
@@ -34,24 +33,49 @@
 
     kWeakSelf(self);
     [VBHttpsTool postWithURL:@"getMyMsg" params:paramDict success:^(id json) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
         if ([json[@"result"] intValue] ==1){
+            weakself.arry = nil;
             weakself.arry = [msgList mj_objectWithKeyValues:json];
-            [weakself loadNewDataEndHeadsuccessSet:nil code:1 footerIsShow:NO hasMore:nil];
+            [weakself loadNewDataEndHeadsuccessSet:nil code:1 footerIsShow:YES hasMore:@"1"];
         }else{
              [weakself loadNewDataEndHeadfailureSet:nil errorCode:[json[@"result"] intValue]];
         }
     } failure:^(NSError *error) {
          [weakself loadNewDataEndHeadfailureSet:nil errorCode:999];
     }];
-
-//    kWeakSelf(self);
-//    [[ToolHelper shareToolHelper]CP_getMyMsgWithlastId:[NSNumber numberWithInt:0] success:^(id dataDict, NSString *msg, NSInteger code) {
-//        [weakself loadNewDataEndHeadsuccessSet:nil code:code footerIsShow:NO hasMore:nil];
-//    } failure:^(NSInteger errorCode, NSString *msg) {
-//        [weakself loadNewDataEndHeadfailureSet:nil errorCode:errorCode];
-//    }];
 }
+
+- (void)loadMoreData{
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    if (self.arry.arry.count) {
+        msgOne *last = self.arry.arry.lastObject;
+        paramDict[@"last_id"] = last.msg_id;
+    } else {
+        paramDict[@"last_id"] = [NSNumber numberWithInt:0];
+    }
+    paramDict[@"token"] = TOKEN;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
+    
+    kWeakSelf(self);
+    [VBHttpsTool postWithURL:@"getMyMsg" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            msgList *tmp = [msgList mj_objectWithKeyValues:json];
+            [weakself.arry.arry addObjectsFromArray:tmp.arry];
+            NSString *hasMore = @"0";
+            if (tmp.arry.count) {
+                hasMore = @"1";
+            }else{
+                [MBProgressHUD showPrompt:@"没有更多消息了" toView:weakself.view];
+            }
+            [weakself loadMoreDataEndFootsuccessSet:nil hasMore:hasMore];
+        }else{
+            [weakself loadMoreDataEndFootfailureSet:nil errorCode:[json[@"result"] intValue] msg:json[@"info"]];
+        }
+    } failure:^(NSError *error) {
+        [weakself loadMoreDataEndFootfailureSet:nil errorCode:999 msg:nil];
+    }];
+}
+
 - (void)rightClick{
     NSString *url = @"https://kf1.learnsaas.com/chat/chatClient/chatbox.jsp?companyID=814050&configID=62885&jid=3341006926&s=1";
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {

@@ -539,27 +539,30 @@
     [self.guangaoView show];
 }
 - (void)attionButtonClick{
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     WeakSelf
+    [MBProgressHUD showLoadingMessage:@"提交中..." toView:self.view];
     NSMutableDictionary *paramDict =[NSMutableDictionary dictionary];
     paramDict[@"token"] = TOKEN;
     paramDict[@"anchorID"] = self.anchorID;
     paramDict[@"livePlatID"] = self.livePlatID;
     paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
     [VBHttpsTool postWithURL:@"focusOn" params:paramDict success:^(id json) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view];
         if ([json[@"result"] intValue]==1){
             if (weakSelf.isAttention){
-                [MBProgressHUD showMessage:@"取消关注成功" finishBlock:nil];
+                [MBProgressHUD showMessage:@"取消关注成功" toView:weakSelf.view];
                 [weakSelf.attentionButton setImage:[UIImage imageNamed:@"关注"] forState:0];
             }else{
-                [MBProgressHUD showMessage:@"关注成功" finishBlock:nil];
+                [MBProgressHUD showMessage:@"关注成功" toView:weakSelf.view];
                 [weakSelf.attentionButton setImage:[UIImage imageNamed:@"关注-select"] forState:0];
             }
             weakSelf.isAttention =!weakSelf.isAttention;
+        }else{
+            [MBProgressHUD showMessage:json[@"info"] toView:weakSelf.view];
         }
     } failure:^(NSError *error) {
-        [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [MBProgressHUD showMessage:@"请重试" toView:weakSelf.view];
     }];
 }
 

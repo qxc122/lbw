@@ -93,6 +93,7 @@
 - (void)TipsInChatRoomConnection{
     if (!self.maskBtn) {
         UIButton *maskBtn = [UIButton new];
+        maskBtn.backgroundColor = [UIColor clearColor];
         self.maskBtn = maskBtn;
         [self.view addSubview:maskBtn];
         [maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {

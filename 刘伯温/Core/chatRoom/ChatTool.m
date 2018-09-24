@@ -23,7 +23,7 @@ singleM(ChatTool);
     self.conversation = nil;
     [self.list removeAllObjects];
     [JMessage removeAllDelegates];
-    [self IMlogOut];
+    [self LogOutChatRoomOnly];
 }
 - (void)StartWork{
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -188,7 +188,7 @@ singleM(ChatTool);
     [JMSGUser logout:^(id resultObject, NSError *error) {
         if (!error) {
             //退出登录成功
-            [weakself LogOutChatRoomOnly];
+            NSLog(@"退出成功");
         } else {
             //退出登录失败
             [weakself performSelector:@selector(IMlogOut) withObject:nil afterDelay:0.3];
@@ -203,6 +203,7 @@ singleM(ChatTool);
     [JMSGChatRoom leaveChatRoomWithRoomId:data.main_room_id completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             NSLog(@"推出 聊天室成功");
+            [self IMlogOut];
         }else{
             NSLog(@"推出 聊天室失败 %@",error.description);
             [weakself performSelector:@selector(LogOutChatRoomOnly) withObject:nil afterDelay:0.1];

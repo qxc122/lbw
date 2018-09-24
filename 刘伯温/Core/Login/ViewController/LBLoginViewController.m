@@ -34,19 +34,21 @@
 
 - (IBAction)loginClick:(id)sender {
     if (!self.accontTextField.text.length){
-        [MBProgressHUD showMessage:@"手机号不能为空" finishBlock:nil];
+        [MBProgressHUD showPrompt:@"手机号不能为空" toView:self.view];
+        return;
+    }
+    
+    if (![self.accontTextField.text isMobileNumber]){
+        [MBProgressHUD showPrompt:@"请输入有效的手机号码" toView:self.view];
         return;
     }
     
     if (!self.passworldTextField.text.length){
-        [MBProgressHUD showMessage:@"密码不能为空" finishBlock:nil];
+        [MBProgressHUD showPrompt:@"密码不能为空" toView:self.view];
         return;
     }
-    
-    
+    [self.view endEditing:YES];
     [self phoneLogin];
-    
-    
 }
 - (void)phoneLogin{
     NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];

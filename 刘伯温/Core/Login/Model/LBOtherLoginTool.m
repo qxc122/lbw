@@ -23,7 +23,7 @@
     [[UMSocialManager defaultManager] getUserInfoWithPlatform:platType currentViewController:nil completion:^(id result, NSError *error) {
         if (error)
         {
-            [MBProgressHUD showMessage:@"登录失败" finishBlock:nil];
+            [MBProgressHUD showPrompt:@"登录失败"];
         }else{
             UMSocialUserInfoResponse *resp = result;
             NSString *WeiXinId = @"";
