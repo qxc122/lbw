@@ -130,4 +130,10 @@ singleH(ToolHelper);
 - (void)getPlayeListWithPage:(NSString *)page
                      success:(RequestSuccess)successBlock
                      failure:(RequestFailure)failureBlock;
+
+#pragma --mark 记录播放历史
+- (void)recordPlayWithanchorID:(NSString *)anchorID
+                    livePlatID:(NSString *)livePlatID
+                       success:(RequestSuccess)successBlock
+                       failure:(RequestFailure)failureBlock;
 @end

@@ -26,7 +26,7 @@
     self.Pagesize = 10;
     self.Pagenumber = 0;
     self.NodataTitle = @"没有数据";
-    
+    self.isRefreshing = YES;
     [self setTableView];
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [[NSNotificationCenter defaultCenter]addObserver:self
@@ -59,11 +59,21 @@
 #pragma -mark<mj_header  头部>
 - (MJRefreshHeader *)header{
     if (!_header) {
-        MJRefreshHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadNewData)];
+        MJRefreshHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadNewDataPre)];
         _header = header;
     }
     return _header;
 }
+
+- (void)loadNewDataPre{
+    self.isRefreshing = NO;
+    [self loadNewData];
+}
+- (void)loadMoreDataPre{
+    self.isRefreshing = NO;
+    [self loadMoreData];
+}
+
 - (void)loadNewData{
 }
 #pragma -mark<加载更多数据>
@@ -73,7 +83,7 @@
 
 #pragma -mark<mj_footer  头部>
 - (void)set_MJRefreshFooter{
-    MJRefreshFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+    MJRefreshFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreDataPre)];
     self.footer = footer;
 }
 
@@ -143,33 +153,30 @@
     
 - (void)loadNewDataEndHeadsuccessSet:(UITableView *)TableView code:(NSInteger)code footerIsShow:(BOOL)footerIsShow hasMore:(NSString *)hasMore{
     self.empty_type = code;
-    if (self.header.isRefreshing) {
-        [self.header endRefreshingWithCompletionBlock:^{
-            [self.tableView reloadData];
-            if (footerIsShow) {
-                if(!self.footer){
-                    [self set_MJRefreshFooter];
-                    self.tableView.mj_footer = self.footer;
-                }
-                if ([hasMore isEqualToString:@"1"]) {
-                    self.footer.hidden = NO;
-                    if (self.footer.state == MJRefreshStateNoMoreData) {
-                        [self.footer resetNoMoreData];
-                    }
-                }else{
-                    self.footer.hidden = YES;
-                }
-                self.Pagenumber++;
+    self.isRefreshing = NO;
+    [self.header endRefreshing];
+    [self.tableView reloadData];
+    if (footerIsShow) {
+        if(!self.footer){
+            [self set_MJRefreshFooter];
+            self.tableView.mj_footer = self.footer;
+        }
+        if ([hasMore isEqualToString:@"1"]) {
+            self.footer.hidden = NO;
+            if (self.footer.state == MJRefreshStateNoMoreData) {
+                [self.footer resetNoMoreData];
             }
-        }];
+        }else{
+            self.footer.hidden = YES;
+        }
+        self.Pagenumber++;
     }
 }
 - (void)loadNewDataEndHeadfailureSet:(UITableView *)TableView errorCode:(NSInteger)errorCode{
     self.empty_type = errorCode;
-    kWeakSelf(self);
-    [self.header endRefreshingWithCompletionBlock:^{
-        [weakself.tableView reloadData];
-    }];
+    self.isRefreshing = NO;
+    [self.header endRefreshing];
+    [self.tableView reloadData];
     if(self.footer){
         self.footer.hidden = YES;
     }
@@ -177,6 +184,7 @@
     
 - (void)loadMoreDataEndFootsuccessSet:(UITableView *)TableView  hasMore:(NSString *)hasMore{
     [self.footer endRefreshing];
+    self.isRefreshing = NO;
     if ([hasMore isEqualToString:@"1"]) {
         self.footer.hidden = NO;
         if (self.footer.state == MJRefreshStateNoMoreData) {
@@ -190,6 +198,7 @@
 }
 - (void)loadMoreDataEndFootfailureSet:(UITableView *)TableView errorCode:(NSInteger)errorCode msg:(NSString *)msg{
     [self.footer endRefreshing];
+    self.isRefreshing = NO;
 }
   
 #pragma --<空白页处理>
@@ -262,13 +271,13 @@
     
 //是否显示空白页，默认YES
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView {
-    return !self.header.isRefreshing;
+    return !self.isRefreshing;
 }
     
 //空白页点击事件
 - (void)emptyDataSetDidTapView:(UIScrollView *)scrollView {
     if([[ToolHelper shareToolHelper] isReachable]){
-        if (self.empty_type != kRespondCodeSuccess && !self.header.isRefreshing) {
+        if (self.empty_type != kRespondCodeSuccess && !self.isRefreshing) {
             [self.header beginRefreshing];
             [self.tableView reloadData];
         }
@@ -296,7 +305,7 @@
 //}
     
 - (void)networkStateChange{
-    if(!self.header.isRefreshing){
+    if(!self.isRefreshing){
         if(self.empty_type == NoNetworkConnection_empty_num){
             [self.header beginRefreshing];
         }

@@ -64,6 +64,7 @@
                              }];
                          }
                      });
+                     failure([[NSError alloc]initWithDomain:@"验证失效，请重新登录" code:7 userInfo:nil]);
                  }
              }else{
                  success(responseObject);

@@ -518,6 +518,31 @@ singleM(ToolHelper);
 
 
 
+#pragma --mark 记录播放历史
+- (void)recordPlayWithanchorID:(NSString *)anchorID
+                    livePlatID:(NSString *)livePlatID
+                     success:(RequestSuccess)successBlock
+                     failure:(RequestFailure)failureBlock{
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"token"] = TOKEN;
+    if (livePlatID) {
+        paramDict[@"livePlatID"] = livePlatID;
+    }
+    paramDict[@"anchorID"] = anchorID;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance]getSign:paramDict];
+    [VBHttpsTool postWithURL:@"recordPlay" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            successBlock(json,json[@"info"],[json[@"result"] intValue]);
+        }else{
+            failureBlock([json[@"result"] intValue],json[@"info"]);
+        }
+    } failure:^(NSError *error) {
+        failureBlock(error.code,error.userInfo.description);
+    }];
+}
+
+
+
 #ifdef DEBUG
 - (void)networkStateChange{
     if ([self.reachability currentReachabilityStatus] == ReachableViaWiFi) {

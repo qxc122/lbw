@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, empty_num)
 
 
 @interface baseUiTableView : basicVc
+@property (nonatomic,assign) BOOL isRefreshing;
 @property (nonatomic,strong) MJRefreshHeader *header;//头部
 @property (nonatomic,strong) MJRefreshFooter *footer;//底部
 @property (nonatomic,strong) NSString  *NodataTitle; // 没有数据时候的标题

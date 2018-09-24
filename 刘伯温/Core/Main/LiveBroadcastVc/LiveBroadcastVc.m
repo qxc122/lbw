@@ -50,19 +50,25 @@
 @property(nonatomic, strong)UIButton *paseButton;
 
 @property (nonatomic,strong) NSTimer *scrollTimer;
+
+@property (nonatomic,assign) BOOL record;
+
 @end
 
 @implementation LiveBroadcastVc
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.record = NO;
     self.fd_prefersNavigationBarHidden = YES;
     self.view.backgroundColor = [UIColor blackColor];
-    
+    [self creatPlaer];
+}
+- (void)creatPlaer{
     [IJKFFMoviePlayerController checkIfFFmpegVersionMatch:YES];
     
     IJKFFOptions *options = [IJKFFOptions optionsByDefault]; //使用默认配置
-
+    
     NSURL * url = [NSURL URLWithString:self.anchorLiveUrl];
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:url withOptions:options]; //初始化播放器，播放在线视频或直播(RTMP)
     self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -104,6 +110,7 @@
     [self.player prepareToPlay];
     NSLog(@"准备链接中");
 }
+
 - (void)inputKeyboardWillHide{
     [self setBottom:NO];
 }
@@ -283,6 +290,9 @@
                 [self.player pause];
                 NSLog(@"暂停");
             }
+        }else{
+            [self.player shutdown];
+            NSLog(@"shutdown");
         }
     }
 }
@@ -309,6 +319,7 @@
         [self setTopBtnEnable:YES];
         NSLog(@"loadStateDidChange: IJKMPMovieLoadStatePlaythroughOK: %d\n", (int)loadState);
     } else if ((loadState & IJKMPMovieLoadStateStalled) != 0) {
+        [self startAnimating];
         NSLog(@"loadStateDidChange: IJKMPMovieLoadStateStalled: %d\n", (int)loadState);
     } else {
         NSLog(@"loadStateDidChange: ???: %d\n", (int)loadState);
@@ -367,6 +378,7 @@
         }
         case IJKMPMoviePlaybackStatePlaying: {
             NSLog(@"IJKMPMoviePlayBackStateDidChange %d: playing", (int)_player.playbackState);
+            [self recordPlayWithanchorID];
             break;
         }
         case IJKMPMoviePlaybackStatePaused: {
@@ -704,9 +716,6 @@
 
 - (void)dealloc{
     [self removeMovieNotificationObservers];
-    [self removeTimer];
-    [self.player shutdown];
-    
     NSLog(@"销毁了。dealloc");
 }
 
@@ -724,5 +733,16 @@
         make.top.equalTo(self.view);
         make.bottom.equalTo(self.view);
     }];
+}
+
+- (void)recordPlayWithanchorID{
+    if (!self.record) {
+        self.record = YES;
+        [[ToolHelper shareToolHelper]recordPlayWithanchorID:self.anchorID livePlatID:self.livePlatID success:^(id dataDict, NSString *msg, NSInteger code) {
+            NSLog(@"记录成功");
+        } failure:^(NSInteger errorCode, NSString *msg) {
+            NSLog(@"记录失败");
+        }];
+    }
 }
 @end
