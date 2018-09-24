@@ -53,7 +53,7 @@
             if ([self.amount intValue] < [self.moneyTextField.text intValue]){
                 message = @"余额不足";
             }else if([self.moneyTextField.text intValue] <= 0){
-                message = @"请输入画有效金额";
+                message = @"请输入有效金额";
             }
         }
     }else if (!self.accontTextField.text.length){
