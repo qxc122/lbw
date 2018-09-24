@@ -45,7 +45,7 @@ singleM(ChatTool);
 - (void)onReceiveChatRoomConversation:(JMSGConversation *)conversation
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     [self addArry:messages];
-    NSLog(@"收到消息&ld",messages.count);
+    NSLog(@"收到消息%ld",messages.count);
     if (self.delegate) {
         [self.delegate ChatToolonReceiveChatRoomConversation:conversation messages:messages];
     }

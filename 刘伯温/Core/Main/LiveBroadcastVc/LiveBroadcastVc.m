@@ -44,7 +44,6 @@
 @property(nonatomic, weak)UIButton *CPButtom;
 @property(nonatomic, weak)UIButton *ChatRoomButton;
 
-@property(nonatomic, strong)UIButton *applauseBtn;
 @property(nonatomic, assign)BOOL isAttention;
 
 
@@ -519,7 +518,7 @@
 
 
 - (void)likeButtonClick{
-    [self showTheApplauseInView:self.view belowView:self.applauseBtn];
+    [self showTheApplauseInView:self.view belowView:self.guanggPng];
 }
 
 
@@ -692,7 +691,7 @@
 }
 #pragma mark----倒计时
 -(void)daojishiRunning{
-    [self showTheApplauseInView:self.view belowView:self.applauseBtn];
+    [self showTheApplauseInView:self.view belowView:self.guanggPng];
 }
 #pragma mark----移除定时器
 -(void)removeTimer

@@ -411,28 +411,25 @@
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     
 
-    NSLog(@"tmo");
-    for (JMSGMessage *message in messages) {
-//        JMSGMessage *message = [JMSGMessage alloc];
-//
-//        if(messageFrom.contentType == kJMSGContentTypeUnknown){
-//            NSString *tmp = ((JMSGTextContent *)messageFrom.content).text;
-//            if ([tmp isKindOfClass:[NSString class]]) {
-//                message.contentType = kJMSGContentTypeText;
-//            }else{
-//                break;
-//            }
-//        }
+    kWEAKSELF
+    JCHATMAINTHREAD((^{
+        kSTRONGSELF
+    
+        NSLog(@"tmo");
+        for (JMSGMessage *message in messages) {
+
             JCHATChatModel *model = [_allMessageDic objectForKey:message.msgId];
             if (model) {// 说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新
                 model.message = message;
                 [self refreshCellMessageMediaWithChatModel:model];
+                NSLog(@"说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新");
             }else{
                 
                 NSString *firstMsgId = [_allmessageIdArr firstObject];
                 JCHATChatModel *firstModel = [_allMessageDic objectForKey:firstMsgId];
                 if (message.timestamp < firstModel.message.timestamp) {
                     // 比数组中最老的消息时间都小的，无需加入界面显示，下次翻页时会加载
+                    NSLog(@"比数组中最老的消息时间都小的，无需加入界面显示，下次翻页时会加载");
                     return ;
                 }
                 
@@ -440,22 +437,34 @@
                 [model setChatModelWith:message conversationType:_conversation];
                 if (message.contentType == kJMSGContentTypeImage) {
                     [_imgDataArr addObject:model];
+                    NSLog(@"图片消息");
                 }
                 model.photoIndex = [_imgDataArr count] -1;
                 [self addmessageShowTimeData:message.timestamp];
                 [self addMessage:model];
-                if (!model.message) {
-//                    NSLog(@"空的消息");
+
+                BOOL isHaveCache = NO;
+                NSString *key = [NSString stringWithFormat:@"%@_%@",message.fromUser.username,message.fromUser.appKey];
+                NSMutableArray *messages = _refreshAvatarUsersDic[key];
+                if (messages) {
+                    NSLog(@"缓存的消息");
+                    isHaveCache = YES;
+                    [messages addObject:message];
+                }else{
+                    NSLog(@"不是缓存的消息");
+                    messages = [NSMutableArray array];
+                    [messages addObject:message];
                 }
-                if (!model.timeId) {
-//                    NSLog(@"空的消息  timeId");
+                if (messages.count > 10) {
+                    NSLog(@"消息总数大于10");
+                    [messages removeObjectAtIndex:0];
                 }
-                //            [self chcekReceiveMessageAvatarWithReceiveNewMessage:message];
+                [_refreshAvatarUsersDic setObject:messages forKey:key];
+                
+                [strongSelf chcekReceiveMessageAvatarWithReceiveNewMessage:message];
             }
-//        }else{
-//            NSLog(@"未知消息类型");
-//        }
-    }
+        }
+    }));
 }
 #pragma mark --收到消息
 - (void)onReceiveMessage:(JMSGMessage *)message error:(NSError *)error {

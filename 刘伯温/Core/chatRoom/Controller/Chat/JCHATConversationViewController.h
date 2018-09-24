@@ -72,9 +72,7 @@ UITextViewDelegate>{
 - (void)setupView;
 - (void)prepareImageMessage:(UIImage *)img;
 
+
 @property(strong, nonatomic) NSString *zhibojian; //在直播间的标志
-
 @property(strong, nonatomic) NSString *returnzhibojian; //石否返回直播间的
-
-
 @end
