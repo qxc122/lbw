@@ -76,7 +76,7 @@
     [self setupView];
     [self addNotification];
 //    [self addDelegate];
-    [self getGroupMemberListWithGetMessageFlag:YES];
+//    [self getGroupMemberListWithGetMessageFlag:YES];
     self.moreViewBottomConstrait.constant = IMkTabBarHeight;
     self.view.backgroundColor= [UIColor whiteColor];
     [self addTwoView];
@@ -91,6 +91,7 @@
     [self TipsInChatRoomConnection];
     
     [ChatTool shareChatTool].delegate = self;
+    self.conversation = [ChatTool shareChatTool].conversation;
 }
 #pragma  mark 聊天室连接成功之间添加蒙板
 - (void)TipsInChatRoomConnection{
@@ -264,16 +265,34 @@
     }
     if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
         [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
+//        [self getGroupMemberListWithGetMessageFlag:YES];
     }
 }
 
+//- (void)ChatToolonSendMessageResponse:(JMSGMessage *)message error:(NSError *)error{
+//    [self onSendMessageResponse:message error:error];
+//}
+//
+//- (void)ChatToolonReceiveMessageDownloadFailed:(JMSGMessage *)message{
+//    [self onReceiveMessageDownloadFailed:message];
+//}
+//
+//- (void)ChatToolonSyncOfflineMessageConversation:(JMSGConversation *)conversation
+//                                 offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages{
+//    [self onSyncOfflineMessageConversation:conversation offlineMessages:offlineMessages];
+//}
+- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation{
+    [self onSyncRoamingMessageConversation:conversation];
+}
 
 - (void)ChatToolonReceiveChatRoomConversation:(JMSGConversation *)conversation
                                      messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     [self onReceiveChatRoomConversation:conversation messages:messages];
+//    [self getGroupMemberListWithGetMessageFlag:YES];
 }
 
 - (void)ChatToolkJMSGNetworkSucces{
+    self.conversation = [ChatTool shareChatTool].conversation;
     if (![[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
         self.maskBtn.hidden = YES;
     }
@@ -281,6 +300,7 @@
         [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
     }
 }
+
 
 - (void)RefreshMessage{
     kWEAKSELF
@@ -470,9 +490,9 @@
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     
 
-    kWEAKSELF
-    JCHATMAINTHREAD((^{
-        kSTRONGSELF
+//    kWEAKSELF
+//    JCHATMAINTHREAD((^{
+//        kSTRONGSELF
     
         NSLog(@"tmo");
         for (JMSGMessage *message in messages) {
@@ -504,6 +524,7 @@
 
                 BOOL isHaveCache = NO;
                 NSString *key = [NSString stringWithFormat:@"%@_%@",message.fromUser.username,message.fromUser.appKey];
+                NSLog(@"key=%@",key);
                 NSMutableArray *messages = _refreshAvatarUsersDic[key];
                 if (messages) {
                     NSLog(@"缓存的消息");
@@ -520,10 +541,13 @@
                 }
                 [_refreshAvatarUsersDic setObject:messages forKey:key];
                 
-                [strongSelf chcekReceiveMessageAvatarWithReceiveNewMessage:message];
+                if (!messages) {
+                    NSLog(@"空的消息");
+                }
+                [self chcekReceiveMessageAvatarWithReceiveNewMessage:message];
             }
         }
-    }));
+//    }));
 }
 #pragma mark --收到消息
 - (void)onReceiveMessage:(JMSGMessage *)message error:(NSError *)error {

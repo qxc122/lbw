@@ -75,7 +75,27 @@ singleM(ChatTool);
     }
 }
 
-
+- (void)onSendMessageResponse:(JMSGMessage *)message error:(NSError *)error {
+    if (self.delegate) {
+        [self.delegate ChatToolonSendMessageResponse:message error:error];
+    }
+}
+- (void)onReceiveMessageDownloadFailed:(JMSGMessage *)message {
+    if (self.delegate) {
+        [self.delegate ChatToolonReceiveMessageDownloadFailed:message];
+    }
+}
+- (void)onSyncOfflineMessageConversation:(JMSGConversation *)conversation
+                         offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages{
+    if (self.delegate) {
+        [self.delegate ChatToolonSyncOfflineMessageConversation:conversation offlineMessages:offlineMessages];
+    }
+}
+- (void)onSyncRoamingMessageConversation:(JMSGConversation *)conversation{
+    if (self.delegate) {
+        [self.delegate ChatToolonSyncRoamingMessageConversation:conversation];
+    }
+}
 - (void)addArry:(NSArray *)arry{
     if (!self.list) {
         self.list = [NSMutableArray array];
