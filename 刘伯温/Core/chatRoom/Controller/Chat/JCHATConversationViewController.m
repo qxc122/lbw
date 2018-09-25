@@ -23,7 +23,7 @@
 #import "webAddIMVc.h"
 #import "ChatRecordCell.h"
 #import "mainTableVc.h"
-@interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate> {
+@interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate,ChatToolJMSGMessageDelegate> {
 @private
     BOOL isNoOtherMessage;
     NSInteger messageOffset;
@@ -76,7 +76,7 @@
     [self setupView];
     [self addNotification];
 //    [self addDelegate];
-//    [self getGroupMemberListWithGetMessageFlag:YES];
+    [self getGroupMemberListWithGetMessageFlag:YES];
     self.moreViewBottomConstrait.constant = IMkTabBarHeight;
     self.view.backgroundColor= [UIColor whiteColor];
     [self addTwoView];
@@ -281,9 +281,9 @@
 //                                 offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages{
 //    [self onSyncOfflineMessageConversation:conversation offlineMessages:offlineMessages];
 //}
-- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation{
-    [self onSyncRoamingMessageConversation:conversation];
-}
+//- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation{
+//    [self onSyncRoamingMessageConversation:conversation];
+//}
 
 - (void)ChatToolonReceiveChatRoomConversation:(JMSGConversation *)conversation
                                      messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
@@ -390,7 +390,6 @@
 }
 
 - (void)setupNavigation {
-  self.navigationController.navigationBar.translucent = NO;
   _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
   [_rightBtn setFrame:navigationRightButtonRect];
   if (_conversation.conversationType == kJMSGConversationTypeSingle) {
@@ -488,8 +487,6 @@
 #pragma mark --聊天室 收到消息
 - (void)onReceiveChatRoomConversation:(JMSGConversation *)conversation
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
-    
-
 //    kWEAKSELF
 //    JCHATMAINTHREAD((^{
 //        kSTRONGSELF
@@ -547,7 +544,7 @@
                 [self chcekReceiveMessageAvatarWithReceiveNewMessage:message];
             }
         }
-//    }));
+//    })); // strongSelf
 }
 #pragma mark --收到消息
 - (void)onReceiveMessage:(JMSGMessage *)message error:(NSError *)error {
@@ -1477,7 +1474,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
             return cell;
         }
     } else {
-        
         if (!isNoOtherMessage) {
             if (indexPath.row == 0) {
                 static NSString *cellLoadIdentifier = @"loadCell"; //name

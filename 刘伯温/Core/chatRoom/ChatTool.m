@@ -45,6 +45,7 @@ singleM(ChatTool);
 }
 - (void)StopWork{
     self.conversation = nil;
+//    [self.conversation deleteChatRoomConversationWithRoomId:[ChatTool shareChatTool].basicConfig.main_room_id];
     [self.list removeAllObjects];
     [JMessage removeAllDelegates];
     [self LogOutChatRoomOnly];
@@ -111,6 +112,7 @@ singleM(ChatTool);
 
 - (void)setConversation:(JMSGConversation *)conversation{
     _conversation = conversation;
+//    _conversation = [JMSGConversation groupConversationWithGroupId:self.basicConfig.main_room_id];
     [self addDelegate];
     if (self.delegate) {
         [self.delegate ChatToolkJMSGNetworkSucces];

@@ -282,23 +282,23 @@
     // 关闭跑马灯
     [_horizontalMarquee marqueeOfSettingWithState:MarqueeShutDown_H];
 }
-
-#pragma mark 聊天室测试
-- (void)createChatRoomConversation{
-    [JMSGConversation createChatRoomConversationWithRoomId:@"5294578" completionHandler:^(id resultObject, NSError *error) {
-        if (!error) {
-            NSLog(@"创建聊天室成功");
-        }else{
-            NSLog(@"%@",error);
-        }
-    }];
-}
-
-- (void)deleteChatRoomConversatio{
-    if ([JMSGConversation deleteChatRoomConversationWithRoomId:@"5294578"]) {
-        NSLog(@"删除聊天室成功");
-    } else {
-        NSLog(@"删除聊天室 失败");
-    }
-}
+//
+//#pragma mark 聊天室测试
+//- (void)createChatRoomConversation{
+//    [JMSGConversation createChatRoomConversationWithRoomId:@"5294578" completionHandler:^(id resultObject, NSError *error) {
+//        if (!error) {
+//            NSLog(@"创建聊天室成功");
+//        }else{
+//            NSLog(@"%@",error);
+//        }
+//    }];
+//}
+//
+//- (void)deleteChatRoomConversatio{
+//    if ([JMSGConversation deleteChatRoomConversationWithRoomId:@"5294578"]) {
+//        NSLog(@"删除聊天室成功");
+//    } else {
+//        NSLog(@"删除聊天室 失败");
+//    }
+//}
 @end
