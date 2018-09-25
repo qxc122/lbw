@@ -32,6 +32,8 @@
 //@property(nonatomic, strong)UITableView *tableView;
 @property(nonatomic, strong)UILabel *descLabel;
 
+
+@property (nonatomic,strong)NSArray *listArr;  //平台账号
 @end
 
 @implementation LBMineRootViewController
@@ -47,8 +49,8 @@
 //    self.titleArr = @[@"卡密激活",@"转换现金",@"在线客服",@"金币商城",@"邀请好友",@"点播历史记录",@"我关注的主播",@"意见反馈",@"检查更新"];
 //    self.imageArr = @[@"gerenxinxi_r11_c2",@"wode_trancel",@"wode_online_call",@"ic_jifeng",@"ic_yaoqing",@"wode_r2_c2",@"wode_r8_c1",@"wode_r17_c3",@"wode_r15_c4"];
     
-    self.titleArr = @[@[@"消息通知"],@[@"充值",@"卡密激活",@"转换现金"],@[@"在线客服",@"金币商城",@"邀请好友"],@[@"点播历史",@"我关注的主播",@"意见反馈"]];
-    self.imageArr = @[@[@"myset_msg"],@[@"myset_recharge",@"myic_amount_vip",@"mywode_trancel"],@[@"mywode_online_call",@"myic_jifeng",@"ic_yaoqing"],@[@"mywode_r2_c2",@"mywode_r8_c1",@"mywode_r15_c4",@"wode_r15_c4"]];
+    self.titleArr = @[@[@"消息通知"],@[@"充值",@"卡密激活",@"一键注册并额度转入彩票",@"转换现金"],@[@"在线客服",@"金币商城",@"邀请好友"],@[@"点播历史",@"我关注的主播",@"意见反馈"]];
+    self.imageArr = @[@[@"myset_msg"],@[@"myset_recharge",@"myic_amount_vip",@"tab_cp_press",@"mywode_trancel"],@[@"mywode_online_call",@"myic_jifeng",@"ic_yaoqing"],@[@"mywode_r2_c2",@"mywode_r8_c1",@"mywode_r15_c4",@"wode_r15_c4"]];
 
     WeakSelf
     LBMineHeadView *headView = [[LBMineHeadView alloc] initWithFrame:CGRectMake(0, 0, kFullWidth, 250.5-64)];
@@ -192,6 +194,8 @@
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"检查更新"]) {
 
+    } else if ([rowTitle isEqualToString:@"一键注册并额度转入彩票"]) {
+        [self getPlatAccout];
     }
 }
 
@@ -242,5 +246,88 @@
     }];
 }
 
+
+
+- (void)getHappyPlateList{
+    for (LBGetHappyPlateListModel *one in self.listArr) {
+        if ([one.plate_reg_type isEqualToString:@"1"]) {
+            LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
+            NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+            paramDict[@"token"] = TOKEN;
+            
+            paramDict[@"amount"] = [NSString stringWithFormat:@"%.2f",[data.amount floatValue] + [data.freezing floatValue]];
+            if ([data.amount floatValue] + [data.freezing floatValue]) {
+                paramDict[@"plate"] = one.plate_name;
+                paramDict[@"plateAccount"] = one.plate_account;
+                paramDict[@"trueName"] = data.surname;
+                paramDict[@"platePassword"] = @"";
+                paramDict[@"phone"] = data.phone;
+                paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
+                WeakSelf
+                [VBHttpsTool postWithURL:@"happyPay" params:paramDict success:^(id json) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view];
+                    if ([json[@"result"] intValue] ==1){
+                        
+                        LBGetMyInfoModel *tmpUserData = weakSelf.myinfoModel;
+                        tmpUserData.amount = @"0";
+                        tmpUserData.freezing = @"0";
+                        [NSKeyedArchiver archiveRootObject:tmpUserData toFile:PATH_UESRINFO];
+                        weakSelf.headView.infoModel = tmpUserData;
+                        
+                        [LBShowRemendView showRemendViewText:@"提交成功！请稍待几分钟，后台在审核处理" andTitleText:@"转帐" andEnterText:@"知道了" andEnterBlock:^{
+                            
+                        }];
+                    }else{
+                        [weakSelf prompt:json[@"info"]];
+                    }
+                } failure:^(NSError *error) {
+                    [MBProgressHUD hideHUDForView:weakSelf.view];
+                    [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
+                }];
+            } else {
+                [MBProgressHUD hideHUDForView:self.view];
+                [MBProgressHUD showPrompt:@"您的可转入金额不足" toView:self.view];
+                break;
+            }
+        }
+    }
+}
+
+
+- (void)prompt:(NSString *)tmp{
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:tmp preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"马上联系在线客服" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *url = @"https://kf1.learnsaas.com/chat/chatClient/chatbox.jsp?companyID=814050&configID=62885&jid=3341006926&s=1";
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+        }
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+
+- (void)getPlatAccout{
+    WeakSelf
+    [MBProgressHUD showLoadingMessage:@"提交中..." toView:self.view];
+    NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
+    paramDict[@"token"] = TOKEN;
+    paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
+    [VBHttpsTool postWithURL:@"getHappyPlateList" params:paramDict success:^(id json) {
+        if ([json[@"result"] intValue] ==1){
+            weakSelf.listArr = [NSArray modelArrayWithClass:[LBGetHappyPlateListModel class] json:json[@"data"]];
+            [weakSelf getHappyPlateList];
+        }else{
+            [MBProgressHUD hideHUDForView:weakSelf.view];
+            [MBProgressHUD showPrompt:json[@"info"] toView:weakSelf.view];
+        }
+    } failure:^(NSError *error) {
+        [MBProgressHUD hideHUDForView:weakSelf.view];
+        [MBProgressHUD showPrompt:@"请重试" toView:weakSelf.view];
+    }];
+}
 @end
 

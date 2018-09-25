@@ -71,6 +71,8 @@
         if(ISLOGIN){
             NSString *token =  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
             reqUrl = [reqUrl stringByAppendingString:token];
+        }else{
+            self.islogSuccessfully = NO;
         }
         self.title = dataBase.tab_ltTitle;
         self.islogSuccessfully = NO;
@@ -84,8 +86,6 @@
     
     self.webView.opaque = NO;
     [self setNavBtn];
-    
-    
 //        NSLog(@"url =%@",reqUrl);
 }
 
