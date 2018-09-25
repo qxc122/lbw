@@ -63,11 +63,7 @@
 
 #define JAMS @"JAMESM3DADF"
 
-//#define HeadURL @"http://jxjiancai.net:9999/api.v11.php?a="// 正式
-//#define ImageHead @"http://jxjiancai.net:804"
 
-#define HeadURL @"http://43.230.143.218:9999/api.v11.php?a="// 正式
-#define ImageHead @"http://43.230.143.218:804"
 
 //#define HeadURL @"http://121.42.42.112:903/api.v10.php?a="//测试
 

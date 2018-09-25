@@ -497,6 +497,7 @@
 		3DF66DBA2077C67C00A8DC37 /* LBDepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LBDepositViewController.xib; sourceTree = "<group>"; };
 		73BFA4B29A15F550774B2FB1 /* Pods-Core.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Core/Pods-Core.debug.xcconfig"; sourceTree = "<group>"; };
 		B4FD57F2CB0343A08D2AAE44 /* Pods-Core.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.release.xcconfig"; path = "Pods/Target Support Files/Pods-Core/Pods-Core.release.xcconfig"; sourceTree = "<group>"; };
+		DB17BFD62159E30E009415A6 /* url.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = url.h; sourceTree = "<group>"; };
 		DB33D4E7214CD0D300E93DF8 /* SDWebImageManager+MJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SDWebImageManager+MJ.h"; sourceTree = "<group>"; };
 		DB33D4E8214CD0D300E93DF8 /* SDWebImageManager+MJ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SDWebImageManager+MJ.m"; sourceTree = "<group>"; };
 		DB48DEE12154C34400D7B56E /* LBWMainVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBWMainVc.h; sourceTree = "<group>"; };
@@ -1092,6 +1093,7 @@
 				04CFA5A61F70CC2800D12AD4 /* Assets.xcassets */,
 				04CFA5AB1F70CC2800D12AD4 /* Info.plist */,
 				04CFA5D01F70CD0100D12AD4 /* Header.h */,
+				DB17BFD62159E30E009415A6 /* url.h */,
 				04CFA5D11F70CD0100D12AD4 /* PrefixHeader.pch */,
 				04B4285B1F76947A004B519B /* Launch Screen.storyboard */,
 				04CFA59A1F70CC2800D12AD4 /* Supporting Files */,
