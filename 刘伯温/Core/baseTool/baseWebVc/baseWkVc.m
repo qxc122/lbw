@@ -60,14 +60,13 @@
     
     [webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     
-    LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
     NSString *reqUrl = @"";
     if (self.tabBarController.selectedIndex == 1){
-        reqUrl = dataBase.WBW;
-        self.title = dataBase.tab_cpTitle;
+        reqUrl = [ChatTool shareChatTool].basicConfig.WBW;
+        self.title = [ChatTool shareChatTool].basicConfig.tab_cpTitle;
         self.islogSuccessfully = YES;
     }else if (self.tabBarController.selectedIndex == 3){
-        reqUrl = dataBase.CFLT;
+        reqUrl = [ChatTool shareChatTool].basicConfig.CFLT;
         if(ISLOGIN){
             self.islogSuccessfully = NO;
             NSString *token =  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
@@ -75,7 +74,7 @@
         }else{
             self.islogSuccessfully = YES;
         }
-        self.title = dataBase.tab_ltTitle;
+        self.title = [ChatTool shareChatTool].basicConfig.tab_ltTitle;
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];

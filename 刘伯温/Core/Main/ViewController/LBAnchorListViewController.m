@@ -116,13 +116,13 @@
 
 #pragma mark 设置跑马灯
 - (void)setPaoMaDeng{
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, SCREENWIDTH-30, 20) withSingleScrollDuration:data.msg.length*0.15];
+
+    JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, SCREENWIDTH-30, 20) withSingleScrollDuration:[ChatTool shareChatTool].basicConfig.msg.length*0.15];
     self.horizontalMarquee = horizontalMarquee;
     horizontalMarquee.textColor = MainColor;
     horizontalMarquee.font = [UIFont systemFontOfSize:14];
     [self.view addSubview:horizontalMarquee];
-    self.horizontalMarquee.text = data.msg;
+    self.horizontalMarquee.text = [ChatTool shareChatTool].basicConfig.msg;
 }
 
 - (void)viewWillAppear:(BOOL)animated{

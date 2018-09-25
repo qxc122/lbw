@@ -78,8 +78,8 @@
     }];
     self.content.backgroundColor = [UIColor clearColor];
     self.content.scrollView.bounces = NO;
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    [self.content loadHTMLString:data.publishMsg baseURL:nil];
+
+    [self.content loadHTMLString:[ChatTool shareChatTool].basicConfig.publishMsg baseURL:nil];
 
     
     UIView *back = [UIView new];

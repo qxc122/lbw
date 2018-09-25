@@ -140,8 +140,7 @@
 
 #pragma mark - app更新检测
 - (void)upadateApp{
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    NSString *url = data.ios_update_check;
+    NSString *url = [ChatTool shareChatTool].basicConfig.ios_update_check;
     url = [url stringByTrimmingCharactersInSet:
            [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     //1.获取一个全局串行队列

@@ -84,7 +84,7 @@
     self.header.hidden = YES;
     self.empty_type = succes_empty_num;
     
-    self.myinfoModel = [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
+    self.myinfoModel = [ChatTool shareChatTool].User;
     self.headView.infoModel = self.myinfoModel;
 }
 - (void)settingButtonClick{
@@ -154,10 +154,8 @@
         notificationListVc *VC= [notificationListVc new];
         [self.navigationController pushViewController:VC animated:YES];
     } else if ([rowTitle isEqualToString:@"充值"]) {
-        LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        NSString *url = dataBase.payfor_url;
-        url = [url stringByAppendingString:data.userID];
+        NSString *url = [ChatTool shareChatTool].basicConfig.payfor_url;
+        url = [url stringByAppendingString:[ChatTool shareChatTool].User.userID];
         
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
@@ -216,7 +214,7 @@
     [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
         NSLog(@"在我的页面 基础信息获取成功");
         LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
-        [NSKeyedArchiver archiveRootObject:model toFile:PATH_base];
+        [ChatTool shareChatTool].basicConfig = model;
     } failure:^(NSInteger errorCode, NSString *msg) {
 
     }];
@@ -233,7 +231,9 @@
         if ([json[@"result"] intValue] ==1){
             
             weakSelf.myinfoModel = [LBGetMyInfoModel mj_objectWithKeyValues:json[@"data"]];
-            [NSKeyedArchiver archiveRootObject:weakSelf.myinfoModel toFile:PATH_UESRINFO];
+            [ChatTool shareChatTool].User = weakSelf.myinfoModel;
+            
+            
             [[NSUserDefaults standardUserDefaults]setObject:weakSelf.myinfoModel.address forKey:@"DeliveryAddress"];
             [[NSUserDefaults standardUserDefaults]setObject:weakSelf.myinfoModel.integral forKey:@"integral"];
             [[NSUserDefaults standardUserDefaults] setObject:weakSelf.myinfoModel.expirationDate forKey:@"expirationDate"];
@@ -251,17 +251,16 @@
 - (void)getHappyPlateList{
     for (LBGetHappyPlateListModel *one in self.listArr) {
         if ([one.plate_reg_type isEqualToString:@"1"]) {
-            LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
             NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
             paramDict[@"token"] = TOKEN;
             
-            paramDict[@"amount"] = [NSString stringWithFormat:@"%.2f",[data.amount floatValue] + [data.freezing floatValue]];
-            if ([data.amount floatValue] + [data.freezing floatValue]) {
+            paramDict[@"amount"] = [NSString stringWithFormat:@"%.2f",[[ChatTool shareChatTool].User.amount floatValue] + [[ChatTool shareChatTool].User.freezing floatValue]];
+            if ([[ChatTool shareChatTool].User.amount floatValue] + [[ChatTool shareChatTool].User.freezing floatValue]) {
                 paramDict[@"plate"] = one.plate_name;
                 paramDict[@"plateAccount"] = one.plate_account;
-                paramDict[@"trueName"] = data.surname;
+                paramDict[@"trueName"] = [ChatTool shareChatTool].User.surname;
                 paramDict[@"platePassword"] = @"";
-                paramDict[@"phone"] = data.phone;
+                paramDict[@"phone"] = [ChatTool shareChatTool].User.phone;
                 paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
                 WeakSelf
                 [VBHttpsTool postWithURL:@"happyPay" params:paramDict success:^(id json) {
@@ -271,7 +270,9 @@
                         LBGetMyInfoModel *tmpUserData = weakSelf.myinfoModel;
                         tmpUserData.amount = @"0";
                         tmpUserData.freezing = @"0";
-                        [NSKeyedArchiver archiveRootObject:tmpUserData toFile:PATH_UESRINFO];
+                        [ChatTool shareChatTool].User = tmpUserData;
+                        
+                        
                         weakSelf.headView.infoModel = tmpUserData;
                         
                         [LBShowRemendView showRemendViewText:@"提交成功！请稍待几分钟，后台在审核处理" andTitleText:@"转帐" andEnterText:@"知道了" andEnterBlock:^{

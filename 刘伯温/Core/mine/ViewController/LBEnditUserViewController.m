@@ -63,7 +63,7 @@
     signoutButton.clipsToBounds = YES;
     
 //    [self getMyInfo];
-    self.myinfoModel = [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
+    self.myinfoModel = [ChatTool shareChatTool].User;
 }
 
 - (void)signoutButtonClick{
@@ -290,8 +290,6 @@
             }else if ([type intValue] == 5){
                 [[NSUserDefaults standardUserDefaults] setObject:text forKey:@"DeliveryAddress"];
             }
-
-            
             [weakSelf getMyInfo];
         }else{
             [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
@@ -310,8 +308,8 @@
     [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
             weakSelf.myinfoModel = [LBGetMyInfoModel mj_objectWithKeyValues:json[@"data"]];
+            [ChatTool shareChatTool].User = weakSelf.myinfoModel;
             [weakSelf.tableView reloadData];
-            [[NSUserDefaults standardUserDefaults] setBool:(weakSelf.myinfoModel.address.length ||weakSelf.myinfoModel.phone.length||weakSelf.myinfoModel.surname.length) forKey:@"hasFullInfo"];
         }else{
             [MBProgressHUD showMessage:json[@"info"] finishBlock:nil];
         }

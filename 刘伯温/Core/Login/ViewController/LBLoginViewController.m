@@ -269,7 +269,8 @@ WeakSelf
     [VBHttpsTool postWithURL:@"getMyInfo" params:paramDict success:^(id json) {
         if ([json[@"result"] intValue] ==1){
             LBGetMyInfoModel *myinfoModel = [LBGetMyInfoModel mj_objectWithKeyValues:json[@"data"]];
-            [NSKeyedArchiver archiveRootObject:myinfoModel toFile:PATH_UESRINFO];
+            [ChatTool shareChatTool].User = myinfoModel;
+            
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLogin"];
             [[NSUserDefaults standardUserDefaults]setObject:myinfoModel.address forKey:@"DeliveryAddress"];
             [[NSUserDefaults standardUserDefaults]setObject:myinfoModel.integral forKey:@"integral"];

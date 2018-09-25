@@ -40,7 +40,7 @@
     kWeakSelf(self);
     [[ToolHelper shareToolHelper]getUserInfosuccess:^(id dataDict, NSString *msg, NSInteger code) {
         LBGetMyInfoModel *data = [LBGetMyInfoModel mj_objectWithKeyValues:dataDict[@"data"]];
-        [NSKeyedArchiver archiveRootObject:data toFile:PATH_UESRINFO];
+        [ChatTool shareChatTool].User = data;
         weakself.head.data = data;
         [weakself loadNewDataEndHeadsuccessSet:nil code:code footerIsShow:NO hasMore:nil];
         weakself.header.hidden = YES;
@@ -56,11 +56,9 @@
     NSString *rowTitle = tmp[indexPath.row];
     
     if ([rowTitle isEqualToString:@"充值"]) {
-        LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        
-        NSString *url = dataBase.payfor_url;
-        url = [url stringByAppendingString:data.userID];
+
+        NSString *url = [ChatTool shareChatTool].basicConfig.payfor_url;
+        url = [url stringByAppendingString:[ChatTool shareChatTool].User.userID];
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
         }
@@ -72,8 +70,7 @@
         [self selectBuyCard];
     } else if ([rowTitle isEqualToString:@"转换现金"]) {
         LBDepositViewController *VC = [[LBDepositViewController alloc]initWithNibName:@"LBDepositViewController" bundle:nil];
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        VC.amount = [NSString stringWithFormat:@"%.2f",[data.amount floatValue]+[data.freezing floatValue]];
+        VC.amount = [NSString stringWithFormat:@"%.2f",[[ChatTool shareChatTool].User.amount floatValue]+[[ChatTool shareChatTool].User.freezing floatValue]];
         [self.navigationController pushViewController:VC animated:YES];
     }
 }
@@ -170,8 +167,7 @@
     cell.imageView.image = [UIImage imageNamed:tmp2[indexPath.row]];
     cell.textLabel.text = tmp[indexPath.row];
     if (indexPath.section == 0 && indexPath.row == 1) {
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"当前可提现金额(%.2f元)",[data.amount floatValue]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"当前可提现金额(%.2f元)",[[ChatTool shareChatTool].User.amount floatValue]];
     } else {
         cell.detailTextLabel.text = nil;
     }

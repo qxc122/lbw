@@ -20,6 +20,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ChatTool : NSObject
+@property(strong, nonatomic) LBGetMyInfoModel *User;
+@property(strong, nonatomic) LBGetVerCodeModel *basicConfig;
+
+#pragma mark 下载用户头像并更新IM用户信息
+- (void)updateUserInfo;
+
 singleH(ChatTool);
 - (void)StartWork;
 - (void)StopWork;

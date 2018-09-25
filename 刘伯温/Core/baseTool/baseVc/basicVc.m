@@ -135,8 +135,8 @@
     [VBHttpsTool postWithURL:@"sign" params:paramDict success:^(id json) {
         [MBProgressHUD hideHUDForView:weakSelf.view];
         if ([json[@"result"] intValue] == 1){
-            LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-            [LBShowRemendView showRemendViewText:[NSString stringWithFormat:@"签到成功，您将获得%@金币奖励",data.singReward] andTitleText:@"签到" andEnterText:@"我知道了" andEnterBlock:^{
+
+            [LBShowRemendView showRemendViewText:[NSString stringWithFormat:@"签到成功，您将获得%@金币奖励",[ChatTool shareChatTool].basicConfig.singReward] andTitleText:@"签到" andEnterText:@"我知道了" andEnterBlock:^{
                 
             }];
         }else{

@@ -10,7 +10,10 @@
 
 
 @interface ChatTool ()<JMessageDelegate>
-
+{
+    LBGetMyInfoModel *_User;
+    LBGetVerCodeModel *_basicConfig;
+}
 @end
 
 
@@ -18,7 +21,28 @@
 @implementation ChatTool
 singleM(ChatTool);
 
+- (LBGetVerCodeModel *)basicConfig{
+    if (!_basicConfig) {
+        _basicConfig = [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+    }
+    return  _basicConfig;
+}
 
+- (void)setBasicConfig:(LBGetVerCodeModel *)basicConfig{
+    _basicConfig = basicConfig;
+    [NSKeyedArchiver archiveRootObject:basicConfig toFile:PATH_base];
+}
+
+- (LBGetMyInfoModel *)User{
+    if (!_User) {
+        _User = [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
+    }
+    return  _User;
+}
+- (void)setUser:(LBGetMyInfoModel *)User{
+    _User = User;
+    [NSKeyedArchiver archiveRootObject:User toFile:PATH_UESRINFO];
+}
 - (void)StopWork{
     self.conversation = nil;
     [self.list removeAllObjects];
@@ -96,32 +120,34 @@ singleM(ChatTool);
     }];
 }
 
-
+#pragma mark 下载用户头像并更新IM用户信息
 - (void)updateUserInfo{
-    NSString *avatar = [[NSUserDefaults standardUserDefaults] objectForKey:@"avatar"];
-    if (avatar) {
+    if (self.User.avatar) {
+        kWeakSelf(self);
         SDWebImageDownloader *manager = [SDWebImageDownloader sharedDownloader];
-        [manager downloadImageWithURL:[NSURL URLWithString:avatar] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        [manager downloadImageWithURL:[NSURL URLWithString:self.User.avatar] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
             
         } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
             if (image) {
-                // do something with image
-                JMSGUserInfo *userInfo = [[JMSGUserInfo alloc] init];
-                userInfo.nickname = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
-                userInfo.avatarData = UIImagePNGRepresentation(image);
-                [JMSGUser updateMyInfoWithUserInfo:userInfo completionHandler:^(id resultObject, NSError *error) {
-                    if (!error) {
-                        //登录成功
-                        NSLog(@"IM  信息 更新成功");
-                    } else {
-                        //登录失败
-                        NSLog(@"IM 信息 更新失败");
-                    }
-                }];
+                [weakself updateUserInfoEnd:image];
             }
-            
         }];
     }
+}
+#pragma mark 上传用户头像，名字
+- (void)updateUserInfoEnd:(UIImage *)image{
+    // do something with image
+    JMSGUserInfo *userInfo = [[JMSGUserInfo alloc] init];
+    userInfo.nickname = self.User.name?self.User.name:self.User.surname;
+    userInfo.address = self.User.address;
+    userInfo.avatarData = UIImagePNGRepresentation(image);
+    [JMSGUser updateMyInfoWithUserInfo:userInfo completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            NSLog(@"IM  信息 更新成功");
+        } else {
+            NSLog(@"IM 信息 更新失败");
+        }
+    }];
 }
 
 
@@ -171,6 +197,8 @@ singleM(ChatTool);
 - (void)addChatRoom{
     LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
     kWeakSelf(self);
+    
+    
     [JMSGChatRoom enterChatRoomWithRoomId:data.main_room_id completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             NSLog(@"加入聊天室成功");
@@ -199,8 +227,7 @@ singleM(ChatTool);
 - (void)LogOutChatRoomOnly{
     kWeakSelf(self);
     NSLog(@"推出 聊天室 中");
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    [JMSGChatRoom leaveChatRoomWithRoomId:data.main_room_id completionHandler:^(id resultObject, NSError *error) {
+    [JMSGChatRoom leaveChatRoomWithRoomId:[ChatTool shareChatTool].basicConfig.main_room_id completionHandler:^(id resultObject, NSError *error) {
         if (!error) {
             NSLog(@"推出 聊天室成功");
             [self IMlogOut];

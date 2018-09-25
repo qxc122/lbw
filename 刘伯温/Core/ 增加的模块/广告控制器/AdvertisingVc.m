@@ -39,10 +39,9 @@
 
     
     [self getBaseConfig];
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if (data) {
+    if ([ChatTool shareChatTool].basicConfig) {
         [self setSkip];
-        [self.png sd_setImageWithURL:[NSURL URLWithString:data.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];
+        [self.png sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];
         [self creatTimer];
     } else {
         self.png.image = [UIImage imageNamed:@"splash2"];
@@ -114,7 +113,7 @@
     [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
         NSLog(@"在广告页 基础信息获取成功");
         LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
-        [NSKeyedArchiver archiveRootObject:model toFile:PATH_base];
+        [ChatTool shareChatTool].basicConfig = model;
         
         [weakself  setSkip];
         [weakself.png sd_setImageWithURL:[NSURL URLWithString:model.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];

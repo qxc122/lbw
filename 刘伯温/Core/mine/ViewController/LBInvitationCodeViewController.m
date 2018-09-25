@@ -21,8 +21,7 @@
 
 @implementation LBInvitationCodeViewController
 - (IBAction)sendMessageClick:(id)sender {
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    [self showMessageView:nil title:@"邀请好友" body:[NSString stringWithFormat:@"%@:使用邀请码‘%@’可获得%@金币的奖励。快去下载吧",data.shareMsg,[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"],data.invitationReward]];
+    [self showMessageView:nil title:@"邀请好友" body:[NSString stringWithFormat:@"%@:使用邀请码‘%@’可获得%@金币的奖励。快去下载吧",[ChatTool shareChatTool].basicConfig.shareMsg,[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"],[ChatTool shareChatTool].basicConfig.invitationReward]];
 }
 - (IBAction)shareClick:(id)sender {
     [UMSocialUIManager showShareMenuViewInWindowWithPlatformSelectionBlock:^(UMSocialPlatformType platformType, NSDictionary *userInfo) {
@@ -42,15 +41,15 @@
         make.top.equalTo(self.descLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(codePng.mas_width);
     }];
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    [codePng sd_setImageWithURL:[NSURL URLWithString:data.shareVcode]];
+
+    [codePng sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.shareVcode]];
     
     self.hidesBottomBarWhenPushed = YES;
     self.topView.backgroundColor = MainColor;
 
 
     self.codeLabel.text = [NSString stringWithFormat:@"我的邀请码:%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"]];
-    self.descLabel.text = [NSString stringWithFormat:@"每邀请一位好友，将获得%@金币的奖励。接受好友邀请的用户同样获得%@的金币",data.invitationReward,data.invitationReward];
+    self.descLabel.text = [NSString stringWithFormat:@"每邀请一位好友，将获得%@金币的奖励。接受好友邀请的用户同样获得%@的金币",[ChatTool shareChatTool].basicConfig.invitationReward,[ChatTool shareChatTool].basicConfig.invitationReward];
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"保存二维码" style:UIBarButtonItemStylePlain target:self action:@selector(saveCodeClick)];
 }
@@ -58,8 +57,8 @@
     kWeakSelf(self);
     [MBProgressHUD showLoadingMessage:NSLocalizedString(@"保存中...", @"") toView:self.view];
     SDWebImageDownloader *manager = [SDWebImageDownloader sharedDownloader];
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    [manager downloadImageWithURL:[NSURL URLWithString:data.shareVcode] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+
+    [manager downloadImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.shareVcode] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         
     } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
         if (image) {
@@ -115,18 +114,15 @@
     }];
 }
 
-
-
 - (void)shareWebPageToPlatformType:(UMSocialPlatformType)platformType
 {
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
     //创建分享消息对象
     UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
     
     //创建网页内容对象
-    UMShareWebpageObject *shareObject = [UMShareWebpageObject shareObjectWithTitle:[NSString stringWithFormat:@"刘伯温邀请码：%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"]] descr:[NSString stringWithFormat:@"使用邀请码'%@'可获得%@金币的奖励。快去下载吧",[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"],data.invitationReward] thumImage:[UIImage imageNamed:@"logo"]];
+    UMShareWebpageObject *shareObject = [UMShareWebpageObject shareObjectWithTitle:[NSString stringWithFormat:@"刘伯温邀请码：%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"]] descr:[NSString stringWithFormat:@"使用邀请码'%@'可获得%@金币的奖励。快去下载吧",[[NSUserDefaults standardUserDefaults] objectForKey:@"invitationCode"],[ChatTool shareChatTool].basicConfig.invitationReward] thumImage:[UIImage imageNamed:@"logo"]];
     //设置网页地址
-    shareObject.webpageUrl = data.shareVcode;
+    shareObject.webpageUrl = [ChatTool shareChatTool].basicConfig.shareVcode;
     
     //分享消息对象设置分享内容对象
     messageObject.shareObject = shareObject;

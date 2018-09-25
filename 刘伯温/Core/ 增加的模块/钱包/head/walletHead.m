@@ -59,9 +59,9 @@
             make.bottom.equalTo(self).offset(-15);
         }];
         
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        self.two.text = [NSString stringWithFormat:@"%.2f",[data.amount floatValue]+[data.freezing floatValue]];
-        self.three.text = [NSString stringWithFormat:@"不可提现金额(%.2f)",[data.freezing floatValue]];
+
+        self.two.text = [NSString stringWithFormat:@"%.2f",[[ChatTool shareChatTool].User.amount floatValue]+[[ChatTool shareChatTool].User.freezing floatValue]];
+        self.three.text = [NSString stringWithFormat:@"不可提现金额(%.2f)",[[ChatTool shareChatTool].User.freezing floatValue]];
     }
     return self;
 }

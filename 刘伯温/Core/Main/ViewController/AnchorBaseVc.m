@@ -67,9 +67,7 @@
     }
     
     LBAnchorListModel *model = self.arry[indexPath.row];
-    
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if ([data.isFree intValue]){
+    if ([[ChatTool shareChatTool].basicConfig.isFree intValue]){
         NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
         NSDateFormatter *format = [[NSDateFormatter alloc] init];
         format.dateFormat = @"yyyy-MM-dd HH:mm:ss";

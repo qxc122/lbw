@@ -27,7 +27,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
+        self.data =  [ChatTool shareChatTool].basicConfig;
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         UIImageView *bannerImageView = [UIImageView new];
         bannerImageView.userInteractionEnabled = YES;

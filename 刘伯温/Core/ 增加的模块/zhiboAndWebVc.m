@@ -25,9 +25,7 @@
     [likeButton addTarget:self action:@selector(likeButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:likeButton];
     
-    
-    LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    NSString * reqUrl =dataBase.CFLT;
+    NSString * reqUrl =[ChatTool shareChatTool].basicConfig.CFLT;
     NSString *token =  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
     reqUrl = [reqUrl stringByAppendingString:token];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];

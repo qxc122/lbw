@@ -130,8 +130,7 @@
     UILabel *bottomDescLabel = [UILabel new];
     self.bottomDescLabel = bottomDescLabel;
     
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    bottomDescLabel.text = data.liveTipMsg;
+    bottomDescLabel.text = [ChatTool shareChatTool].basicConfig.liveTipMsg;
     bottomDescLabel.font = CustomUIFont(14);
     bottomDescLabel.textColor =[UIColor whiteColor];
     bottomDescLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
@@ -586,14 +585,13 @@
 
 - (void)shareWebPageToPlatformType:(UMSocialPlatformType)platformType
 {
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
     //创建分享消息对象
     UMSocialMessageObject *messageObject = [UMSocialMessageObject messageObject];
     
     //创建网页内容对象
-    UMShareWebpageObject *shareObject = [UMShareWebpageObject shareObjectWithTitle:self.nickname descr:data.shareMsg thumImage:self.iconUrl];
+    UMShareWebpageObject *shareObject = [UMShareWebpageObject shareObjectWithTitle:self.nickname descr:[ChatTool shareChatTool].basicConfig.shareMsg thumImage:self.iconUrl];
     //设置网页地址
-    shareObject.webpageUrl = data.shareVcode;
+    shareObject.webpageUrl = [ChatTool shareChatTool].basicConfig.shareVcode;
     
     //分享消息对象设置分享内容对象
     messageObject.shareObject = shareObject;

@@ -21,8 +21,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self addTwoView];
-    LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    NSString * reqUrl =dataBase.CFLT;
+    NSString * reqUrl =[ChatTool shareChatTool].basicConfig.CFLT;
     NSString *token =  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
     reqUrl = [reqUrl stringByAppendingString:token];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
@@ -86,11 +85,8 @@
 }
 - (void)btnClick:(UIButton *)btn{
     if ([btn.restorationIdentifier isEqualToString:IM_VIEW_money]) {
-        LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        
-        NSString *url = dataBase.payfor_url;
-        url = [url stringByAppendingString:data.userID];
+        NSString *url = [ChatTool shareChatTool].basicConfig.payfor_url;
+        url = [url stringByAppendingString:[ChatTool shareChatTool].User.userID];
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
         }
@@ -107,8 +103,7 @@
             [self.navigationController popToViewController:chatRoom animated:YES];
         } else {
             LBAnchorListModel *model =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_OF_ZHUBO];
-            LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-            if ([data.isFree intValue]){
+            if ([[ChatTool shareChatTool].basicConfig.isFree intValue]){
                 NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
                 NSDateFormatter *format = [[NSDateFormatter alloc] init];
                 format.dateFormat = @"yyyy-MM-dd HH:mm:ss";

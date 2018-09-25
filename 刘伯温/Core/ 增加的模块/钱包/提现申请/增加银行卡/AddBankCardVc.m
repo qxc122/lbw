@@ -296,9 +296,8 @@
     five.placeholder = @"请输入验证码";
     five.keyboardType = UIKeyboardTypeNumberPad;
     
-    LBGetMyInfoModel *dataUserInfo =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-    self.Three.text = dataUserInfo.surname;
-    self.four.text = dataUserInfo.phone;
+    self.Three.text = [ChatTool shareChatTool].User.surname;
+    self.four.text = [ChatTool shareChatTool].User.phone;
 }
 - (void)bankSelectClick{
     kWeakSelf(self);

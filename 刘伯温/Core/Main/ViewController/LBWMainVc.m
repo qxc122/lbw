@@ -55,8 +55,7 @@
     hornImageView.image = [UIImage imageNamed:@"喇叭"];
     [self.view addSubview:hornImageView];
     
-    LBGetVerCodeModel *dataPMD =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if (dataPMD) {
+    if ([ChatTool shareChatTool].basicConfig) {
         [self setPaoMaDeng];
     }else{
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -261,13 +260,12 @@
 #pragma mark 设置跑马灯
 - (void)setPaoMaDeng{
     if (!self.horizontalMarquee) {
-        LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, SCREENWIDTH-30, 20) withSingleScrollDuration:data.msg.length*0.15];
+        JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(30, self.SDscrollView.frame.size.height, SCREENWIDTH-30, 20) withSingleScrollDuration:[ChatTool shareChatTool].basicConfig.msg.length*0.15];
         self.horizontalMarquee = horizontalMarquee;
         horizontalMarquee.textColor = MainColor;
         horizontalMarquee.font = [UIFont systemFontOfSize:14];
         [self.view addSubview:horizontalMarquee];
-        self.horizontalMarquee.text = data.msg;
+        self.horizontalMarquee.text = [ChatTool shareChatTool].basicConfig.msg;
     }
 }
 
@@ -275,11 +273,32 @@
     [super viewWillAppear:animated];
     // 开启跑马灯
     [_horizontalMarquee marqueeOfSettingWithState:MarqueeStart_H];
+    
+//    [self createChatRoomConversation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     // 关闭跑马灯
     [_horizontalMarquee marqueeOfSettingWithState:MarqueeShutDown_H];
+}
+
+#pragma mark 聊天室测试
+- (void)createChatRoomConversation{
+    [JMSGConversation createChatRoomConversationWithRoomId:@"5294578" completionHandler:^(id resultObject, NSError *error) {
+        if (!error) {
+            NSLog(@"创建聊天室成功");
+        }else{
+            NSLog(@"%@",error);
+        }
+    }];
+}
+
+- (void)deleteChatRoomConversatio{
+    if ([JMSGConversation deleteChatRoomConversationWithRoomId:@"5294578"]) {
+        NSLog(@"删除聊天室成功");
+    } else {
+        NSLog(@"删除聊天室 失败");
+    }
 }
 @end

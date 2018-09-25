@@ -109,8 +109,7 @@
     }
 }
 - (void)maskBtnClick{
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if ([data.main_room_forbidden isEqualToString:@"1"]) {
+    if ([[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
         [MBProgressHUD showPrompt:@"聊天室已经被全局禁言" toView:self.view];
     }else{
         self.maskBtn.tag = 4;
@@ -215,19 +214,14 @@
 
 - (void)btnClick:(UIButton *)btn{
     if ([btn.restorationIdentifier isEqualToString:IM_VIEW_money]) {
-        LBGetVerCodeModel *dataBase =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-        
-        NSString *url = dataBase.payfor_url;
-        url = [url stringByAppendingString:data.userID];
+        NSString *url = [ChatTool shareChatTool].basicConfig.payfor_url;
+        url = [url stringByAppendingString:[ChatTool shareChatTool].User.userID];
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
         }
     }else if ([btn.restorationIdentifier isEqualToString:zhiboAndWebVcPNG]) {
         LBAnchorListModel *model =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_OF_ZHUBO];
-        
-        LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-        if ([data.isFree intValue]){
+        if ([[ChatTool shareChatTool].basicConfig.isFree intValue]){
             NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
             NSDateFormatter *format = [[NSDateFormatter alloc] init];
             format.dateFormat = @"yyyy-MM-dd HH:mm:ss";
@@ -265,10 +259,7 @@
     DDLogDebug(@"Event - viewWillAppear");
     [super viewWillAppear:animated];
     [self.toolBarContainer.toolbar drawRect:self.toolBarContainer.toolbar.frame];
-
-
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if ([data.main_room_forbidden isEqualToString:@"1"]) {
+    if ([[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
         self.maskBtn.hidden = NO;
     }
     if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
@@ -283,8 +274,7 @@
 }
 
 - (void)ChatToolkJMSGNetworkSucces{
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if (![data.main_room_forbidden isEqualToString:@"1"]) {
+    if (![[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
         self.maskBtn.hidden = YES;
     }
     if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
@@ -1147,8 +1137,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 }
 #pragma mark --发送文本
 - (void)sendText:(NSString *)text {
-    LBGetVerCodeModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_base];
-    if ([data.main_room_forbidden isEqualToString:@"0"]) {
+    if ([[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"0"]) {
         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"chat_forbidden"] isEqualToString:@"0"]) {
             [self prepareTextMessage:text];
         } else {

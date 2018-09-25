@@ -81,7 +81,6 @@
 }
 
 - (void)loadData{
-    LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
     NSMutableDictionary *paramDict = [NSMutableDictionary dictionary];
     paramDict[@"token"] = TOKEN;
     
@@ -94,7 +93,7 @@
     paramDict[@"plateAccount"] = self.accontTextField.text;
     paramDict[@"trueName"] = self.nameTextField.text;
     paramDict[@"platePassword"] = @"";
-    paramDict[@"phone"] = data.phone;
+    paramDict[@"phone"] = [ChatTool shareChatTool].User.phone;
     paramDict[@"sign"] = [[LBToolModel sharedInstance] getSign:paramDict];
     WeakSelf
     [MBProgressHUD showLoadingMessage:@"提交中..." toView:self.view];
@@ -181,9 +180,9 @@
 //    self.accontTextField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"plateAccount"];
 //    self.nameTextField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"trueName"];
 //
-    LBGetMyInfoModel *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_UESRINFO];
-    self.accontTextField.text = data.plateAccount;
-    self.nameTextField.text = data.surname;
+
+    self.accontTextField.text = [ChatTool shareChatTool].User.plateAccount;
+    self.nameTextField.text = [ChatTool shareChatTool].User.surname;
 //    self.moneyTextField.text = [NSString stringWithFormat:@"%@",self.amount];
     self.nameTextField.hidden = YES;
     self.moneyTextField.hidden = NO;
