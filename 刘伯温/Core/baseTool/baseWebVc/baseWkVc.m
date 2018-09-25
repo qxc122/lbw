@@ -69,13 +69,13 @@
     }else if (self.tabBarController.selectedIndex == 3){
         reqUrl = dataBase.CFLT;
         if(ISLOGIN){
+            self.islogSuccessfully = NO;
             NSString *token =  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
             reqUrl = [reqUrl stringByAppendingString:token];
         }else{
-            self.islogSuccessfully = NO;
+            self.islogSuccessfully = YES;
         }
         self.title = dataBase.tab_ltTitle;
-        self.islogSuccessfully = NO;
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
