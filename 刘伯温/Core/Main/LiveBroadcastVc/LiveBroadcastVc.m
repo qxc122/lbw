@@ -24,6 +24,9 @@
 @property(nonatomic,strong)IJKFFMoviePlayerController * player;
 
 @property(nonatomic,strong)UIActivityIndicatorView *indicator;
+@property(nonatomic, weak)UILabel *indicatorL;
+
+
 @property(nonatomic,weak)UIButton *NOAnchor;
 
 @property(nonatomic, strong)zhiboAndWebVc *zhiboAndWebVcvc;
@@ -471,16 +474,30 @@
     _indicator.frame = CGRectMake(SCREENWIDTH*0.5-13, SCREENHEIGHT*0.5-13, 26, 26);
     //将这个控件加到父容器中。
     [self.view addSubview:_indicator];
+    
+    
+    UILabel *indicatorL = [UILabel new];
+    indicatorL.text = @"玩命加载中...";
+    indicatorL.font = CustomUIFont(12);
+    indicatorL.textColor =[UIColor whiteColor];
+    [self.view  addSubview:indicatorL];
+    self.indicatorL = indicatorL;
+    [indicatorL mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view);
+        make.top.equalTo(self.indicator.mas_bottom);
+    }];
 }
 - (void)startAnimating{
     NSLog(@"开始动画");
     self.indicator.hidden = NO;
     [self.indicator startAnimating];
+    self.indicatorL.hidden = NO;
 }
 - (void)stopAnimating{
     NSLog(@"结束动画");
     [self.indicator stopAnimating];
     self.indicator.hidden = YES;
+    self.indicatorL.hidden = YES;
 }
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if (![UIApplication sharedApplication].idleTimerDisabled) {
