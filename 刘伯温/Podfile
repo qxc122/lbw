@@ -25,4 +25,6 @@ target ‘Core’ do
     pod 'Reachability'
     pod 'SDCycleScrollView'
     pod 'JXCategoryView'
+    pod 'MMKV'
+    pod 'YBPopupMenu'
 end

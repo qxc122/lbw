@@ -81,9 +81,6 @@
 		04F456651F72B17C0088A5BE /* LBMainRootCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F456641F72B17C0088A5BE /* LBMainRootCell.m */; };
 		04F456681F72B4DC0088A5BE /* LBMineHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F456671F72B4DC0088A5BE /* LBMineHeadView.m */; };
 		16748BE0CBBDC2F25357F7EE /* libPods-Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F0057E9B5295053B7C888EB3 /* libPods-Core.a */; };
-		3D16970C207896C5009A41F5 /* YBPopupMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D169707207896C4009A41F5 /* YBPopupMenu.m */; };
-		3D16970D207896C5009A41F5 /* YBPopupMenuPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D169709207896C4009A41F5 /* YBPopupMenuPath.m */; };
-		3D16970E207896C5009A41F5 /* YBRectConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D16970B207896C4009A41F5 /* YBRectConst.m */; };
 		3D5ECA6820790034002EDC45 /* LBExchangeGoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D5ECA6720790034002EDC45 /* LBExchangeGoldView.m */; };
 		3DDCD95E2078EF400060F9D2 /* LBShowBannerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCD95D2078EF400060F9D2 /* LBShowBannerView.m */; };
 		3DF66D9F2077BE3E00A8DC37 /* LBSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF66D9D2077BE3E00A8DC37 /* LBSettingViewController.m */; };
@@ -466,12 +463,6 @@
 		04F456641F72B17C0088A5BE /* LBMainRootCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBMainRootCell.m; sourceTree = "<group>"; };
 		04F456661F72B4DC0088A5BE /* LBMineHeadView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBMineHeadView.h; sourceTree = "<group>"; };
 		04F456671F72B4DC0088A5BE /* LBMineHeadView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBMineHeadView.m; sourceTree = "<group>"; };
-		3D169706207896C4009A41F5 /* YBPopupMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBPopupMenu.h; sourceTree = "<group>"; };
-		3D169707207896C4009A41F5 /* YBPopupMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBPopupMenu.m; sourceTree = "<group>"; };
-		3D169708207896C4009A41F5 /* YBPopupMenuPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBPopupMenuPath.h; sourceTree = "<group>"; };
-		3D169709207896C4009A41F5 /* YBPopupMenuPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBPopupMenuPath.m; sourceTree = "<group>"; };
-		3D16970A207896C4009A41F5 /* YBRectConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBRectConst.h; sourceTree = "<group>"; };
-		3D16970B207896C4009A41F5 /* YBRectConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBRectConst.m; sourceTree = "<group>"; };
 		3D5ECA6620790034002EDC45 /* LBExchangeGoldView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBExchangeGoldView.h; sourceTree = "<group>"; };
 		3D5ECA6720790034002EDC45 /* LBExchangeGoldView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBExchangeGoldView.m; sourceTree = "<group>"; };
 		3DDCD95C2078EF400060F9D2 /* LBShowBannerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBShowBannerView.h; sourceTree = "<group>"; };
@@ -1149,7 +1140,6 @@
 		04CFA5CF1F70CCF400D12AD4 /* Vender */ = {
 			isa = PBXGroup;
 			children = (
-				3D169705207896C4009A41F5 /* YBPopupMenu */,
 				3DF66DA22077BEC800A8DC37 /* WHC_Lib */,
 				0480FEFC1FC1A60700156D59 /* YAddressBookFile */,
 				04E2E45B1FB8867F00B95285 /* LibraryPickerView */,
@@ -1185,19 +1175,6 @@
 				04E2E47A1FB88B3300B95285 /* UzysImagePickerController.m */,
 			);
 			path = LibraryPickerView;
-			sourceTree = "<group>";
-		};
-		3D169705207896C4009A41F5 /* YBPopupMenu */ = {
-			isa = PBXGroup;
-			children = (
-				3D169706207896C4009A41F5 /* YBPopupMenu.h */,
-				3D169707207896C4009A41F5 /* YBPopupMenu.m */,
-				3D169708207896C4009A41F5 /* YBPopupMenuPath.h */,
-				3D169709207896C4009A41F5 /* YBPopupMenuPath.m */,
-				3D16970A207896C4009A41F5 /* YBRectConst.h */,
-				3D16970B207896C4009A41F5 /* YBRectConst.m */,
-			);
-			path = YBPopupMenu;
 			sourceTree = "<group>";
 		};
 		3DF66DA22077BEC800A8DC37 /* WHC_Lib */ = {
@@ -2366,7 +2343,6 @@
 				DB48DEEC2154CBD200D7B56E /* MyLoveListVc.m in Sources */,
 				04E2E47C1FB88B3300B95285 /* UzysImagePickerController.m in Sources */,
 				DBBA46E0214BF4CD00E8E77B /* LiveBroadcastVc.m in Sources */,
-				3D16970E207896C5009A41F5 /* YBRectConst.m in Sources */,
 				04E2E4511FB875B100B95285 /* LBExchangeCollectionViewCell.m in Sources */,
 				3D5ECA6820790034002EDC45 /* LBExchangeGoldView.m in Sources */,
 				DB5671C82143A0AC00B2ADF8 /* ViewUtil.m in Sources */,
@@ -2391,7 +2367,6 @@
 				04C7567D1F7FD1820001D86F /* LBAnchorListViewController.m in Sources */,
 				04B428621F76A094004B519B /* LBFeedBackViewController.m in Sources */,
 				041DE66E1F720C9B0056B2FE /* LBLoginViewController.m in Sources */,
-				3D16970D207896C5009A41F5 /* YBPopupMenuPath.m in Sources */,
 				DB5671692143A02300B2ADF8 /* ChatImageBubble.m in Sources */,
 				DB5671812143A02300B2ADF8 /* JCHATAlertViewWait.m in Sources */,
 				04E853F31FCC4ED5005F5DD2 /* VBWebViewProgressLine.m in Sources */,
@@ -2417,7 +2392,6 @@
 				04CFA59F1F70CC2800D12AD4 /* AppDelegate.m in Sources */,
 				04B38DDC1F792CD3009ACB97 /* LBEnditUserViewController.m in Sources */,
 				DB56716E2143A02300B2ADF8 /* JCHATPhotoPickerViewController.m in Sources */,
-				3D16970C207896C5009A41F5 /* YBPopupMenu.m in Sources */,
 				DB5671912143A02300B2ADF8 /* MJPhoto.m in Sources */,
 				04C5B7A31F713F8700BB41C4 /* LBNavigationController.m in Sources */,
 				DB56750B2143A51B00B2ADF8 /* JCHATConversationViewController.m in Sources */,
