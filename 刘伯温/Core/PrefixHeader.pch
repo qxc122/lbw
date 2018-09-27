@@ -25,6 +25,7 @@
 #import "LBNavigationController.h"
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
+#import "ChatToolSQL.h"
 #import "url.h"
 #import "ChatTool.h"
 #import "LBRechargerViewController.h"

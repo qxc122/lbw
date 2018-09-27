@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <JMessage/JMSGConversation.h>
 
+
+
+
+
 @protocol ChatToolJMSGMessageDelegate <NSObject>
 @required
 - (void)ChatToolonReceiveChatRoomConversation:(JMSGConversation *)conversation
@@ -32,6 +36,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ChatTool : NSObject
+@property(assign, nonatomic) NSInteger TotalMessages;
 @property(strong, nonatomic) LBGetMyInfoModel *User;
 @property(strong, nonatomic) LBGetVerCodeModel *basicConfig;
 

@@ -283,6 +283,7 @@
 		DBBA46E0214BF4CD00E8E77B /* LiveBroadcastVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBBA46DF214BF4CD00E8E77B /* LiveBroadcastVc.m */; };
 		DBBC15802151FA30002EA679 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBC157F2151FA30002EA679 /* Foundation.framework */; };
 		DBBC1582215220AE002EA679 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBC1581215220AE002EA679 /* Photos.framework */; };
+		DBCA9E49215B72BB00A29BEC /* ChatToolSQL.m in Sources */ = {isa = PBXBuildFile; fileRef = DBCA9E48215B72BB00A29BEC /* ChatToolSQL.m */; };
 		DBEA957C2148F36D0047A764 /* zhiboAndWebVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEA957B2148F36D0047A764 /* zhiboAndWebVc.m */; };
 		DBEB4135214658940018D718 /* notificationListVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEB4134214658940018D718 /* notificationListVc.m */; };
 		DBEB413921465F930018D718 /* ToolHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEB413721465F930018D718 /* ToolHelper.m */; };
@@ -743,6 +744,8 @@
 		DBBC157D2151F82C002EA679 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		DBBC157F2151FA30002EA679 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DBBC1581215220AE002EA679 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		DBCA9E47215B72BB00A29BEC /* ChatToolSQL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolSQL.h; sourceTree = "<group>"; };
+		DBCA9E48215B72BB00A29BEC /* ChatToolSQL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatToolSQL.m; sourceTree = "<group>"; };
 		DBEA957A2148F36D0047A764 /* zhiboAndWebVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zhiboAndWebVc.h; sourceTree = "<group>"; };
 		DBEA957B2148F36D0047A764 /* zhiboAndWebVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = zhiboAndWebVc.m; sourceTree = "<group>"; };
 		DBEB4133214658940018D718 /* notificationListVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = notificationListVc.h; sourceTree = "<group>"; };
@@ -1239,6 +1242,8 @@
 				DB5671A82143A05400B2ADF8 /* JChatConstants.h */,
 				DB48DEF221565F1D00D7B56E /* ChatTool.h */,
 				DB48DEF321565F1D00D7B56E /* ChatTool.m */,
+				DBCA9E47215B72BB00A29BEC /* ChatToolSQL.h */,
+				DBCA9E48215B72BB00A29BEC /* ChatToolSQL.m */,
 				DB56756C2143BB4F00B2ADF8 /* Resources */,
 				DB56745C2143A51B00B2ADF8 /* Controller */,
 				DB5671B92143A0AC00B2ADF8 /* Category */,
@@ -2302,6 +2307,7 @@
 				DBEB418E214671100018D718 /* NSDictionary+Add.m in Sources */,
 				DB5675372143A51B00B2ADF8 /* JCHATMoreView.m in Sources */,
 				DBEB41A3214694A30018D718 /* walletHead.m in Sources */,
+				DBCA9E49215B72BB00A29BEC /* ChatToolSQL.m in Sources */,
 				DB5675392143A51B00B2ADF8 /* JCHATRecordAnimationView.m in Sources */,
 				DB5675362143A51B00B2ADF8 /* JCHATMessageTextView.m in Sources */,
 				DB5671962143A02300B2ADF8 /* MJPhotoToolbar.m in Sources */,

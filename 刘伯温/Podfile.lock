@@ -23,6 +23,9 @@ PODS:
     - CocoaLumberjack/Default
   - DZNEmptyDataSet (1.8.1)
   - FDFullscreenPopGesture (1.1)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - GPUImage (0.1.7)
   - IQKeyboardManager (6.1.1)
   - JCore (1.2.2)
@@ -63,6 +66,7 @@ DEPENDENCIES:
   - CocoaLumberjack
   - DZNEmptyDataSet
   - FDFullscreenPopGesture
+  - FMDB
   - GPUImage (~> 0.1.7)
   - IQKeyboardManager
   - JMessage
@@ -90,6 +94,7 @@ SPEC REPOS:
     - CocoaLumberjack
     - DZNEmptyDataSet
     - FDFullscreenPopGesture
+    - FMDB
     - GPUImage
     - IQKeyboardManager
     - JCore
@@ -124,6 +129,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   IQKeyboardManager: 79c57795f5c2408d259d37b9da2ed07efcbb5225
   JCore: f14c0549968a63c22e246a4875aa9d428446f373
@@ -144,6 +150,6 @@ SPEC CHECKSUMS:
   YBPopupMenu: 6efb286385d95ba5f97c58b8464ec873645e8764
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 49741fc5fc6a9923786d139030c7dcd768b6753a
+PODFILE CHECKSUM: edc8c4168a2ee1884bddb42793f332ed4938a545
 
 COCOAPODS: 1.5.3

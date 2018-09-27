@@ -254,46 +254,51 @@
     }
 }
 
-
-
 - (void)viewWillAppear:(BOOL)animated {
     DDLogDebug(@"Event - viewWillAppear");
     [super viewWillAppear:animated];
     [self.toolBarContainer.toolbar drawRect:self.toolBarContainer.toolbar.frame];
     if ([[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
         self.maskBtn.hidden = NO;
+    }else{
+       self.maskBtn.hidden = YES;
     }
+//    if ([ChatTool shareChatTool].TotalMessages) {
+//        [self.messageTableView reloadData];
+//    }
     if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
         [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
-//        [self getGroupMemberListWithGetMessageFlag:YES];
     }
 }
 
-//- (void)ChatToolonSendMessageResponse:(JMSGMessage *)message error:(NSError *)error{
-//    [self onSendMessageResponse:message error:error];
-//}
-//
-//- (void)ChatToolonReceiveMessageDownloadFailed:(JMSGMessage *)message{
-//    [self onReceiveMessageDownloadFailed:message];
-//}
-//
-//- (void)ChatToolonSyncOfflineMessageConversation:(JMSGConversation *)conversation
-//                                 offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages{
-//    [self onSyncOfflineMessageConversation:conversation offlineMessages:offlineMessages];
-//}
-//- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation{
-//    [self onSyncRoamingMessageConversation:conversation];
-//}
+- (void)ChatToolonSendMessageResponse:(JMSGMessage *)message error:(NSError *)error{
+    [self onSendMessageResponse:message error:error];
+}
+
+- (void)ChatToolonReceiveMessageDownloadFailed:(JMSGMessage *)message{
+    [self onReceiveMessageDownloadFailed:message];
+}
+
+- (void)ChatToolonSyncOfflineMessageConversation:(JMSGConversation *)conversation
+                                 offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages{
+    [self onSyncOfflineMessageConversation:conversation offlineMessages:offlineMessages];
+}
+- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation{
+    [self onSyncRoamingMessageConversation:conversation];
+}
 
 - (void)ChatToolonReceiveChatRoomConversation:(JMSGConversation *)conversation
                                      messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     [self onReceiveChatRoomConversation:conversation messages:messages];
+//    [self.messageTableView reloadData];
 //    [self getGroupMemberListWithGetMessageFlag:YES];
 }
 
 - (void)ChatToolkJMSGNetworkSucces{
     self.conversation = [ChatTool shareChatTool].conversation;
-    if (![[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
+    if ([[ChatTool shareChatTool].basicConfig.main_room_forbidden isEqualToString:@"1"]) {
+        self.maskBtn.hidden = NO;
+    }else{
         self.maskBtn.hidden = YES;
     }
     if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
@@ -1435,7 +1440,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
+//    return [ChatTool shareChatTool].TotalMessages;
   return [_allmessageIdArr count];
 }
 - (void)configureChatRecordCell:(ChatRecordCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -1523,7 +1528,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
                 cell.messageTimeLabel.text = [JCHATStringUtils getFriendlyDateString:[model.messageTime longLongValue]];
             }
             return cell;
-            
         }
 //        else if (model.message.contentType == kJMSGContentTypeUnknown) {
 //            static NSString *cellIdentifier = @"UITableViewCell";

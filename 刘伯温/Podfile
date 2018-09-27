@@ -27,4 +27,5 @@ target ‘Core’ do
     pod 'JXCategoryView'
     pod 'MMKV'
     pod 'YBPopupMenu'
+    pod 'FMDB'
 end

@@ -63,7 +63,7 @@
 
 #define JAMS @"JAMESM3DADF"
 
-
+#define PageForNUm  10   //聊天页面每页的消息数
 
 //#define HeadURL @"http://121.42.42.112:903/api.v10.php?a="//测试
 

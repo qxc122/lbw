@@ -49,6 +49,7 @@ singleM(ChatTool);
     [self.list removeAllObjects];
     [JMessage removeAllDelegates];
     [self LogOutChatRoomOnly];
+    self.TotalMessages = 0;
 }
 - (void)StartWork{
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -70,6 +71,8 @@ singleM(ChatTool);
 - (void)onReceiveChatRoomConversation:(JMSGConversation *)conversation
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     [self addArry:messages];
+//    [[ChatToolSQL shareChatToolSQL] insertDataFormArry:messages];
+//    self.TotalMessages += messages.count;
     NSLog(@"收到消息%ld",messages.count);
     if (self.delegate) {
         [self.delegate ChatToolonReceiveChatRoomConversation:conversation messages:messages];
