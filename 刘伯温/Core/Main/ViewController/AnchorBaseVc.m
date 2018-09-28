@@ -84,11 +84,11 @@
     LiveBroadcastVc *vc =[LiveBroadcastVc new];
     vc.anchorLiveUrl = model.anchorLiveUrl;
     
+    NSLog(@"model.anchorLiveUrl=%@",model.anchorLiveUrl);
     vc.anchorID = model.anchorID;
     vc.livePlatID = model.livePlatID;
     vc.iconUrl = model.anchorThumb;
     vc.nickname = model.anchorName;
     [self.navigationController pushViewController:vc animated:YES];
-    
 }
 @end

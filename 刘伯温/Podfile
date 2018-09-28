@@ -28,5 +28,5 @@ target ‘Core’ do
     pod 'MMKV'
     pod 'YBPopupMenu'
     pod 'FMDB'
-#    pod 'PLPlayerKit'
+    pod 'PLPlayerKit'
 end

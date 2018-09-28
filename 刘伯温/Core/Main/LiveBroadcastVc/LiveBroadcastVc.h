@@ -17,4 +17,9 @@
 @property(nonatomic, strong)NSString *iconUrl;
 @property(nonatomic, strong)NSString *nickname;
 
+
+
+@property (nonatomic, strong) UIImageView   *thumbImageView;
+@property (nonatomic, strong) NSURL *thumbImageURL;
+
 @end

@@ -278,7 +278,6 @@
 		DB5EB87321490DF900786CE2 /* ChatRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB87221490DF900786CE2 /* ChatRecordCell.m */; };
 		DB5EB877214912EE00786CE2 /* AdvertisingVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB876214912EE00786CE2 /* AdvertisingVc.m */; };
 		DB5EB87B214A56EA00786CE2 /* ChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB87A214A56EA00786CE2 /* ChatRoom.m */; };
-		DBBA46DA214BF3A800E8E77B /* IJKMediaFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBA46D9214BF3A800E8E77B /* IJKMediaFramework.framework */; };
 		DBBA46DC214BF3AF00E8E77B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBA46DB214BF3AF00E8E77B /* libc++.tbd */; };
 		DBBA46E0214BF4CD00E8E77B /* LiveBroadcastVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBBA46DF214BF4CD00E8E77B /* LiveBroadcastVc.m */; };
 		DBBC15802151FA30002EA679 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBC157F2151FA30002EA679 /* Foundation.framework */; };
@@ -739,7 +738,6 @@
 		DB5EB876214912EE00786CE2 /* AdvertisingVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvertisingVc.m; sourceTree = "<group>"; };
 		DB5EB879214A56EA00786CE2 /* ChatRoom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoom.h; sourceTree = "<group>"; };
 		DB5EB87A214A56EA00786CE2 /* ChatRoom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoom.m; sourceTree = "<group>"; };
-		DBBA46D9214BF3A800E8E77B /* IJKMediaFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = IJKMediaFramework.framework; sourceTree = "<group>"; };
 		DBBA46DB214BF3AF00E8E77B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		DBBA46DE214BF4CD00E8E77B /* LiveBroadcastVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveBroadcastVc.h; sourceTree = "<group>"; };
 		DBBA46DF214BF4CD00E8E77B /* LiveBroadcastVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveBroadcastVc.m; sourceTree = "<group>"; };
@@ -821,7 +819,6 @@
 				DBBA46DC214BF3AF00E8E77B /* libc++.tbd in Frameworks */,
 				04C5B8EB1F715A8700BB41C4 /* libz.tbd in Frameworks */,
 				0406A7DA1FEBF7E0007000F2 /* libiconv.tbd in Frameworks */,
-				DBBA46DA214BF3A800E8E77B /* IJKMediaFramework.framework in Frameworks */,
 				04C5B8ED1F715A9000BB41C4 /* libbz2.tbd in Frameworks */,
 				04C5B9031F715B1F00BB41C4 /* VideoToolbox.framework in Frameworks */,
 				04C5B8FF1F715AF100BB41C4 /* OpenGLES.framework in Frameworks */,
@@ -1080,7 +1077,6 @@
 			isa = PBXGroup;
 			children = (
 				DB48DEED2155E76700D7B56E /* JhtMarquee.framework */,
-				DBBA46D9214BF3A800E8E77B /* IJKMediaFramework.framework */,
 				04C4A43B1FEA833E00634A8A /* Core.entitlements */,
 				DBEB419721468CE60018D718 /*  增加的模块 */,
 				DBEB414F2146710F0018D718 /* baseTool */,
@@ -1959,6 +1955,7 @@
 				04CFA5941F70CC2800D12AD4 /* Frameworks */,
 				04CFA5951F70CC2800D12AD4 /* Resources */,
 				7DB565C55CAB57BB63FA6FF4 /* [CP] Copy Pods Resources */,
+				A68DE09FA9ECF1DBB77141F0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2268,6 +2265,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Core/Pods-Core-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A68DE09FA9ECF1DBB77141F0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Core/Pods-Core-frameworks.sh",
+				"${PODS_ROOT}/PLPlayerKit/Pod/Library/PLPlayerKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PLPlayerKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Core/Pods-Core-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

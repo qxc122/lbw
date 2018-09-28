@@ -7,7 +7,6 @@
 //
 
 #import "LiveBroadcastVc.h"
-#import <IJKMediaFramework/IJKFFMoviePlayerController.h>
 #import "LBShowBannerView.h"
 #import "zhiboAndWebVc.h"
 #import "JCHATConversationViewController.h"
@@ -16,12 +15,13 @@
 #import <UMSocialCore/UMSocialCore.h>
 #import <UShareUI/UShareUI.h>
 
-@interface LiveBroadcastVc (){
-    UITapGestureRecognizer *_tapGestureRecognizer;
-    UITapGestureRecognizer *_doubleTapGestureRecognizer;
-    UIPanGestureRecognizer *_panGestureRecognizer;
-}
-@property(nonatomic,strong)IJKFFMoviePlayerController * player;
+@interface LiveBroadcastVc ()<PLPlayerDelegate>
+
+@property (nonatomic, strong) UIVisualEffectView *effectView;
+
+@property (nonatomic, assign) BOOL isDisapper;
+
+@property (nonatomic, strong) PLPlayer      *player;
 
 @property(nonatomic,strong)UIActivityIndicatorView *indicator;
 @property(nonatomic, weak)UILabel *indicatorL;
@@ -48,14 +48,12 @@
 @property(nonatomic, weak)UIButton *ChatRoomButton;
 
 @property(nonatomic, assign)BOOL isAttention;
-
-
-@property(nonatomic, strong)UIButton *paseButton;
-
 @property (nonatomic,strong) NSTimer *scrollTimer;
 
 @property (nonatomic,assign) BOOL record;
 
+
+@property (nonatomic, strong) NSURL *url;
 @end
 
 @implementation LiveBroadcastVc
@@ -65,30 +63,29 @@
     self.record = NO;
     self.fd_prefersNavigationBarHidden = YES;
     self.view.backgroundColor = [UIColor blackColor];
-    [self creatPlaer];
-}
-- (void)creatPlaer{
-    [IJKFFMoviePlayerController checkIfFFmpegVersionMatch:YES];
     
-    IJKFFOptions *options = [IJKFFOptions optionsByDefault]; //使用默认配置
+    self.thumbImageView = [[UIImageView alloc] init];
+    self.thumbImageView.image = [UIImage imageNamed:@"qn_niu"];
+    self.thumbImageView.clipsToBounds = YES;
+    self.thumbImageView.contentMode = UIViewContentModeScaleAspectFill;
+    if (self.thumbImageURL) {
+        [self.thumbImageView sd_setImageWithURL:self.thumbImageURL placeholderImage:self.thumbImageView.image];
+    }
     
-    NSURL * url = [NSURL URLWithString:self.anchorLiveUrl];
-    self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:url withOptions:options]; //初始化播放器，播放在线视频或直播(RTMP)
-    self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    self.player.view.frame = self.view.bounds;
-    self.player.scalingMode = IJKMPMovieScalingModeAspectFill; //缩放模式
-    self.player.shouldAutoplay = NO; //开启自动播放
+    [self.view addSubview:self.thumbImageView];
+    [self.thumbImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
     
-#ifdef DEBUG
-    [IJKFFMoviePlayerController setLogReport:YES];
-    [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_DEBUG];
     
-#else
-    [IJKFFMoviePlayerController setLogReport:NO];
-    [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_INFO];
-#endif
-    self.view.autoresizesSubviews = YES;
-    [self.view addSubview:self.player.view];
+    UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    self.effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    [self.thumbImageView addSubview:_effectView];
+    [self.effectView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.thumbImageView);
+    }];
+    
+    [self setupPlayer];
     
     [self installMovieNotificationObservers];
     [self addChatRecodVc];
@@ -110,10 +107,16 @@
     [self.guangaoView show];
     [self addTopView];
     [self AddGesture];
-    [self.player prepareToPlay];
     NSLog(@"准备链接中");
 }
-
+- (void)setIconUrl:(NSString *)iconUrl{
+    _iconUrl = iconUrl;
+    self.thumbImageURL = [NSURL URLWithString:iconUrl];
+}
+- (void)setAnchorLiveUrl:(NSString *)anchorLiveUrl{
+    _anchorLiveUrl = anchorLiveUrl;
+    self.url = [NSURL URLWithString:anchorLiveUrl];
+}
 - (void)inputKeyboardWillHide{
     [self setBottom:NO];
 }
@@ -274,144 +277,9 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    if (!self.scrollTimer) {
-        if (self.player.isPreparedToPlay) {
-            [self.player play];
-            [self stopAnimating];
-            [self setTopBtnEnable:YES];
-            NSLog(@"准备播放");
-        }else if(!self.player.isPlaying){
-            if (self.NOAnchor.hidden) {
-                [self startAnimating];
-                NSLog(@"还在链接中");
-            }
-        }
-        [self installMovieNotificationObservers];
-        [self creatTimer];
-        [[UIApplication sharedApplication] addObserver:self forKeyPath:@"idleTimerDisabled" options:NSKeyValueObservingOptionNew context:nil];
-    }
-}
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    if (self.scrollTimer) {
-        [self removeTimer];
-        [[UIApplication sharedApplication] removeObserver:self forKeyPath:@"idleTimerDisabled"];
-        if ([self.navigationController.childViewControllers containsObject:self]) {
-            if (self.player.isPlaying) {
-                [self.player pause];
-                NSLog(@"暂停");
-            }
-        }else{
-            [self.player shutdown];
-            NSLog(@"shutdown");
-        }
-    }
-}
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self RemoveKeyboard];
-}
-- (void)loadStateDidChange:(NSNotification*)notification
-{
-    //    MPMovieLoadStateUnknown        = 0,
-    //    MPMovieLoadStatePlayable       = 1 << 0,
-    //    MPMovieLoadStatePlaythroughOK  = 1 << 1, // Playback will be automatically started in this state when shouldAutoplay is YES
-    //    MPMovieLoadStateStalled        = 1 << 2, // Playback will be automatically paused in this state, if started
-    
-    IJKMPMovieLoadState loadState = _player.loadState;
-    
-    if ((loadState & IJKMPMovieLoadStatePlaythroughOK) != 0) {
-        if ([self.navigationController.topViewController isEqual:self]) {
-            [self.player play];
-            NSLog(@"链接 成功");
-        }
-        NSLog(@"播放");
-        [self stopAnimating];
-        [self setTopBtnEnable:YES];
-        NSLog(@"loadStateDidChange: IJKMPMovieLoadStatePlaythroughOK: %d\n", (int)loadState);
-    } else if ((loadState & IJKMPMovieLoadStateStalled) != 0) {
-        [self startAnimating];
-        NSLog(@"loadStateDidChange: IJKMPMovieLoadStateStalled: %d\n", (int)loadState);
-    } else {
-        NSLog(@"loadStateDidChange: ???: %d\n", (int)loadState);
-    }
-}
-
-- (void)moviePlayBackDidFinish:(NSNotification*)notification
-{
-    //    MPMovieFinishReasonPlaybackEnded,
-    //    MPMovieFinishReasonPlaybackError,
-    //    MPMovieFinishReasonUserExited
-    int reason = [[[notification userInfo] valueForKey:IJKMPMoviePlayerPlaybackDidFinishReasonUserInfoKey] intValue];
-    
-    switch (reason)
-    {
-        case IJKMPMovieFinishReasonPlaybackEnded:
-//            [self TheAnchorIsNot];
-            NSLog(@"playbackStateDidChange: IJKMPMovieFinishReasonPlaybackEnded: %d\n", reason);
-            break;
-            
-        case IJKMPMovieFinishReasonUserExited:
-            NSLog(@"playbackStateDidChange: IJKMPMovieFinishReasonUserExited: %d\n", reason);
-            break;
-            
-        case IJKMPMovieFinishReasonPlaybackError:
-            [self TheAnchorIsNot];
-            NSLog(@"主播不在 TheAnchorIsNot");
-            NSLog(@"playbackStateDidChange: IJKMPMovieFinishReasonPlaybackError: %d\n", reason);
-            break;
-            
-        default:
-            NSLog(@"playbackPlayBackDidFinish: ???: %d\n", reason);
-            break;
-    }
-}
-
-- (void)mediaIsPreparedToPlayDidChange:(NSNotification*)notification
-{
-    NSLog(@"mediaIsPreparedToPlayDidChange\n");
-}
-
-- (void)moviePlayBackStateDidChange:(NSNotification*)notification
-{
-    //    MPMoviePlaybackStateStopped,
-    //    MPMoviePlaybackStatePlaying,
-    //    MPMoviePlaybackStatePaused,
-    //    MPMoviePlaybackStateInterrupted,
-    //    MPMoviePlaybackStateSeekingForward,
-    //    MPMoviePlaybackStateSeekingBackward
-    
-    switch (_player.playbackState)
-    {
-        case IJKMPMoviePlaybackStateStopped: {
-            NSLog(@"IJKMPMoviePlayBackStateDidChange %d: stoped", (int)_player.playbackState);
-            break;
-        }
-        case IJKMPMoviePlaybackStatePlaying: {
-            NSLog(@"IJKMPMoviePlayBackStateDidChange %d: playing", (int)_player.playbackState);
-            [self recordPlayWithanchorID];
-            break;
-        }
-        case IJKMPMoviePlaybackStatePaused: {
-            NSLog(@"IJKMPMoviePlayBackStateDidChange %d: paused", (int)_player.playbackState);
-            break;
-        }
-        case IJKMPMoviePlaybackStateInterrupted: {
-            NSLog(@"IJKMPMoviePlayBackStateDidChange %d: interrupted", (int)_player.playbackState);
-            break;
-        }
-        case IJKMPMoviePlaybackStateSeekingForward:
-        case IJKMPMoviePlaybackStateSeekingBackward: {
-            NSLog(@"IJKMPMoviePlayBackStateDidChange %d: seeking", (int)_player.playbackState);
-            break;
-        }
-        default: {
-            NSLog(@"IJKMPMoviePlayBackStateDidChange %d: unknown", (int)_player.playbackState);
-            break;
-        }
-    }
 }
 
 #pragma mark Install Movie Notifications
@@ -419,25 +287,6 @@
 /* Register observers for the various movie object notifications. */
 -(void)installMovieNotificationObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(loadStateDidChange:)
-                                                 name:IJKMPMoviePlayerLoadStateDidChangeNotification
-                                               object:_player];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moviePlayBackDidFinish:)
-                                                 name:IJKMPMoviePlayerPlaybackDidFinishNotification
-                                               object:_player];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(mediaIsPreparedToPlayDidChange:)
-                                                 name:IJKMPMediaPlaybackIsPreparedToPlayDidChangeNotification
-                                               object:_player];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moviePlayBackStateDidChange:)
-                                                 name:IJKMPMoviePlayerPlaybackStateDidChangeNotification
-                                               object:_player];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(inputKeyboardWillShow)
                                                  name:UIKeyboardWillShowNotification
@@ -454,19 +303,10 @@
 /* Remove the movie notification observers from the movie object. */
 -(void)removeMovieNotificationObservers
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:IJKMPMoviePlayerLoadStateDidChangeNotification object:_player];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:IJKMPMoviePlayerPlaybackDidFinishNotification object:_player];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:IJKMPMediaPlaybackIsPreparedToPlayDidChangeNotification object:_player];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:IJKMPMoviePlayerPlaybackStateDidChangeNotification object:_player];
-    
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (void)TheAnchorIsNot{
-    [self stopAnimating];
-    self.NOAnchor.hidden = NO;
-}
 - (void)addindicator{
     _indicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     _indicator.hidesWhenStopped = NO;
@@ -487,18 +327,7 @@
         make.top.equalTo(self.indicator.mas_bottom);
     }];
 }
-- (void)startAnimating{
-    NSLog(@"开始动画");
-    self.indicator.hidden = NO;
-    [self.indicator startAnimating];
-    self.indicatorL.hidden = NO;
-}
-- (void)stopAnimating{
-    NSLog(@"结束动画");
-    [self.indicator stopAnimating];
-    self.indicator.hidden = YES;
-    self.indicatorL.hidden = YES;
-}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if (![UIApplication sharedApplication].idleTimerDisabled) {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -701,13 +530,6 @@
     singleTapGesture.numberOfTapsRequired =1;
     singleTapGesture.numberOfTouchesRequired  =1;
     [self.view addGestureRecognizer:singleTapGesture];
-    
-    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleDoubleTap:)];
-    doubleTapGesture.numberOfTapsRequired =2;
-    doubleTapGesture.numberOfTouchesRequired =1;
-    [self.view addGestureRecognizer:doubleTapGesture];
-    //只有当doubleTapGesture识别失败的时候(即识别出这不是双击操作)，singleTapGesture才能开始识别
-    [singleTapGesture requireGestureRecognizerToFail:doubleTapGesture];
 }
 
 
@@ -774,4 +596,165 @@
         }];
     }
 }
+
+- (void)setThumbImageURL:(NSURL *)thumbImageURL {
+    _thumbImageURL = thumbImageURL;
+    [self.thumbImageView sd_setImageWithURL:thumbImageURL placeholderImage:self.thumbImageView.image];
+}
+
+- (void)setUrl:(NSURL *)url {
+    if ([_url.absoluteString isEqualToString:url.absoluteString]) return;
+    _url = url;
+    
+    if (self.player) {
+        [self stop];
+        [self setupPlayer];
+        [self.player play];
+    }
+}
+
+- (void) setupPlayer {
+    
+    NSLog(@"播放地址: %@", _url.absoluteString);
+    
+    PLPlayerOption *option = [PLPlayerOption defaultOption];
+    PLPlayFormat format = kPLPLAY_FORMAT_UnKnown;
+    NSString *urlString = _url.absoluteString.lowercaseString;
+    if ([urlString hasSuffix:@"mp4"]) {
+        format = kPLPLAY_FORMAT_MP4;
+    } else if ([urlString hasPrefix:@"rtmp:"]) {
+        format = kPLPLAY_FORMAT_FLV;
+    } else if ([urlString hasSuffix:@".mp3"]) {
+        format = kPLPLAY_FORMAT_MP3;
+    } else if ([urlString hasSuffix:@".m3u8"]) {
+        format = kPLPLAY_FORMAT_M3U8;
+    }
+    [option setOptionValue:@(format) forKey:PLPlayerOptionKeyVideoPreferFormat];
+    [option setOptionValue:@(kPLLogNone) forKey:PLPlayerOptionKeyLogLevel];
+    
+    self.player = [PLPlayer playerWithURL:_url option:option];
+    [self.view insertSubview:self.player.playerView atIndex:0];
+    [self.player.playerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    self.player.delegateQueue = dispatch_get_main_queue();
+    self.player.playerView.contentMode = UIViewContentModeScaleAspectFill;
+    self.player.delegate = self;
+    self.player.loopPlay = YES;
+}
+
+- (void)clickCloseButton {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    self.isDisapper = YES;
+    [self stop];
+    [super viewDidDisappear:animated];
+    if (self.scrollTimer) {
+        [self removeTimer];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isDisapper = NO;
+    if (![self.player isPlaying]) {
+        [self.player play];
+    }
+    if (!self.scrollTimer) {
+        [self installMovieNotificationObservers];
+        [self creatTimer];
+    }
+}
+
+- (void)stop {
+    [self.player stop];
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+}
+
+- (void)showWaiting{
+    NSLog(@"开始动画");
+    self.indicator.hidden = NO;
+    [self.indicator startAnimating];
+    self.indicatorL.hidden = NO;
+}
+- (void)hideWaiting{
+    NSLog(@"结束动画");
+    [self.indicator stopAnimating];
+    self.indicator.hidden = YES;
+    self.indicatorL.hidden = YES;
+}
+
+#pragma mark - PLPlayerDelegate
+
+- (void)playerWillBeginBackgroundTask:(PLPlayer *)player {
+}
+
+- (void)playerWillEndBackgroundTask:(PLPlayer *)player {
+}
+
+- (void)player:(PLPlayer *)player statusDidChange:(PLPlayerStatus)state
+{
+    NSLog(@"state=%ld",(long)state);
+    if (self.isDisapper) {
+        [self stop];
+        [self hideWaiting];
+        return;
+    }
+    
+    if (state == PLPlayerStatusPlaying ) {
+        [self hideWaiting];
+    }else if(state == PLPlayerStatusPaused ||
+             state == PLPlayerStatusStopped ||
+             state == PLPlayerStatusError ||
+             state == PLPlayerStatusUnknow ||
+             state == PLPlayerStatusCompleted){
+        [self hideWaiting];
+    }else if (state == PLPlayerStatusPreparing ||
+               state == PLPlayerStatusReady ||
+               state == PLPlayerStatusCaching) {
+        [self showWaiting];
+    } else if (state == PLPlayerStateAutoReconnecting) {
+        [self showWaiting];
+    }
+}
+
+- (void)player:(PLPlayer *)player stoppedWithError:(NSError *)error
+{
+    NSLog(@"stoppedWithError");
+    [self hideWaiting];
+    self.NOAnchor.hidden = NO;
+}
+
+- (void)player:(nonnull PLPlayer *)player willRenderFrame:(nullable CVPixelBufferRef)frame pts:(int64_t)pts sarNumerator:(int)sarNumerator sarDenominator:(int)sarDenominator {
+    dispatch_main_async_safe(^{
+        if (![UIApplication sharedApplication].isIdleTimerDisabled) {
+            [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+        }
+    });
+//    NSLog(@"willRenderFrame");
+}
+
+- (AudioBufferList *)player:(PLPlayer *)player willAudioRenderBuffer:(AudioBufferList *)audioBufferList asbd:(AudioStreamBasicDescription)audioStreamDescription pts:(int64_t)pts sampleFormat:(PLPlayerAVSampleFormat)sampleFormat{
+//    NSLog(@"willAudioRenderBuffer");
+    return audioBufferList;
+}
+
+- (void)player:(nonnull PLPlayer *)player firstRender:(PLPlayerFirstRenderType)firstRenderType {
+    if (PLPlayerFirstRenderTypeVideo == firstRenderType) {
+        self.thumbImageView.hidden = YES;
+    }
+    NSLog(@"firstRender");
+}
+
+- (void)player:(nonnull PLPlayer *)player SEIData:(nullable NSData *)SEIData {
+    NSLog(@"SEIData");
+}
+
+- (void)player:(PLPlayer *)player codecError:(NSError *)error {
+    [self hideWaiting];
+    NSLog(@"codecError");
+}
+
 @end

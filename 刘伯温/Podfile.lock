@@ -31,12 +31,15 @@ PODS:
   - JCore (1.2.2)
   - JMessage (3.7.0):
     - JCore (~> 1.0)
-  - JXCategoryView (1.0.9)
+  - JXCategoryView (1.1.0)
   - Masonry (1.1.0)
   - MBProgressHUD (1.1.0)
   - MJExtension (3.0.15.1)
   - MJRefresh (3.1.15.7)
   - MMKV (1.0.10)
+  - PLPlayerKit (3.3.3):
+    - PLPlayerKit/iphoneos (= 3.3.3)
+  - PLPlayerKit/iphoneos (3.3.3)
   - Reachability (3.2)
   - SDCycleScrollView (1.75):
     - SDWebImage (>= 4.0.0)
@@ -76,6 +79,7 @@ DEPENDENCIES:
   - MJExtension
   - MJRefresh
   - MMKV
+  - PLPlayerKit
   - Reachability
   - SDCycleScrollView
   - "UITableView+FDTemplateLayoutCell"
@@ -105,6 +109,7 @@ SPEC REPOS:
     - MJExtension
     - MJRefresh
     - MMKV
+    - PLPlayerKit
     - Reachability
     - SDCycleScrollView
     - SDWebImage
@@ -134,12 +139,13 @@ SPEC CHECKSUMS:
   IQKeyboardManager: 79c57795f5c2408d259d37b9da2ed07efcbb5225
   JCore: f14c0549968a63c22e246a4875aa9d428446f373
   JMessage: 90c194ca878a1724694da320aad4867b489276e9
-  JXCategoryView: b04d90ff1786d9ebd0fbc37715a622d07075418b
+  JXCategoryView: 2c541ff4c72d09ba0b4d9de41c7d55f7ba33e827
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
   MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
   MMKV: 197e3924f9e2d8a5b0ee1c2ce9e1b3827cb49222
+  PLPlayerKit: 8089fa9ae8e2169cd5b3f1deb60041c676dc55e5
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDCycleScrollView: 884b88f0266dd4708a0e1934975c69cb971707b1
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
@@ -150,6 +156,6 @@ SPEC CHECKSUMS:
   YBPopupMenu: 6efb286385d95ba5f97c58b8464ec873645e8764
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: cd24f3595c6bb4445ad03a06b2184e6f5c9d1f12
+PODFILE CHECKSUM: 185db30427c023b0b2542c80460d12d147d5bd93
 
 COCOAPODS: 1.5.3
