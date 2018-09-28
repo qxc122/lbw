@@ -1,0 +1,155 @@
+PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
+  - AliyunOSSiOS (2.6.5)
+  - CocoaLumberjack (3.4.2):
+    - CocoaLumberjack/Default (= 3.4.2)
+    - CocoaLumberjack/Extensions (= 3.4.2)
+  - CocoaLumberjack/Default (3.4.2)
+  - CocoaLumberjack/Extensions (3.4.2):
+    - CocoaLumberjack/Default
+  - DZNEmptyDataSet (1.8.1)
+  - FDFullscreenPopGesture (1.1)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - GPUImage (0.1.7)
+  - IQKeyboardManager (6.1.1)
+  - JCore (1.2.2)
+  - JMessage (3.7.0):
+    - JCore (~> 1.0)
+  - JXCategoryView (1.0.9)
+  - Masonry (1.1.0)
+  - MBProgressHUD (1.1.0)
+  - MJExtension (3.0.15.1)
+  - MJRefresh (3.1.15.7)
+  - MMKV (1.0.10)
+  - Reachability (3.2)
+  - SDCycleScrollView (1.75):
+    - SDWebImage (>= 4.0.0)
+  - SDWebImage (4.4.2):
+    - SDWebImage/Core (= 4.4.2)
+  - SDWebImage/Core (4.4.2)
+  - "UITableView+FDTemplateLayoutCell (1.6)"
+  - UMengAnalytics-NO-IDFA (4.2.5)
+  - UMengUShare/Core (6.4.8.2):
+    - UMengUShare/Network
+  - UMengUShare/Network (6.4.8.2)
+  - UMengUShare/Social/ReducedQQ (6.4.8.2):
+    - UMengUShare/Core
+  - UMengUShare/Social/ReducedWeChat (6.4.8.2):
+    - UMengUShare/Core
+  - UMengUShare/UI (6.4.8.2):
+    - UMengUShare/Core
+  - UMessage (1.4.0)
+  - YBPopupMenu (1.1.2)
+  - YYKit (1.0.9):
+    - YYKit/no-arc (= 1.0.9)
+  - YYKit/no-arc (1.0.9)
+
+DEPENDENCIES:
+  - AFNetworking
+  - AliyunOSSiOS (~> 2.6.0)
+  - CocoaLumberjack
+  - DZNEmptyDataSet
+  - FDFullscreenPopGesture
+  - FMDB
+  - GPUImage (~> 0.1.7)
+  - IQKeyboardManager
+  - JMessage
+  - JXCategoryView
+  - Masonry
+  - MBProgressHUD
+  - MJExtension
+  - MJRefresh
+  - MMKV
+  - Reachability
+  - SDCycleScrollView
+  - "UITableView+FDTemplateLayoutCell"
+  - UMengAnalytics-NO-IDFA
+  - UMengUShare/Social/ReducedQQ
+  - UMengUShare/Social/ReducedWeChat
+  - UMengUShare/UI
+  - UMessage (from `https://raw.githubusercontent.com/kkme/UMessage/master/UMessage.podspec`)
+  - YBPopupMenu
+  - YYKit
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
+    - AliyunOSSiOS
+    - CocoaLumberjack
+    - DZNEmptyDataSet
+    - FDFullscreenPopGesture
+    - FMDB
+    - GPUImage
+    - IQKeyboardManager
+    - JCore
+    - JMessage
+    - JXCategoryView
+    - Masonry
+    - MBProgressHUD
+    - MJExtension
+    - MJRefresh
+    - MMKV
+    - Reachability
+    - SDCycleScrollView
+    - SDWebImage
+    - "UITableView+FDTemplateLayoutCell"
+    - UMengAnalytics-NO-IDFA
+    - UMengUShare
+    - YBPopupMenu
+    - YYKit
+
+EXTERNAL SOURCES:
+  UMessage:
+    :podspec: https://raw.githubusercontent.com/kkme/UMessage/master/UMessage.podspec
+
+CHECKOUT OPTIONS:
+  UMessage:
+    :commit: 1695f0e00d975a20b07aec91c4c0e0c1a6dc3246
+    :git: https://github.com/kkme/UMessage.git
+
+SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
+  AliyunOSSiOS: 6d7f1f6aae0176095d147a88d60b23bbef93e0b7
+  CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
+  FDFullscreenPopGesture: a8a620179e3d9c40e8e00256dcee1c1a27c6d0f0
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
+  IQKeyboardManager: 79c57795f5c2408d259d37b9da2ed07efcbb5225
+  JCore: f14c0549968a63c22e246a4875aa9d428446f373
+  JMessage: 90c194ca878a1724694da320aad4867b489276e9
+  JXCategoryView: b04d90ff1786d9ebd0fbc37715a622d07075418b
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MJExtension: 19bc33ce2eee2d319760f5622562cf581a6ff756
+  MJRefresh: 697f8ec75ebdbe9207767bb682cf0f51b0d8a41f
+  MMKV: 197e3924f9e2d8a5b0ee1c2ce9e1b3827cb49222
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SDCycleScrollView: 884b88f0266dd4708a0e1934975c69cb971707b1
+  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
+  "UITableView+FDTemplateLayoutCell": 5c949b4a5059c404b442926c0e80f81d10a2d66f
+  UMengAnalytics-NO-IDFA: 16666e32edce5be44ae5b14aaaa7f3582e09d6ab
+  UMengUShare: 370d180101e13ee0227ae657ab119ba97243d2b3
+  UMessage: 07a2837c79d8bc440b4818f22d611e620f0a81c7
+  YBPopupMenu: 6efb286385d95ba5f97c58b8464ec873645e8764
+  YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
+
+PODFILE CHECKSUM: cd24f3595c6bb4445ad03a06b2184e6f5c9d1f12
+
+COCOAPODS: 1.5.3
