@@ -652,6 +652,7 @@
     [self stop];
     [super viewDidDisappear:animated];
     if (self.scrollTimer) {
+        [self removeMovieNotificationObservers];
         [self removeTimer];
     }
 }
@@ -679,6 +680,7 @@
     [self.indicator startAnimating];
     self.indicatorL.hidden = NO;
 }
+
 - (void)hideWaiting{
     NSLog(@"结束动画");
     [self.indicator stopAnimating];
@@ -687,11 +689,24 @@
 }
 
 #pragma mark - PLPlayerDelegate
-
 - (void)playerWillBeginBackgroundTask:(PLPlayer *)player {
+    self.isDisapper = YES;
+    [self stop];
+    if (self.scrollTimer) {
+        [self removeMovieNotificationObservers];
+        [self removeTimer];
+    }
 }
 
 - (void)playerWillEndBackgroundTask:(PLPlayer *)player {
+    self.isDisapper = NO;
+    if (![self.player isPlaying]) {
+        [self.player play];
+    }
+    if (!self.scrollTimer) {
+        [self installMovieNotificationObservers];
+        [self creatTimer];
+    }
 }
 
 - (void)player:(PLPlayer *)player statusDidChange:(PLPlayerStatus)state
@@ -740,7 +755,6 @@
 //    NSLog(@"willAudioRenderBuffer");
     return audioBufferList;
 }
-
 - (void)player:(nonnull PLPlayer *)player firstRender:(PLPlayerFirstRenderType)firstRenderType {
     if (PLPlayerFirstRenderTypeVideo == firstRenderType) {
         self.thumbImageView.hidden = YES;
@@ -756,5 +770,4 @@
     [self hideWaiting];
     NSLog(@"codecError");
 }
-
 @end
