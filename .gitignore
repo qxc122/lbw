@@ -7,7 +7,10 @@ build/
 DerivedData/
 刘伯温/Pods/
 刘伯温/Core/IJKMediaFramework.framework 
+刘伯温/Core/JhtMarquee.framework 
 刘伯温/Core/url.h 
+刘伯温/Assets.xcassets
+
 
 zip/
 pic/
