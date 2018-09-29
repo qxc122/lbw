@@ -19,13 +19,13 @@
 - (void)ChatToolkJMSGNetworkSucces;
 @optional
 - (void)ChatToolonSendMessageResponse:(JMSGMessage *)message error:(NSError *)error;
-@optional
-- (void)ChatToolonReceiveMessageDownloadFailed:(JMSGMessage *)message;
-@optional
-- (void)ChatToolonSyncOfflineMessageConversation:(JMSGConversation *)conversation
-                         offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages;
-@optional
-- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation;
+//@optional
+//- (void)ChatToolonReceiveMessageDownloadFailed:(JMSGMessage *)message;
+//@optional
+//- (void)ChatToolonSyncOfflineMessageConversation:(JMSGConversation *)conversation
+//                         offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages;
+//@optional
+//- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation;
 
 
 @end

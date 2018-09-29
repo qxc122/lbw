@@ -28,7 +28,7 @@ static NSString *const AES_IV_PARAMETER = @"0123456789ABCDEF";
     NSString *baseStr = [AESData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
     
 //    NSLog(@"*****************\nGTMBase:%@\n*****************", baseStr_GTM);
-    NSLog(@"*****************\niOSCode:%@\n*****************", baseStr);
+//    NSLog(@"*****************\niOSCode:%@\n*****************", baseStr);
     return baseStr;
 }
 
@@ -51,7 +51,7 @@ static NSString *const AES_IV_PARAMETER = @"0123456789ABCDEF";
     NSString *decStr = [[NSString alloc] initWithData:AESData encoding:NSUTF8StringEncoding];
     
 //    NSLog(@"*****************\nGTMBase:%@\n*****************", decStr_GTM);
-    NSLog(@"*****************\niOSCode:%@\n*****************", decStr);
+//    NSLog(@"*****************\niOSCode:%@\n*****************", decStr);
     
     return decStr;
 }
@@ -88,7 +88,7 @@ static NSString *const AES_IV_PARAMETER = @"0123456789ABCDEF";
                                             &numBytesEncrypted);
     
     if(cryptorStatus == kCCSuccess) {
-        NSLog(@"Success");
+//        NSLog(@"Success");
         return [NSData dataWithBytesNoCopy:buffer length:numBytesEncrypted];
         
     } else {

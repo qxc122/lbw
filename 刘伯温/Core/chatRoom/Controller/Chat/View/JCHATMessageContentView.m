@@ -207,7 +207,7 @@ static NSInteger const textMessageContentRightOffset = 15;
 }
 
 -(void)attachTapHandler{
-  self.userInteractionEnabled = YES;  //用户交互的总开关
+  self.userInteractionEnabled = NO;  //用户交互的总开关
   UILongPressGestureRecognizer *touch = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
   touch.minimumPressDuration = 1.0;
   [self addGestureRecognizer:touch];
@@ -257,7 +257,6 @@ static NSInteger const textMessageContentRightOffset = 15;
     default:
       break;
   }
-  
 }
 
 -(void)delete:(id)sender {

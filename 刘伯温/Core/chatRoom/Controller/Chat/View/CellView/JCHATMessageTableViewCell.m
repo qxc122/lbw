@@ -257,6 +257,7 @@ static NSInteger const readViewRadius = 4;
     [_messageContent setFrame:CGRectMake(headHeight + 5, heightUserName, contentSize.width, contentSize.height)];
       
     [_readView setFrame:CGRectMake(_messageContent.frame.origin.x + _messageContent.frame.size.width + 10, 5, 2 * readViewRadius, 2 * readViewRadius)];
+      _userName.hidden = NO;
   } else {
       _userName.hidden = YES;
     [_headView setFrame:CGRectMake(kApplicationWidth - headHeight - gapWidth, 0, headHeight, headHeight)];//头像位置

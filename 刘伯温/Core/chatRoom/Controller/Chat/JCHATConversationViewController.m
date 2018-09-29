@@ -24,17 +24,10 @@
 #import "ChatRecordCell.h"
 #import "mainTableVc.h"
 #import "NSString+AES.h"
-@interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate,ChatToolJMSGMessageDelegate> {
+@interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate> {
 @private
-    BOOL isNoOtherMessage;
-    NSInteger messageOffset;
-    NSMutableArray *_imgDataArr;
-    JMSGConversation *_conversation;//
     NSMutableDictionary *_allMessageDic; //缓存所有的message model
     NSMutableArray *_allmessageIdArr; //按序缓存后有的messageId， 于allMessage 一起使用
-    NSMutableArray *_userArr;//
-    UIButton *_rightBtn;
-    NSMutableDictionary *_refreshAvatarUsersDic;
 }
 @property(weak, nonatomic) UIButton *btn0;
 @property(weak, nonatomic) UIButton *btn1;
@@ -67,17 +60,13 @@
     [super viewDidLoad];
     self.sendPng = YES;
     self.automaticallyAdjustsScrollViewInsets = NO;
-    _refreshAvatarUsersDic = [NSMutableDictionary dictionary];
     _allMessageDic = [NSMutableDictionary dictionary];
     _allmessageIdArr = [NSMutableArray array];
-    _imgDataArr = [NSMutableArray array];
+
     DDLogDebug(@"Action - viewDidLoad");
-//    self.title = _conversation.title;
     self.title = @"聊天室";
-    [self setupView];
+    [self setupComponentView];
     [self addNotification];
-//    [self addDelegate];
-    [self getGroupMemberListWithGetMessageFlag:YES];
     self.moreViewBottomConstrait.constant = IMkTabBarHeight;
     self.view.backgroundColor= [UIColor whiteColor];
     [self addTwoView];
@@ -277,13 +266,10 @@
     }else{
        self.maskBtn.hidden = YES;
     }
-//    if ([ChatTool shareChatTool].TotalMessages) {
-//        [self.messageTableView reloadData];
-//    }
-    if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
+
+    if ([ChatTool shareChatTool].list.count) {
+        [self cleanMessageCache];
         [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
-    }else{
-        [self RefreshMessage];
     }
     [ChatTool shareChatTool].delegate = self;
     self.conversation = [ChatTool shareChatTool].conversation;
@@ -293,23 +279,9 @@
     [self onSendMessageResponse:message error:error];
 }
 
-- (void)ChatToolonReceiveMessageDownloadFailed:(JMSGMessage *)message{
-    [self onReceiveMessageDownloadFailed:message];
-}
-
-- (void)ChatToolonSyncOfflineMessageConversation:(JMSGConversation *)conversation
-                                 offlineMessages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)offlineMessages{
-    [self onSyncOfflineMessageConversation:conversation offlineMessages:offlineMessages];
-}
-- (void)ChatToolonSyncRoamingMessageConversation:(JMSGConversation *)conversation{
-    [self onSyncRoamingMessageConversation:conversation];
-}
-
 - (void)ChatToolonReceiveChatRoomConversation:(JMSGConversation *)conversation
                                      messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
     [self onReceiveChatRoomConversation:conversation messages:messages];
-//    [self.messageTableView reloadData];
-//    [self getGroupMemberListWithGetMessageFlag:YES];
 }
 
 - (void)ChatToolkJMSGNetworkSucces{
@@ -319,11 +291,9 @@
     }else{
         self.maskBtn.hidden = YES;
     }
-    if (!_allmessageIdArr.count && [ChatTool shareChatTool].list.count) {
-        [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
-    }
+    [self cleanMessageCache];
+    [self onReceiveChatRoomConversation:[ChatTool shareChatTool].conversation messages:[ChatTool shareChatTool].list];
 }
-
 
 - (void)RefreshMessage{
     kWEAKSELF
@@ -333,28 +303,6 @@
 //        strongSelf.title = [resultObject title];
         [_messageTableView reloadData];
     }];
-}
-
-- (void)updateGroupConversationTittle:(JMSGGroup *)newGroup {
-  JMSGGroup *group;
-  if (newGroup == nil) {
-    group = self.conversation.target;
-  } else {
-    group = newGroup;
-  }
-  
-  if ([group.name isEqualToString:@""]) {
-    self.title = @"群聊";
-  } else {
-    self.title = group.name;
-  }
-  self.title = [NSString stringWithFormat:@"%@(%lu)",self.title,(unsigned long)[group.memberArray count]];
-  [self getGroupMemberListWithGetMessageFlag:NO];
-  if (self.isConversationChange) {
-    [self cleanMessageCache];
-    [self getPageMessage];
-    self.isConversationChange = NO;
-  }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -382,10 +330,6 @@
     NSLog(@"dealloc CHatROOM\n\n\n\n\n\n\n\n");
 }
 
-- (void)setupView {
-//  [self setupNavigation];
-  [self setupComponentView];
-}
 
 - (void)addtoolbar {
   self.toolBarContainer.toolbar.frame = CGRectMake(0, 0, kApplicationWidth, 45);
@@ -412,51 +356,6 @@
 //  _moreViewContainer.moreView.backgroundColor = messageTableColor;
 }
 
-- (void)setupNavigation {
-  _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-  [_rightBtn setFrame:navigationRightButtonRect];
-  if (_conversation.conversationType == kJMSGConversationTypeSingle) {
-    [_rightBtn setImage:[UIImage imageNamed:@"userDetail"] forState:UIControlStateNormal];
-  } else {
-      [_rightBtn setImage:[UIImage imageNamed:@"groupDetail"] forState:UIControlStateNormal];
-      [self updateGroupConversationTittle:nil];
-    if ([((JMSGGroup *)_conversation.target) isMyselfGroupMember]) {
-      _rightBtn.hidden = YES;
-    }
-  }
-  
-  [_conversation clearUnreadCount];
-  
-  [_rightBtn addTarget:self action:@selector(addFriends) forControlEvents:UIControlEventTouchUpInside];
-  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_rightBtn];//为导航栏添加右侧按钮
-    
-  UIButton *leftBtn =[UIButton buttonWithType:UIButtonTypeCustom];
-  [leftBtn setFrame:kNavigationLeftButtonRect];
-  [leftBtn setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
-  [leftBtn setImageEdgeInsets:kGoBackBtnImageOffset];
-
-  [leftBtn addTarget:self action:@selector(backClick) forControlEvents:UIControlEventTouchUpInside];
-  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBtn];//为导航栏添加左侧按钮
-  self.navigationController.interactivePopGestureRecognizer.delegate = self;
-}
-
-- (void)getGroupMemberListWithGetMessageFlag:(BOOL)getMesageFlag {
-  if (self.conversation && self.conversation.conversationType == kJMSGConversationTypeGroup) {
-    JMSGGroup *group = nil;
-    group = self.conversation.target;
-    _userArr = [NSMutableArray arrayWithArray:[group memberArray]];
-    [self isContantMeWithUserArr:_userArr];
-    if (getMesageFlag) {
-      [self getPageMessage];
-    }
-  } else {
-    if (getMesageFlag) {
-      [self getPageMessage];
-    }
-    [self hidenDetailBtn:NO];
-  }
-}
-
 - (void)isContantMeWithUserArr:(NSMutableArray *)userArr {
   BOOL hideFlag = YES;
   for (NSInteger i =0; i< [userArr count]; i++) {
@@ -473,7 +372,7 @@
 }
 
 - (void)hidenDetailBtn:(BOOL)flag {
-    [_rightBtn setHidden:flag];
+//    [_rightBtn setHidden:flag];
 }
 
 - (void)setTitleWithUser:(JMSGUser *)user {
@@ -509,284 +408,39 @@
 #pragma mark --聊天室 收到消息
 - (void)onReceiveChatRoomConversation:(JMSGConversation *)conversation
                              messages:(NSArray JMSG_GENERIC(__kindof JMSGMessage *)*)messages{
-//    kWEAKSELF
-//    JCHATMAINTHREAD((^{
-//        kSTRONGSELF
-    
-        NSLog(@"tmo");
-        for (JMSGMessage *message in messages) {
-
-            JCHATChatModel *model = [_allMessageDic objectForKey:message.msgId];
-            if (model) {// 说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新
-                model.message = message;
-                [self refreshCellMessageMediaWithChatModel:model];
-                NSLog(@"说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新");
-            }else{
-                
-                NSString *firstMsgId = [_allmessageIdArr firstObject];
-                JCHATChatModel *firstModel = [_allMessageDic objectForKey:firstMsgId];
-                if (message.timestamp < firstModel.message.timestamp) {
-                    // 比数组中最老的消息时间都小的，无需加入界面显示，下次翻页时会加载
-                    NSLog(@"比数组中最老的消息时间都小的，无需加入界面显示，下次翻页时会加载");
-                    return ;
-                }
-                
-                model = [[JCHATChatModel alloc] init];
-                [model setChatModelWith:message conversationType:_conversation];
-                if (message.contentType == kJMSGContentTypeImage) {
-                    [_imgDataArr addObject:model];
-                    NSLog(@"图片消息");
-                }
-                model.photoIndex = [_imgDataArr count] -1;
-                [self addmessageShowTimeData:message.timestamp];
-                [self addMessage:model];
-
-                BOOL isHaveCache = NO;
-                NSString *key = [NSString stringWithFormat:@"%@_%@",message.fromUser.username,message.fromUser.appKey];
-                NSLog(@"key=%@",key);
-                NSMutableArray *messages = _refreshAvatarUsersDic[key];
-                if (messages) {
-                    NSLog(@"缓存的消息");
-                    isHaveCache = YES;
-                    [messages addObject:message];
-                }else{
-                    NSLog(@"不是缓存的消息");
-                    messages = [NSMutableArray array];
-                    [messages addObject:message];
-                }
-                if (messages.count > 10) {
-                    NSLog(@"消息总数大于10");
-                    [messages removeObjectAtIndex:0];
-                }
-                [_refreshAvatarUsersDic setObject:messages forKey:key];
-                
-                if (!messages) {
-                    NSLog(@"空的消息");
-                }
-                [self chcekReceiveMessageAvatarWithReceiveNewMessage:message];
-            }
-        }
-//    })); // strongSelf
-}
-#pragma mark --收到消息
-- (void)onReceiveMessage:(JMSGMessage *)message error:(NSError *)error {
-    
-    return;
-    if (message != nil) {
-    }
-    if (error != nil) {
-        JCHATChatModel *model = [[JCHATChatModel alloc] init];
-        [model setErrorMessageChatModelWithError:error];
-        [self addMessage:model];
-        return;
-    }
-
-    if (![self.conversation isMessageForThisConversation:message]) {
-        return;
-    }
-
-    if (message.contentType == kJMSGContentTypeCustom) {
-        return;
-    }
-    DDLogDebug(@"Event - receiveMessageNotification");
-    
-    kWEAKSELF
-    JCHATMAINTHREAD((^{
-        kSTRONGSELF
-        if (!message) {
-          DDLogWarn(@"get the nil message .");
-          return;
-        }
-
-//        if (_allMessageDic[message.msgId] != nil) {
-//          DDLogDebug(@"该条消息已加载");
-//          return;
-//        }
-
-        if (message.contentType == kJMSGContentTypeEventNotification) {
-          if (((JMSGEventContent *)message.content).eventType == kJMSGEventNotificationRemoveGroupMembers
-              && ![((JMSGGroup *)_conversation.target) isMyselfGroupMember]) {
-            [strongSelf setupNavigation];
-          }
-        }
-
-        if (_conversation.conversationType == kJMSGConversationTypeSingle) {
-        } else if (![((JMSGGroup *)_conversation.target).gid isEqualToString:((JMSGGroup *)message.target).gid]){
-          return;
-        }
-        
+    for (JMSGMessage *message in messages) {
         JCHATChatModel *model = [_allMessageDic objectForKey:message.msgId];
         if (model) {// 说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新
             model.message = message;
-            [strongSelf refreshCellMessageMediaWithChatModel:model];
+            [self refreshCellMessageMediaWithChatModel:model];
+            NSLog(@"说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新");
         }else{
             
             NSString *firstMsgId = [_allmessageIdArr firstObject];
             JCHATChatModel *firstModel = [_allMessageDic objectForKey:firstMsgId];
             if (message.timestamp < firstModel.message.timestamp) {
                 // 比数组中最老的消息时间都小的，无需加入界面显示，下次翻页时会加载
+                NSLog(@"比数组中最老的消息时间都小的，无需加入界面显示，下次翻页时会加载");
                 return ;
             }
-            
+            if (!message) {
+                NSLog(@"空的消息");
+            }
             model = [[JCHATChatModel alloc] init];
             [model setChatModelWith:message conversationType:_conversation];
-            if (message.contentType == kJMSGContentTypeImage) {
-                [_imgDataArr addObject:model];
-            }
-            model.photoIndex = [_imgDataArr count] -1;
-            [strongSelf addmessageShowTimeData:message.timestamp];
-            [strongSelf addMessage:model];
             
-            BOOL isHaveCache = NO;
-            NSString *key = [NSString stringWithFormat:@"%@_%@",message.fromUser.username,message.fromUser.appKey];
-            NSMutableArray *messages = _refreshAvatarUsersDic[key];
-            if (messages) {
-                isHaveCache = YES;
-                [messages addObject:message];
-            }else{
-                messages = [NSMutableArray array];
-                [messages addObject:message];
-            }
-            if (messages.count > 10) {
-                [messages removeObjectAtIndex:0];
-            }
-            [_refreshAvatarUsersDic setObject:messages forKey:key];
+            [self addmessageShowTimeData:message.timestamp];
+            [self addMessage:model];
             
-            [strongSelf chcekReceiveMessageAvatarWithReceiveNewMessage:message];
-//            if (!isHaveCache) {
-//                [strongSelf performSelector:@selector(chcekReceiveMessageAvatarWithReceiveNewMessage:) withObject:message afterDelay:1.5];
-//            }
+            if (messages.count > 50) {
+                NSLog(@"消息总数大于10");
+//                [messages removeObjectAtIndex:0];
+            }
+//            [self chcekReceiveMessageAvatarWithReceiveNewMessage:message];
         }
-  }));
-}
-
-- (void)onReceiveMessageDownloadFailed:(JMSGMessage *)message {
-  if (![self.conversation isMessageForThisConversation:message]) {
-    return;
-  }
-  
-  DDLogDebug(@"Event - receiveMessageNotification");
-  JCHATMAINTHREAD((^{
-      if (!message) {
-          DDLogWarn(@"get the nil message .");
-          return;
-      }
-      
-      if (_conversation.conversationType == kJMSGConversationTypeSingle) {
-      } else if (![((JMSGGroup *)_conversation.target).gid isEqualToString:((JMSGGroup *)message.target).gid]){
-          return;
-      }
-    
-      JCHATChatModel *model = [_allMessageDic objectForKey:message.msgId];
-      if (model) {// 说明已经加载，说明可能是同步下来的多媒体消息，下载完成，然后再次收到就去刷新
-          model.message = message;
-          [self refreshCellMessageMediaWithChatModel:model];
-      }else{
-          model = [[JCHATChatModel alloc] init];
-          [model setChatModelWith:message conversationType:_conversation];
-          if (message.contentType == kJMSGContentTypeImage) {
-              [_imgDataArr addObject:model];
-          }
-          model.photoIndex = [_imgDataArr count] -1;
-          [self addmessageShowTimeData:message.timestamp];
-          [self addMessage:model];
-      }
-    
-  }));
-}
-- (void)onSyncOfflineMessageConversation:(JMSGConversation *)conversation
-                         offlineMessages:(NSArray<__kindof JMSGMessage *> *)offlineMessages {
-    DDLogDebug(@"Action -- onSyncOfflineMessageConversation:offlineMessages:");
-    
-    if (conversation.conversationType != self.conversation.conversationType) {
-        return ;
-    }
-    BOOL isThisConversation = NO;
-    if (conversation.conversationType == kJMSGConversationTypeSingle) {
-        JMSGUser *user1 = (JMSGUser *)conversation.target;
-        JMSGUser *user2 = (JMSGUser *)self.conversation.target;
-        if ([user1.username isEqualToString:user2.username] &&
-            [user1.appKey isEqualToString:user2.appKey]) {
-            isThisConversation = YES;
-        }
-    }else{
-        JMSGGroup *group1 = (JMSGGroup *)conversation.target;
-        JMSGGroup *group2 = (JMSGGroup *)conversation.target;
-        if ([group1.gid isEqualToString:group2.gid]) {
-            isThisConversation = YES;
-        }
-    }
-    
-    if (!isThisConversation) {
-        return ;
-    }
-    
-    NSMutableArray *pathsArray = [NSMutableArray array];
-    NSMutableArray *allSyncMessages = [NSMutableArray arrayWithArray:offlineMessages];
-    for (int i = 0; i< allSyncMessages.count; i++) {
-        JMSGMessage *message = allSyncMessages[i];
-        JCHATChatModel *model = [[JCHATChatModel alloc] init];
-        [model setChatModelWith:message conversationType:_conversation];
-        if (message.contentType == kJMSGContentTypeImage) {
-            [_imgDataArr addObject:model];
-        }
-        model.photoIndex = [_imgDataArr count] -1;
-        
-        [_allMessageDic setObject:model forKey:model.message.msgId];
-        [_allmessageIdArr addObject:model.message.msgId];
-        
-        NSIndexPath *path = [NSIndexPath indexPathForRow:[_allmessageIdArr count]-1 inSection:0];
-        [pathsArray addObject:path];
-    }
-    if (pathsArray.count) {
-        [_messageTableView beginUpdates];
-        [_messageTableView insertRowsAtIndexPaths:pathsArray withRowAnimation:UITableViewRowAnimationNone];
-        [_messageTableView endUpdates];
-        [self scrollToEnd];
     }
 }
 
-- (void)onSyncRoamingMessageConversation:(JMSGConversation *)conversation {
-    DDLogDebug(@"Action -- onSyncRoamingMessageConversation:");
-    
-    if (conversation.conversationType != self.conversation.conversationType) {
-        return ;
-    }
-    BOOL isThisConversation = NO;
-    if (conversation.conversationType == kJMSGConversationTypeSingle) {
-        JMSGUser *user1 = (JMSGUser *)conversation.target;
-        JMSGUser *user2 = (JMSGUser *)self.conversation.target;
-        if ([user1.username isEqualToString:user2.username] &&
-            [user1.appKey isEqualToString:user2.appKey]) {
-            isThisConversation = YES;
-        }
-    }else{
-        JMSGGroup *group1 = (JMSGGroup *)conversation.target;
-        JMSGGroup *group2 = (JMSGGroup *)conversation.target;
-        if ([group1.gid isEqualToString:group2.gid]) {
-            isThisConversation = YES;
-        }
-    }
-    
-    if (!isThisConversation) {
-        return ;
-    }
-    
-    isNoOtherMessage = NO;
-    messageOffset = 0;
-    [_imgDataArr removeAllObjects];
-    [_userArr removeAllObjects];
-    
-    [_allMessageDic removeAllObjects];
-    [_allmessageIdArr removeAllObjects];
-    [_imgDataArr removeAllObjects];
-    
-    [self getGroupMemberListWithGetMessageFlag:YES];
-}
-
-- (void)onGroupInfoChanged:(JMSGGroup *)group {
-  [self updateGroupConversationTittle:group];
-}
 
 - (void)relayoutTableCellWithMessage:(JMSGMessage *) message{
     DDLogDebug(@"relayoutTableCellWithMessage: msgid:%@",message.msgId);
@@ -873,87 +527,10 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
   [self prepareImageMessage:img];
 }
 
-- (void)deleteMessage:(NSNotification *)notification {
-  JMSGMessage *message = notification.object;
-  [_conversation deleteMessageWithMessageId:message.msgId];
-  [_allMessageDic removeObjectForKey:message.msgId];
-  [_allmessageIdArr removeObject:message.msgId];
-  [_messageTableView loadMoreMessage];
-}
-
 #pragma mark --排序conversation
 - (NSMutableArray *)sortMessage:(NSMutableArray *)messageArr {
   NSArray *sortResultArr = [messageArr sortedArrayUsingFunction:sortMessageType context:nil];
   return [NSMutableArray arrayWithArray:sortResultArr];
-}
-
-- (void)getPageMessage {
-  DDLogDebug(@"Action - getAllMessage");
-  [self cleanMessageCache];
-  NSMutableArray * arrList = [[NSMutableArray alloc] init];
-  [_allmessageIdArr addObject:[[NSObject alloc] init]];
-  
-  messageOffset = messagefristPageNumber;
-  [arrList addObjectsFromArray:[[[_conversation messageArrayFromNewestWithOffset:@0 limit:@(messageOffset)] reverseObjectEnumerator] allObjects]];
-  if ([arrList count] < messagefristPageNumber) {
-    isNoOtherMessage = YES;
-    [_allmessageIdArr removeObjectAtIndex:0];
-  }
-  
-  for (NSInteger i=0; i< [arrList count]; i++) {
-    JMSGMessage *message = [arrList objectAtIndex:i];
-    JCHATChatModel *model = [[JCHATChatModel alloc] init];
-    [model setChatModelWith:message conversationType:_conversation];
-    if (message.contentType == kJMSGContentTypeImage) {
-      [_imgDataArr addObject:model];
-      model.photoIndex = [_imgDataArr count] - 1;
-    }
-    
-    [self dataMessageShowTime:message.timestamp];
-    [_allMessageDic setObject:model forKey:model.message.msgId];
-    [_allmessageIdArr addObject:model.message.msgId];
-  }
-  [_messageTableView reloadData];
-  [self scrollToBottomAnimated:NO];
-}
-
-- (void)flashToLoadMessage {
-    NSMutableArray * arrList = @[].mutableCopy;
-    NSArray *newMessageArr = [_conversation messageArrayFromNewestWithOffset:@(messageOffset) limit:@(messagePageNumber)];
-    [arrList addObjectsFromArray:newMessageArr];
-    if ([arrList count] < messagePageNumber) {// 判断还有没有新数据
-        isNoOtherMessage = YES;
-        [_allmessageIdArr removeObjectAtIndex:0];
-    }
-    
-    messageOffset += messagePageNumber;
-    for (NSInteger i = 0; i < [arrList count]; i++) {
-        JMSGMessage *message = arrList[i];
-        JCHATChatModel *model = [[JCHATChatModel alloc] init];
-        [model setChatModelWith:message conversationType:_conversation];
-        
-        if (message.contentType == kJMSGContentTypeImage) {
-            [_imgDataArr insertObject:model atIndex:0];
-            model.photoIndex = [_imgDataArr count] - 1;
-        }
-        
-        [_allMessageDic setObject:model forKey:model.message.msgId];
-        [_allmessageIdArr insertObject:model.message.msgId atIndex: isNoOtherMessage?0:1];
-        [self dataMessageShowTimeToTop:message.timestamp];// FIXME:
-    }
-    
-    [_messageTableView loadMoreMessage];
-}
-
-- (JMSGUser *)getAvatarWithTargetId:(NSString *)targetId {
-    
-  for (NSInteger i=0; i<[_userArr count]; i++) {
-    JMSGUser *user = [_userArr objectAtIndex:i];
-    if ([user.username isEqualToString:targetId]) {
-      return user;
-    }
-  }
-  return nil;
 }
 
 - (XHVoiceRecordHelper *)voiceRecordHelper {
@@ -1074,34 +651,29 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 }
 
 #pragma mark --发送图片
-- (void)prepareImageMessage:(UIImage *)img {
-  DDLogDebug(@"Action - prepareImageMessage");
-  img = [img resizedImageByWidth:upLoadImgWidth];
-  
-  JMSGMessage* message = nil;
-  JCHATChatModel *model = [[JCHATChatModel alloc] init];
-  JMSGImageContent *imageContent = [[JMSGImageContent alloc] initWithImageData:UIImagePNGRepresentation(img)];
-  if (imageContent) {
-    message = [_conversation createMessageWithContent:imageContent];
-    [[JCHATSendMsgManager ins] addMessage:message withConversation:_conversation];
-    [self addmessageShowTimeData:message.timestamp];
-    [model setChatModelWith:message conversationType:_conversation];
-    [_imgDataArr addObject:model];
-    model.photoIndex = [_imgDataArr count] - 1;
-    [model setupImageSize];
-    [self addMessage:model];
-  }
-}
+//- (void)prepareImageMessage:(UIImage *)img {
+//  DDLogDebug(@"Action - prepareImageMessage");
+//  img = [img resizedImageByWidth:upLoadImgWidth];
+//
+//  JMSGMessage* message = nil;
+//  JCHATChatModel *model = [[JCHATChatModel alloc] init];
+//  JMSGImageContent *imageContent = [[JMSGImageContent alloc] initWithImageData:UIImagePNGRepresentation(img)];
+//  if (imageContent) {
+//    message = [_conversation createMessageWithContent:imageContent];
+//    [[JCHATSendMsgManager ins] addMessage:message withConversation:_conversation];
+//    [self addmessageShowTimeData:message.timestamp];
+//    [model setChatModelWith:message conversationType:_conversation];
+//    [_imgDataArr addObject:model];
+//    model.photoIndex = [_imgDataArr count] - 1;
+//    [model setupImageSize];
+//    [self addMessage:model];
+//  }
+//}
 
 #pragma mark --
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
   [picker dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark --add Delegate
-- (void)addDelegate {
-  [JMessage addDelegate:self withConversation:self.conversation];
 }
 
 #pragma mark --加载通知
@@ -1127,10 +699,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
                                                name:kAlertToSendImage
                                              object:nil];
 
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(deleteMessage:)
-                                               name:kDeleteMessage
-                                             object:nil];
 
   [self.toolBarContainer.toolbar.textView addObserver:self
                                            forKeyPath:@"contentSize"
@@ -1353,7 +921,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
       timeModel.messageTime = @(timeInterVal);
       timeModel.contentHeight = [timeModel getTextHeight];
       [_allMessageDic setObject:timeModel forKey:timeModel.timeId];
-      [_allmessageIdArr insertObject:timeModel.timeId atIndex: isNoOtherMessage?0:1];
+      [_allmessageIdArr insertObject:timeModel.timeId atIndex:1];
     }
   } else if ([_allmessageIdArr count] ==0) {//首条消息显示时间
     JCHATChatModel *timeModel =[[JCHATChatModel alloc] init];
@@ -1362,7 +930,7 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
     timeModel.messageTime = @(timeInterVal);
     timeModel.contentHeight = [timeModel getTextHeight];
     [_allMessageDic setObject:timeModel forKey:timeModel.timeId];
-    [_allmessageIdArr insertObject:timeModel.timeId atIndex: isNoOtherMessage?0:1];
+    [_allmessageIdArr insertObject:timeModel.timeId atIndex:1];
   } else {
     DDLogDebug(@"不用显示时间");
   }
@@ -1406,12 +974,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
             return 0.0;
         }
     } else {
-        if (!isNoOtherMessage) {
-            if (indexPath.row == 0) { //这个是第 0 行 用于刷新
-                return 40;
-            }
-        }
-        
         if (indexPath.row >= _allmessageIdArr.count) {
             DDLogDebug(@"1.index %ld beyond bounds %ld",indexPath.row,_allmessageIdArr.count);
             return 40;
@@ -1486,32 +1048,20 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
     if ([self.zhibojian isEqualToString:@"1"]) {
         NSString *messageId = _allmessageIdArr[indexPath.row];
         JCHATChatModel *model = _allMessageDic[messageId];
-        if(!model.isTime && model.message.contentType == kJMSGContentTypeText){
+//        if(!model.isTime && model.message.contentType == kJMSGContentTypeText){
             ChatRecordCell *cell = [ChatRecordCell returnCellWith:tableView];
             [self configureChatRecordCell:cell atIndexPath:indexPath];
             return  cell;
-        }else{
-            static NSString *cellIdentifier = @"UITableViewCell";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            }
-            return cell;
-        }
+            
+//        }else{
+//            static NSString *cellIdentifier = @"UITableViewCell";
+//            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//            if (cell == nil) {
+//                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//            }
+//            return cell;
+//        }
     } else {
-        if (!isNoOtherMessage) {
-            if (indexPath.row == 0) {
-                static NSString *cellLoadIdentifier = @"loadCell"; //name
-                JCHATLoadMessageTableViewCell *cell = (JCHATLoadMessageTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellLoadIdentifier];
-                if (cell == nil) {
-                    cell = [[JCHATLoadMessageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellLoadIdentifier];
-                }
-                [cell startLoading];
-                [self flashToLoadMessage];
-                //          [self performSelector:@selector(flashToLoadMessage) withObject:nil afterDelay:0];
-                return cell;
-            }
-        }
         if (indexPath.row >= _allmessageIdArr.count) {
             DDLogDebug(@"2.index %ld beyond bounds %ld",indexPath.row,_allmessageIdArr.count);
             return nil;
@@ -1568,12 +1118,12 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
             
             [cell setCellData:model delegate:self indexPath:indexPath];
             
-            kWEAKSELF
-            cell.messageTableViewCellRefreshMediaMessage = ^(JCHATChatModel *cellModel,BOOL isShouldRefresh){
-                if (isShouldRefresh) {
-                    [weakSelf refreshCellMessageMediaWithChatModel:cellModel];
-                }
-            };
+//            kWEAKSELF
+//            cell.messageTableViewCellRefreshMediaMessage = ^(JCHATChatModel *cellModel,BOOL isShouldRefresh){
+//                if (isShouldRefresh) {
+//                    [weakSelf refreshCellMessageMediaWithChatModel:cellModel];
+//                }
+//            };
             return cell;
         }
     }
@@ -1597,23 +1147,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
     
     model.message = db_message;
     [_allMessageDic setObject:model forKey:model.message.msgId];
-    //[_allmessageIdArr addObject:model.message.msgId];msgId 不会变化所以不用去修改
-    
-    // 1.method
-//    [self.messageTableView reloadData];
-    
-    // 2.method
-//    NSArray *cellArray = [_messageTableView visibleCells];
-//    for (id temp in cellArray) {
-//        if ([temp isKindOfClass:[JCHATMessageTableViewCell class]]) {
-//            JCHATMessageTableViewCell *cell = (JCHATMessageTableViewCell *)temp;
-//            if ([cell.model.message.msgId isEqualToString:msgId]) {
-//                cell.model = model;
-//                [cell layoutAllView];
-//            }
-//        }
-//    }
-    // 3.在cell 里面刷新
 }
 #pragma mark - 检查并刷新头像
 - (void)chcekReceiveMessageAvatarWithReceiveNewMessage:(JMSGMessage *)message {
@@ -1632,21 +1165,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
             }
         }
     }];
-//    NSString *key = [NSString stringWithFormat:@"%@_%@",message.fromUser.username,message.fromUser.appKey];
-//    NSMutableArray *messages = _refreshAvatarUsersDic[key];
-//    if (messages.count > 0) {
-//        JMSGMessage *lastMessage = [messages lastObject];
-//        JMSGUser *fromUser = lastMessage.fromUser;
-//        [fromUser thumbAvatarData:^(NSData *data, NSString *objectId, NSError *error) {
-//            if (error == nil && [objectId isEqualToString:fromUser.username]) {
-//                if (data != nil) {
-//                    NSUInteger lenght = data.length;
-//                    [self refreshVisibleRowsAvatarWithNewMessage:lastMessage avatarDataLength:lenght];
-//                }
-//            }
-//            [_refreshAvatarUsersDic removeObjectForKey:key];
-//        }];
-//    }
 }
 
 - (void)refreshVisibleRowsAvatarWithNewMessage:(JMSGMessage *)message avatarDataLength:(NSUInteger)length {
@@ -1760,25 +1278,25 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 
 #pragma mark 预览图片 PictureDelegate
 //PictureDelegate
-- (void)tapPicture:(NSIndexPath *)index tapView:(UIImageView *)tapView tableViewCell:(UITableViewCell *)tableViewCell {
-  [self.toolBarContainer.toolbar.textView resignFirstResponder];
-  JCHATMessageTableViewCell *cell =(JCHATMessageTableViewCell *)tableViewCell;
-  NSInteger count = _imgDataArr.count;
-  NSMutableArray *photos = [NSMutableArray arrayWithCapacity:count];
-  for (int i = 0; i<count; i++) {
-    JCHATChatModel *messageObject = [_imgDataArr objectAtIndex:i];
-    MJPhoto *photo = [[MJPhoto alloc] init];
-    photo.message = messageObject;
-    photo.srcImageView = tapView; // 来源于哪个UIImageView
-    [photos addObject:photo];
-  }
-  MJPhotoBrowser *browser = [[MJPhotoBrowser alloc] init];
-  browser.currentPhotoIndex = [_imgDataArr indexOfObject:cell.model];
-//  browser.currentPhotoIndex = cell.model.photoIndex; // 弹出相册时显示的第一张图片是？
-  browser.photos = photos; // 设置所有的图片
-  browser.conversation =_conversation;
-  [browser show];
-}
+//- (void)tapPicture:(NSIndexPath *)index tapView:(UIImageView *)tapView tableViewCell:(UITableViewCell *)tableViewCell {
+//  [self.toolBarContainer.toolbar.textView resignFirstResponder];
+//  JCHATMessageTableViewCell *cell =(JCHATMessageTableViewCell *)tableViewCell;
+//  NSInteger count = _imgDataArr.count;
+//  NSMutableArray *photos = [NSMutableArray arrayWithCapacity:count];
+//  for (int i = 0; i<count; i++) {
+//    JCHATChatModel *messageObject = [_imgDataArr objectAtIndex:i];
+//    MJPhoto *photo = [[MJPhoto alloc] init];
+//    photo.message = messageObject;
+//    photo.srcImageView = tapView; // 来源于哪个UIImageView
+//    [photos addObject:photo];
+//  }
+//  MJPhotoBrowser *browser = [[MJPhotoBrowser alloc] init];
+//  browser.currentPhotoIndex = [_imgDataArr indexOfObject:cell.model];
+////  browser.currentPhotoIndex = cell.model.photoIndex; // 弹出相册时显示的第一张图片是？
+//  browser.photos = photos; // 设置所有的图片
+//  browser.conversation =_conversation;
+//  [browser show];
+//}
 
 #pragma mark --获取所有发送消息图片
 - (NSArray *)getAllMessagePhotoImg {

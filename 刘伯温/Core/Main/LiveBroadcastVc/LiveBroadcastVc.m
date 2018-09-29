@@ -661,8 +661,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.isDisapper = NO;
-    if (![self.player isPlaying]) {
-        [self.player play];
+    if (self.NOAnchor.hidden) {
+        if (![self.player isPlaying]) {
+            [self.player play];
+        }
     }
     if (!self.scrollTimer) {
         [self installMovieNotificationObservers];
@@ -702,8 +704,10 @@
 - (void)playerWillEndBackgroundTask:(PLPlayer *)player {
     if ([self.navigationController.topViewController isEqual:self]) {
         self.isDisapper = NO;
-        if (![self.player isPlaying]) {
-            [self.player play];
+        if (self.NOAnchor.hidden) {
+            if (![self.player isPlaying]) {
+                [self.player play];
+            }
         }
         if (!self.scrollTimer) {
             [self installMovieNotificationObservers];
