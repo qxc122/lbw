@@ -93,6 +93,8 @@
 		3DF66DB72077BEC800A8DC37 /* WHC_PswInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF66DB02077BEC800A8DC37 /* WHC_PswInputView.m */; };
 		3DF66DBB2077C67C00A8DC37 /* LBDepositViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF66DB92077C67C00A8DC37 /* LBDepositViewController.m */; };
 		3DF66DBC2077C67C00A8DC37 /* LBDepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DF66DBA2077C67C00A8DC37 /* LBDepositViewController.xib */; };
+		DB22FADB215F725A00DABE2D /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = DB22FAD8215F725A00DABE2D /* GTMBase64.m */; };
+		DB22FADC215F725A00DABE2D /* NSString+AES.m in Sources */ = {isa = PBXBuildFile; fileRef = DB22FADA215F725A00DABE2D /* NSString+AES.m */; };
 		DB33D4E9214CD0D400E93DF8 /* SDWebImageManager+MJ.m in Sources */ = {isa = PBXBuildFile; fileRef = DB33D4E8214CD0D300E93DF8 /* SDWebImageManager+MJ.m */; };
 		DB48DEE32154C34400D7B56E /* LBWMainVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE22154C34400D7B56E /* LBWMainVc.m */; };
 		DB48DEE62154C58D00D7B56E /* zhuboVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB48DEE52154C58D00D7B56E /* zhuboVc.m */; };
@@ -278,6 +280,7 @@
 		DB5EB87321490DF900786CE2 /* ChatRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB87221490DF900786CE2 /* ChatRecordCell.m */; };
 		DB5EB877214912EE00786CE2 /* AdvertisingVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB876214912EE00786CE2 /* AdvertisingVc.m */; };
 		DB5EB87B214A56EA00786CE2 /* ChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB87A214A56EA00786CE2 /* ChatRoom.m */; };
+		DB9A1926215F504900C3B693 /* windosView.m in Sources */ = {isa = PBXBuildFile; fileRef = DB9A1925215F504900C3B693 /* windosView.m */; };
 		DBBA46DC214BF3AF00E8E77B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBA46DB214BF3AF00E8E77B /* libc++.tbd */; };
 		DBBA46E0214BF4CD00E8E77B /* LiveBroadcastVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBBA46DF214BF4CD00E8E77B /* LiveBroadcastVc.m */; };
 		DBBC15802151FA30002EA679 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBC157F2151FA30002EA679 /* Foundation.framework */; };
@@ -491,6 +494,11 @@
 		73BFA4B29A15F550774B2FB1 /* Pods-Core.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Core/Pods-Core.debug.xcconfig"; sourceTree = "<group>"; };
 		B4FD57F2CB0343A08D2AAE44 /* Pods-Core.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Core.release.xcconfig"; path = "Pods/Target Support Files/Pods-Core/Pods-Core.release.xcconfig"; sourceTree = "<group>"; };
 		DB17BFD62159E30E009415A6 /* url.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = url.h; sourceTree = "<group>"; };
+		DB22FAD5215F725A00DABE2D /* NSString+AES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+AES.h"; sourceTree = "<group>"; };
+		DB22FAD7215F725A00DABE2D /* GTMBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMBase64.h; sourceTree = "<group>"; };
+		DB22FAD8215F725A00DABE2D /* GTMBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMBase64.m; sourceTree = "<group>"; };
+		DB22FAD9215F725A00DABE2D /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
+		DB22FADA215F725A00DABE2D /* NSString+AES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+AES.m"; sourceTree = "<group>"; };
 		DB33D4E7214CD0D300E93DF8 /* SDWebImageManager+MJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SDWebImageManager+MJ.h"; sourceTree = "<group>"; };
 		DB33D4E8214CD0D300E93DF8 /* SDWebImageManager+MJ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SDWebImageManager+MJ.m"; sourceTree = "<group>"; };
 		DB48DEE12154C34400D7B56E /* LBWMainVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBWMainVc.h; sourceTree = "<group>"; };
@@ -738,6 +746,8 @@
 		DB5EB876214912EE00786CE2 /* AdvertisingVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvertisingVc.m; sourceTree = "<group>"; };
 		DB5EB879214A56EA00786CE2 /* ChatRoom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoom.h; sourceTree = "<group>"; };
 		DB5EB87A214A56EA00786CE2 /* ChatRoom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoom.m; sourceTree = "<group>"; };
+		DB9A1924215F504900C3B693 /* windosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = windosView.h; sourceTree = "<group>"; };
+		DB9A1925215F504900C3B693 /* windosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = windosView.m; sourceTree = "<group>"; };
 		DBBA46DB214BF3AF00E8E77B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		DBBA46DE214BF4CD00E8E77B /* LiveBroadcastVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveBroadcastVc.h; sourceTree = "<group>"; };
 		DBBA46DF214BF4CD00E8E77B /* LiveBroadcastVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveBroadcastVc.m; sourceTree = "<group>"; };
@@ -1257,6 +1267,26 @@
 			path = chatRoom;
 			sourceTree = "<group>";
 		};
+		DB22FACE215F6A9700DABE2D /* 加密解密 */ = {
+			isa = PBXGroup;
+			children = (
+				DB22FAD6215F725A00DABE2D /* GTM */,
+				DB22FAD5215F725A00DABE2D /* NSString+AES.h */,
+				DB22FADA215F725A00DABE2D /* NSString+AES.m */,
+			);
+			path = "加密解密";
+			sourceTree = "<group>";
+		};
+		DB22FAD6215F725A00DABE2D /* GTM */ = {
+			isa = PBXGroup;
+			children = (
+				DB22FAD7215F725A00DABE2D /* GTMBase64.h */,
+				DB22FAD8215F725A00DABE2D /* GTMBase64.m */,
+				DB22FAD9215F725A00DABE2D /* GTMDefines.h */,
+			);
+			path = GTM;
+			sourceTree = "<group>";
+		};
 		DB5670E62143A02200B2ADF8 /* External */ = {
 			isa = PBXGroup;
 			children = (
@@ -1673,6 +1703,15 @@
 			path = "自定义聊天室";
 			sourceTree = "<group>";
 		};
+		DB9A1923215F504900C3B693 /* widon  视图 */ = {
+			isa = PBXGroup;
+			children = (
+				DB9A1924215F504900C3B693 /* windosView.h */,
+				DB9A1925215F504900C3B693 /* windosView.m */,
+			);
+			path = "widon  视图";
+			sourceTree = "<group>";
+		};
 		DBBA46DD214BF49D00E8E77B /* LiveBroadcastVc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1725,6 +1764,8 @@
 		DBEB414F2146710F0018D718 /* baseTool */ = {
 			isa = PBXGroup;
 			children = (
+				DB22FACE215F6A9700DABE2D /* 加密解密 */,
+				DB9A1923215F504900C3B693 /* widon  视图 */,
 				04C5B7A01F713F6300BB41C4 /* Nav */,
 				DBEB41502146710F0018D718 /* baseColle */,
 				DBEB415A2146710F0018D718 /* baseTableVc */,
@@ -2346,6 +2387,7 @@
 				DB5675372143A51B00B2ADF8 /* JCHATMoreView.m in Sources */,
 				DBEB41A3214694A30018D718 /* walletHead.m in Sources */,
 				DBCA9E49215B72BB00A29BEC /* ChatToolSQL.m in Sources */,
+				DB22FADB215F725A00DABE2D /* GTMBase64.m in Sources */,
 				DB5675392143A51B00B2ADF8 /* JCHATRecordAnimationView.m in Sources */,
 				DB5675362143A51B00B2ADF8 /* JCHATMessageTextView.m in Sources */,
 				DB5671962143A02300B2ADF8 /* MJPhotoToolbar.m in Sources */,
@@ -2414,10 +2456,12 @@
 				041DE66E1F720C9B0056B2FE /* LBLoginViewController.m in Sources */,
 				DB5671692143A02300B2ADF8 /* ChatImageBubble.m in Sources */,
 				DB5671812143A02300B2ADF8 /* JCHATAlertViewWait.m in Sources */,
+				DB9A1926215F504900C3B693 /* windosView.m in Sources */,
 				04E853F31FCC4ED5005F5DD2 /* VBWebViewProgressLine.m in Sources */,
 				04E2E44B1FB86ACC00B95285 /* LBRemendToolView.m in Sources */,
 				DB56716A2143A02300B2ADF8 /* JCHATAlbumViewController.m in Sources */,
 				04C756891F7FE9DF0001D86F /* LBActivationListViewController.m in Sources */,
+				DB22FADC215F725A00DABE2D /* NSString+AES.m in Sources */,
 				DBEB41492146679E0018D718 /* notificationCell.m in Sources */,
 				3DF66DB62077BEC800A8DC37 /* WHC_PlateView.m in Sources */,
 				04B428651F76A0EE004B519B /* PlaceholderTextView.m in Sources */,

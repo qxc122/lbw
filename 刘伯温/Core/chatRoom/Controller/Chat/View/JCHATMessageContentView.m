@@ -8,7 +8,7 @@
 
 #import "JCHATMessageContentView.h"
 #import "JChatConstants.h"
-
+#import "NSString+AES.h"
 static NSInteger const textMessageContentTopOffset = 10;
 static NSInteger const textMessageContentRightOffset = 15;
 
@@ -61,6 +61,7 @@ static NSInteger const textMessageContentRightOffset = 15;
     _textContent.textAlignment = NSTextAlignmentLeft;
     switch (message.contentType) {
         case kJMSGContentTypeText:
+        {
             _voiceConent.hidden = YES;
             _textContent.hidden = NO;
             
@@ -69,7 +70,18 @@ static NSInteger const textMessageContentRightOffset = 15;
             } else {
                 [_textContent setFrame:CGRectMake(textMessageContentRightOffset - 5, textMessageContentTopOffset, self.frame.size.width - 2 * textMessageContentRightOffset, self.frame.size.height- 2 * textMessageContentTopOffset)];
             }
-            _textContent.text = ((JMSGTextContent *)message.content).text;
+//            _textContent.text = ((JMSGTextContent *)message.content).text;
+            NSString *tmpStr = ((JMSGTextContent *)message.content).text;
+            NSString *msg;
+            if (tmpStr.length) {
+                msg = [tmpStr aci_decryptWithAES];
+            }
+            if (msg.length) {
+                _textContent.text = msg;
+            } else {
+                _textContent.text = ((JMSGTextContent *)message.content).text;
+            }
+        }
             break;
             
         case kJMSGContentTypeImage:
@@ -150,7 +162,7 @@ static NSInteger const textMessageContentRightOffset = 15;
         }
             break;
         case kJMSGContentTypeUnknown:
-            
+        {
             _voiceConent.hidden = YES;
             _textContent.hidden = NO;
             
@@ -159,10 +171,21 @@ static NSInteger const textMessageContentRightOffset = 15;
             } else {
                 [_textContent setFrame:CGRectMake(textMessageContentRightOffset - 5, textMessageContentTopOffset, self.frame.size.width - 2 * textMessageContentRightOffset, self.frame.size.height- 2 * textMessageContentTopOffset)];
             }
-            _textContent.text = ((JMSGTextContent *)message.content).text;
+//            _textContent.text = ((JMSGTextContent *)message.content).text;
+            NSString *tmpStr = ((JMSGTextContent *)message.content).text;
+            NSString *msg;
+            if (tmpStr.length) {
+                msg = [tmpStr aci_decryptWithAES];
+            }
+            if (msg.length) {
+                _textContent.text = msg;
+            } else {
+                _textContent.text = ((JMSGTextContent *)message.content).text;
+            }
+        }
             break;
             
-            
+
 //            _voiceConent.hidden = YES;
 //            _textContent.hidden = NO;
 //            

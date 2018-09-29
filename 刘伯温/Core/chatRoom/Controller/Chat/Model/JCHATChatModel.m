@@ -8,6 +8,7 @@
 
 #import "JCHATChatModel.h"
 #import "JChatConstants.h"
+#import "NSString+AES.h"
 #define headHeight 46
 
 static NSInteger const voiceBubbleHeight = 50;
@@ -121,6 +122,14 @@ static NSInteger const voiceBubbleHeight = 50;
 }
 
 - (CGSize)getTextSizeWithString:(NSString *)string {
+    NSString *msg;
+    if (string.length) {
+        msg = [string aci_decryptWithAES];
+    }
+    if (msg.length) {
+        string = msg;
+    }
+    
   CGSize maxSize = CGSizeMake(200, 2000);
   UIFont *font =[UIFont systemFontOfSize:18];
   NSMutableParagraphStyle *paragraphStyle= [[NSMutableParagraphStyle alloc] init];

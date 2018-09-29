@@ -207,18 +207,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self getMyInfo];
-    [self getBaseConfig];
 }
 
-- (void)getBaseConfig{
-    [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
-        NSLog(@"在我的页面 基础信息获取成功");
-        LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
-        [ChatTool shareChatTool].basicConfig = model;
-    } failure:^(NSInteger errorCode, NSString *msg) {
-
-    }];
-}
 
 - (void)getMyInfo{
     if (!ISLOGIN)return;

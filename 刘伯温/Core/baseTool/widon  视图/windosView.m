@@ -1,16 +1,16 @@
 //
-//  AdvertisingVc.m
-//  Core
+//  windosView.m
+//  TourismT
 //
-//  Created by heiguohua on 2018/9/12.
-//  Copyright © 2018年 mac. All rights reserved.
+//  Created by Store on 16/12/15.
+//  Copyright © 2016年 qxc122@126.com. All rights reserved.
 //
 
-#import "AdvertisingVc.h"
+#import "windosView.h"
 #import "UIImageView+WebCache.h"
 #import "WHC_GestureUnlockScreenVC.h"
 #import "mainTableVc.h"
-@interface AdvertisingVc ()
+@interface windosView ()
 @property (nonatomic,weak) UIImageView *png;
 
 @property (nonatomic,weak) UIButton *skip;
@@ -20,41 +20,43 @@
 @end
 
 
-@implementation AdvertisingVc
+@implementation windosView
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.fd_prefersNavigationBarHidden = YES;
-    self.fd_interactivePopDisabled = YES;
-    UIImageView *png = [[UIImageView alloc] init];
-    [self.view addSubview:png];
-    [png mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view).offset(0);
-        make.right.equalTo(self.view).offset(-0);
-        make.top.equalTo(self.view).offset(0);
-        make.bottom.equalTo(self.view).offset(-0);
-    }];
-    self.png = png;
-    self.png.userInteractionEnabled = YES;
-    self.png.contentMode = UIViewContentModeScaleToFill;
-
-    
-    [self getBaseConfig];
-    if ([ChatTool shareChatTool].basicConfig) {
-        [self setSkip];
-        [self.png sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];
-        [self creatTimer];
-    } else {
-        self.png.image = [UIImage imageNamed:@"splash2"];
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        UIImageView *png = [[UIImageView alloc] init];
+        [self addSubview:png];
+        [png mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self).offset(0);
+            make.right.equalTo(self).offset(-0);
+            make.top.equalTo(self).offset(0);
+            make.bottom.equalTo(self).offset(-0);
+        }];
+        self.png = png;
+        self.png.userInteractionEnabled = YES;
+        self.png.contentMode = UIViewContentModeScaleToFill;
+        
+        
+        [self getBaseConfig];
+        if ([ChatTool shareChatTool].basicConfig) {
+            [self setSkip];
+            [self.png sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];
+            [self creatTimer];
+        } else {
+            self.png.image = [UIImage imageNamed:@"splash2"];
+        }
     }
+    return self;
 }
 
 - (void)setSkip{
     UIButton *skip = [[UIButton alloc] init];
-    [self.view addSubview:skip];
+    [self addSubview:skip];
     [skip mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-30);
-        make.top.equalTo(self.view).offset(40);
+        make.right.equalTo(self).offset(-30);
+        make.top.equalTo(self).offset(40);
         make.width.equalTo(@60);
         make.height.equalTo(@30);
     }];
@@ -71,26 +73,8 @@
 }
 
 - (void)skipClick{
-//    [self dismissViewControllerAnimated:YES completion:^{
-//
-//    }];
     [self removeTimer];
-    MMKV *mmkv = [MMKV defaultMMKV];
-    if ([mmkv getBoolForKey:@"mimasuo"]){
-        WHC_GestureUnlockScreenVC  * unlockVC = [WHC_GestureUnlockScreenVC new];
-        unlockVC.unlockType = ClickNumberType;
-        kWeakSelf(self);
-        [self  presentViewController:unlockVC animated:NO completion:^{
-            [weakself OpenmainTableVc];
-        }];
-    }else{
-        [self OpenmainTableVc];
-    }
-}
-
-- (void)OpenmainTableVc{
-    mainTableVc *vc = [mainTableVc new];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self closeClisck];
 }
 
 
@@ -105,7 +89,7 @@
 #pragma mark----倒计时
 -(void)daojishiRunning{
     self.num--;
-    if (self.num == 0) {
+    if (self.num <= 0) {
         [self skipClick];
         [self removeTimer];
     }else{
@@ -130,12 +114,14 @@
     kWeakSelf(self);
     [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
         NSLog(@"在广告页 基础信息获取成功");
-        LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
-        [ChatTool shareChatTool].basicConfig = model;
         
-        [weakself  setSkip];
-        [weakself.png sd_setImageWithURL:[NSURL URLWithString:model.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];
-        [weakself creatTimer];
+        LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
+        if(![ChatTool shareChatTool].basicConfig){
+            [weakself  setSkip];
+            [weakself.png sd_setImageWithURL:[NSURL URLWithString:model.splash_inage_url] placeholderImage:[UIImage imageNamed:@"splash2"]];
+            [weakself creatTimer];
+        }
+        [ChatTool shareChatTool].basicConfig = model;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getBaseConfigSuccess" object:nil];
     } failure:^(NSInteger errorCode, NSString *msg) {
@@ -146,4 +132,17 @@
 
 
 
+- (void)closeClisck{
+    [self removeFromSuperview];
+}
+- (void)windosViewshow{
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    [window addSubview:self];
+    [self mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(window);
+        make.right.equalTo(window);
+        make.top.equalTo(window);
+        make.bottom.equalTo(window);
+    }];
+}
 @end

@@ -78,7 +78,7 @@
                 [cell addSubview:self.openSwitch];
 
                 MMKV *mmkv = [MMKV defaultMMKV];
-                if ([mmkv getBoolForKey:@"bool"]){
+                if ([mmkv getBoolForKey:@"mimasuo"]){
                     self.openSwitch.on = YES;
                 }else{
                     self.openSwitch.on = NO;
@@ -136,12 +136,12 @@
     MMKV *mmkv = [MMKV defaultMMKV];
     if (self.openSwitch.isOn){
         if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ConfigurationKey"]) {
-            [mmkv setBool:YES forKey:@"bool"];
+            [mmkv setBool:YES forKey:@"mimasuo"];
         } else {
             [WHC_GestureUnlockScreenVC setUnlockScreenWithType:ClickNumberType];
         }
     }else{
-        [mmkv setBool:NO forKey:@"bool"];
+        [mmkv setBool:NO forKey:@"mimasuo"];
 //        [WHC_GestureUnlockScreenVC removeGesturePassword];
     }
 }

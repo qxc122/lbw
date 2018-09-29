@@ -76,7 +76,7 @@
     [self.thumbImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    
+    self.thumbImageView.hidden = YES;
     
     UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     self.effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
@@ -216,6 +216,7 @@
     } else {
         if (!self.chatRoom) {
             self.chatRoom = [JCHATConversationViewController new];
+            self.chatRoom.gotoZhiBoVc = YES;
         }
         [self.navigationController pushViewController:self.chatRoom animated:YES];
     }
@@ -699,13 +700,15 @@
 }
 
 - (void)playerWillEndBackgroundTask:(PLPlayer *)player {
-    self.isDisapper = NO;
-    if (![self.player isPlaying]) {
-        [self.player play];
-    }
-    if (!self.scrollTimer) {
-        [self installMovieNotificationObservers];
-        [self creatTimer];
+    if ([self.navigationController.topViewController isEqual:self]) {
+        self.isDisapper = NO;
+        if (![self.player isPlaying]) {
+            [self.player play];
+        }
+        if (!self.scrollTimer) {
+            [self installMovieNotificationObservers];
+            [self creatTimer];
+        }
     }
 }
 

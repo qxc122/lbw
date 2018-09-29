@@ -16,10 +16,5 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.fd_prefersNavigationBarHidden = YES;
-//    self.view.backgroundColor = [UIColor clearColor];
-//    self.messageTableView.backgroundColor = [UIColor clearColor];
-//    self.messageTableView.contentInset = UIEdgeInsetsMake(300, 0, 0, 0);
 }
-- (void)addTwoView{}
 @end

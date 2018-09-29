@@ -19,6 +19,7 @@
 #import <JhtMarquee/JhtHorizontalMarquee.h>
 #import "passAll.h"
 #import "WHC_GestureUnlockScreenVC.h"
+#import "JCHATConversationViewController.h"
 
 #define WindowsSize [UIScreen mainScreen].bounds.size
 
@@ -39,6 +40,11 @@
 
 @property (nonatomic, strong) passAll *passwordView;
 
+@property (nonatomic, weak) UIButton *live_off_btn;
+
+
+@property (nonatomic, assign) BOOL isDisplayed;  //公告是否显示过
+@property (nonatomic, assign) NSInteger indexMsg;  //将要显示第几个公告
 @end
 
 
@@ -46,6 +52,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.indexMsg = 0;
     self.title = @"VIP俱乐";
     self.titles = @[@"推荐主播", @"直播平台", @"我的关注"];
     self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -91,9 +98,9 @@
     self.scrollView.bounces = NO;
     [self.view addSubview:self.scrollView];
     
-    if (@available(iOS 11.0, *)) {
-        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
+//    if (@available(iOS 11.0, *)) {
+//        self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+//    }
     
     for (int i = 0; i < count; i ++) {
         [self configListViewController:nil index:i];
@@ -144,11 +151,23 @@
     [signButton addTarget:self action:@selector(signButtonClick) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:signButton],[[UIBarButtonItem alloc] initWithCustomView:searchButton]];
     
-
     [self setpassWord];
+    
+    UIButton *live_off_btn = [[UIButton alloc]initWithFrame:self.scrollView.frame];
+    self.live_off_btn = live_off_btn;
+    [self.view addSubview:live_off_btn];
+    [live_off_btn addTarget:self action:@selector(live_off_btnClick) forControlEvents:UIControlEventTouchUpInside];
+    if ([[ChatTool shareChatTool].basicConfig.live_of isEqualToString:@"1"]) { //关
+        [self setlive_off_btn];
+    } else {
+        self.live_off_btn.hidden = YES;
+    }
+
 }
-
-
+- (void)live_off_btnClick{
+    JCHATConversationViewController *vc = [JCHATConversationViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 - (Class)preferredCategoryViewClass {
     return [JXCategoryTitleView class];
@@ -284,6 +303,9 @@
     if (self.passwordView && ![[NSUserDefaults standardUserDefaults] objectForKey:@"ConfigurationKey"]) {
         [MBProgressHUD showPrompt:@"请先设置密码" toView:self.view];
     }
+    if ([ChatTool shareChatTool].basicConfig.notice_msg.count) {
+        [self DisplayedMsg];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -292,7 +314,50 @@
     [_horizontalMarquee marqueeOfSettingWithState:MarqueeStart_H];
     
 //    [self createChatRoomConversation];
+    [self getBaseConfig];
+}
 
+- (void)getBaseConfig{
+    kWeakSelf(self);
+    [[ToolHelper shareToolHelper]getBaseConfigSuccess:^(id dataDict, NSString *msg, NSInteger code) {
+        NSLog(@"在我的页面 基础信息获取成功");
+        LBGetVerCodeModel *model = [LBGetVerCodeModel mj_objectWithKeyValues:dataDict[@"data"]];
+        [ChatTool shareChatTool].basicConfig = model;
+        if ([model.live_of isEqualToString:@"1"]) { //关
+            [weakself setlive_off_btn];
+        } else {
+            weakself.live_off_btn.hidden = YES;
+        }
+        if ([ChatTool shareChatTool].basicConfig.notice_msg.count && !weakself.isDisplayed) {
+            [weakself DisplayedMsg];
+        }
+    } failure:^(NSInteger errorCode, NSString *msg) {
+        
+    }];
+}
+- (void)setlive_off_btn{
+    self.live_off_btn.hidden = NO;
+    [self.live_off_btn.imageView sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.off_img]];
+}
+
+- (void)DisplayedMsg{
+    if (!self.isDisplayed && !self.tabBarController.navigationController.presentedViewController) {
+        self.isDisplayed = YES;
+        [self DisplayedMsgIndex];
+    }
+}
+
+- (void)DisplayedMsgIndex{
+    if (self.indexMsg < [ChatTool shareChatTool].basicConfig.notice_msg.count) {
+        notice_Onemsg *tmp = [ChatTool shareChatTool].basicConfig.notice_msg[self.indexMsg];
+        kWeakSelf(self);
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:tmp.title message:tmp.msg preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            weakself.indexMsg++;
+            [weakself DisplayedMsgIndex];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -302,10 +367,6 @@
 }
 - (void)setpassWord{
     if (!self.passwordView) {
-//        self.isaidong = @"0";
-//        MMKV *mmkv = [MMKV defaultMMKV];
-//        [mmkv setBool:NO forKey:@"isaidong"];
-        
         self.passwordView =  [[passAll alloc]initWithFrame:self.scrollView.frame];
         [self.view addSubview:self.passwordView];
         kWeakSelf(self);
@@ -315,7 +376,6 @@
     }
 }
 - (void)reLOgin{
- 
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isLogin"];
     [self dismissViewControllerAnimated:YES completion:nil];
     UIWindow *window = [UIApplication sharedApplication].keyWindow;

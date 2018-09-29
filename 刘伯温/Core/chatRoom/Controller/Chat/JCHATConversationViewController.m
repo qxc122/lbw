@@ -23,6 +23,7 @@
 #import "webAddIMVc.h"
 #import "ChatRecordCell.h"
 #import "mainTableVc.h"
+#import "NSString+AES.h"
 @interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate,ChatToolJMSGMessageDelegate> {
 @private
     BOOL isNoOtherMessage;
@@ -92,6 +93,7 @@
     
     [ChatTool shareChatTool].delegate = self;
     self.conversation = [ChatTool shareChatTool].conversation;
+    self.moreViewContainer.hidden = YES;
 }
 #pragma  mark 聊天室连接成功之间添加蒙板
 - (void)TipsInChatRoomConnection{
@@ -221,31 +223,43 @@
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
         }
     }else if ([btn.restorationIdentifier isEqualToString:zhiboAndWebVcPNG]) {
-        LBAnchorListModel *model =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_OF_ZHUBO];
-        if ([[ChatTool shareChatTool].basicConfig.isFree intValue]){
-            NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
-            NSDateFormatter *format = [[NSDateFormatter alloc] init];
-            format.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-            NSDate *oneData = [format dateFromString:expirationDate];
-            NSString *type = [[NSUserDefaults standardUserDefaults] objectForKey:@"type"];
-            
-            if ([type isEqualToString:@"0"]){
-                [self joinMembership];
-                return;
-            }else if([NSDate date].timeIntervalSince1970 >= oneData.timeIntervalSince1970){
-                [self RenewalFee];
-                return;
+        UIViewController *liveVc;
+        for (UIViewController *tmp  in self.navigationController.childViewControllers) {
+            if ([tmp isKindOfClass:[LiveBroadcastVc class]]) {
+                liveVc = tmp;
+                break;
             }
         }
-        NSLog(@"%@\n\n\n\n\n\nhhhhhhhhh",model.anchorLiveUrl);
-        LiveBroadcastVc *vc =[LiveBroadcastVc new];
-        vc.anchorLiveUrl = model.anchorLiveUrl;
+        if (liveVc) {
+            [self.navigationController popToViewController:liveVc animated:YES];
+        } else {
+            LBAnchorListModel *model =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_OF_ZHUBO];
+            if ([[ChatTool shareChatTool].basicConfig.isFree intValue]){
+                NSString *expirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"expirationDate"];
+                NSDateFormatter *format = [[NSDateFormatter alloc] init];
+                format.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                NSDate *oneData = [format dateFromString:expirationDate];
+                NSString *type = [[NSUserDefaults standardUserDefaults] objectForKey:@"type"];
+                
+                if ([type isEqualToString:@"0"]){
+                    [self joinMembership];
+                    return;
+                }else if([NSDate date].timeIntervalSince1970 >= oneData.timeIntervalSince1970){
+                    [self RenewalFee];
+                    return;
+                }
+            }
+            NSLog(@"%@\n\n\n\n\n\nhhhhhhhhh",model.anchorLiveUrl);
+            LiveBroadcastVc *vc =[LiveBroadcastVc new];
+            vc.anchorLiveUrl = model.anchorLiveUrl;
+            
+            vc.anchorID = model.anchorID;
+            vc.livePlatID = model.livePlatID;
+            vc.iconUrl = model.anchorThumb;
+            vc.nickname = model.anchorName;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
         
-        vc.anchorID = model.anchorID;
-        vc.livePlatID = model.livePlatID;
-        vc.iconUrl = model.anchorThumb;
-        vc.nickname = model.anchorName;
-        [self.navigationController pushViewController:vc animated:YES];
     } else {
         if (!self.CPwebVc) {
             self.CPwebVc = [webAddIMVc new];
@@ -469,7 +483,6 @@
 #pragma mark --JMessageDelegate
 - (void)onSendMessageResponse:(JMSGMessage *)message error:(NSError *)error {
   DDLogDebug(@"Event - sendMessageResponse");
-    
   if (message != nil) {
     NSLog(@"发送的 Message:  %@",message);
   }
@@ -1246,6 +1259,9 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
     if ([text isEqualToString:@""] || text == nil) {
         return;
     }
+    
+    text = [text aci_encryptWithAES];
+    
     [[JCHATSendMsgManager ins] updateConversation:_conversation withDraft:@""];
     JMSGMessage *message = nil;
     JMSGTextContent *textContent = [[JMSGTextContent alloc] initWithText:text];

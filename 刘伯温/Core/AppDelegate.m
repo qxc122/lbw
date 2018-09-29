@@ -19,6 +19,7 @@
 #import "IQKeyboardManager.h"
 #import "mainTableVc.h"
 #import "AdvertisingVc.h"
+#import "windosView.h"
 @interface AppDelegate ()<CLLocationManagerDelegate,UNUserNotificationCenterDelegate>
 @property (nonatomic, strong) CLLocationManager * locationManager;
 @end
@@ -33,14 +34,14 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     
-//    MMKV *mmkv = [MMKV defaultMMKV];
-//    [mmkv setBool:YES forKey:@"isaidong"];
-    
     mainTableVc *vc = [mainTableVc new];
     vc.isaidong = @"1";
     self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:vc];
     [self.window makeKeyAndVisible];
 
+    windosView *guanggao = [windosView new];
+    [guanggao windosViewshow];
+    
     BOOL tmp;;
 #ifdef DEBUG
     tmp = NO;
@@ -110,7 +111,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     MMKV *mmkv = [MMKV defaultMMKV];
-    if ([mmkv getBoolForKey:@"bool"]){
+    if ([mmkv getBoolForKey:@"mimasuo"]){
         [WHC_GestureUnlockScreenVC setUnlockScreenWithType:ClickNumberType];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"applicationDidEnterBackground" object:nil];
     }

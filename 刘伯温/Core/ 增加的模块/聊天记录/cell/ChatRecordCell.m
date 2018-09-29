@@ -9,7 +9,7 @@
 #import "ChatRecordCell.h"
 #import "Masonry.h"
 #import "Header.h"
-
+#import "NSString+AES.h"
 @interface ChatRecordCell ()
 @property (nonatomic,weak) UILabel *title;
 @property (nonatomic,weak) UILabel *time;
@@ -84,7 +84,6 @@
     return self;
 }
 
-
 - (void)setOneMsg:(id)oneMsg{
     _oneMsg = oneMsg;
     if ([oneMsg isKindOfClass:[JMSGMessage class]]) {
@@ -94,7 +93,16 @@
         } else {
             self.title.text = @"✔：";
         }
-        self.time.text = ((JMSGTextContent *)tmp.content).text;
+        NSString *tmpStr = ((JMSGTextContent *)tmp.content).text;
+        NSString *msg;
+        if (tmpStr.length) {
+            msg = [tmpStr aci_decryptWithAES];
+        }
+        if (msg.length) {
+            self.time.text = msg;
+        } else {
+            self.time.text = ((JMSGTextContent *)tmp.content).text;
+        }
     }else{
         self.title.text = nil;
         self.time.text = nil;

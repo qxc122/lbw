@@ -167,6 +167,18 @@
         return oldValue;
     }
 }
+
++ (NSDictionary *)mj_objectClassInArray
+{
+    return @{
+             @"notice_msg" : @"notice_Onemsg",
+             };
+}
+
+MJExtensionCodingImplementation
+@end
+
+@implementation notice_Onemsg
 MJExtensionCodingImplementation
 @end
 

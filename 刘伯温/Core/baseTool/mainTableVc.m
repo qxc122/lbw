@@ -36,19 +36,12 @@
     [super viewWillAppear:animated];
     if ([self.isaidong isEqualToString:@"1"]) {
         self.isaidong = @"0";
-
-        UIViewController *NaVC = self;
-//        if ([[NSUserDefaults standardUserDefaults] objectForKey:@"ConfigurationKey"]){
-        
         MMKV *mmkv = [MMKV defaultMMKV];
-        if ([mmkv getBoolForKey:@"bool"]){
+        if ([mmkv getBoolForKey:@"mimasuo"]){
             WHC_GestureUnlockScreenVC  * unlockVC = [WHC_GestureUnlockScreenVC new];
             unlockVC.unlockType = ClickNumberType;
             [self  presentViewController:unlockVC animated:NO completion:nil];
-            NaVC = self.presentedViewController;
         }
-        AdvertisingVc *vc =[AdvertisingVc new];
-        [NaVC presentViewController:vc animated:NO completion:nil];
     }
 }
 
@@ -192,4 +185,17 @@
     }
 }
 
+
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    NSMutableArray *muArry =[self.navigationController.viewControllers mutableCopy];
+    for (UIViewController *vc in self.navigationController.viewControllers) {
+        if ([vc isKindOfClass:[AdvertisingVc class]]) {
+            [muArry removeObject:vc];
+            break;
+        }
+    }
+    self.navigationController.viewControllers = muArry;
+}
 @end

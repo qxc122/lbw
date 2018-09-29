@@ -105,6 +105,10 @@
 @property (nonatomic, copy)NSString *liveTipMsg;
 @property (nonatomic, copy)NSString *invitationCode;
 @property (nonatomic,copy)NSString *live_of;
+
+@property (nonatomic,strong)NSArray *notice_msg;
+@property (nonatomic,copy)NSString *off_img;
+
 @property (nonatomic,copy)NSString *live_adv_user;
 @property (nonatomic,copy)NSString *live_adv_vip_user;
 @property (nonatomic,copy)NSString *live_adv_image;
@@ -112,6 +116,13 @@
 @property (nonatomic,copy)NSString *splash_inage_url;
 @property (nonatomic,copy)NSString *main_room_id;
 @end
+
+
+@interface notice_Onemsg : NSObject
+@property(nonatomic, copy)NSString *title;
+@property(nonatomic, copy)NSString *msg;
+@end
+
 
 
 @interface LBGetLivePlatModel : NSObject
