@@ -313,6 +313,8 @@
 		DBEB41B321476E040018D718 /* MyBankCardVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEB41B221476E040018D718 /* MyBankCardVc.m */; };
 		DBEB41B72147AB5A0018D718 /* bankCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEB41B62147AB5A0018D718 /* bankCell.m */; };
 		DBEB41BB2147ABA60018D718 /* WithdrawalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEB41BA2147ABA60018D718 /* WithdrawalCell.m */; };
+		DBF86B1321621640002BBD2C /* YLCRootVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF86B1221621640002BBD2C /* YLCRootVc.m */; };
+		DBF86B162162164F002BBD2C /* CPRootVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF86B152162164F002BBD2C /* CPRootVc.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -813,6 +815,10 @@
 		DBEB41B62147AB5A0018D718 /* bankCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = bankCell.m; sourceTree = "<group>"; };
 		DBEB41B92147ABA60018D718 /* WithdrawalCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WithdrawalCell.h; sourceTree = "<group>"; };
 		DBEB41BA2147ABA60018D718 /* WithdrawalCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WithdrawalCell.m; sourceTree = "<group>"; };
+		DBF86B1121621640002BBD2C /* YLCRootVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YLCRootVc.h; sourceTree = "<group>"; };
+		DBF86B1221621640002BBD2C /* YLCRootVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YLCRootVc.m; sourceTree = "<group>"; };
+		DBF86B142162164F002BBD2C /* CPRootVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPRootVc.h; sourceTree = "<group>"; };
+		DBF86B152162164F002BBD2C /* CPRootVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPRootVc.m; sourceTree = "<group>"; };
 		F0057E9B5295053B7C888EB3 /* libPods-Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -1873,6 +1879,8 @@
 		DBEB419721468CE60018D718 /*  增加的模块 */ = {
 			isa = PBXGroup;
 			children = (
+				DBF86B0F21621618002BBD2C /* 彩票根模块 */,
+				DBF86B1021621619002BBD2C /* 娱乐城根模块 */,
 				DB5EB878214A56AF00786CE2 /* 自定义聊天室 */,
 				DB5EB86C21490D5F00786CE2 /* 聊天记录 */,
 				DBEB419821468D120018D718 /* webAddIMVc.h */,
@@ -1969,6 +1977,24 @@
 				DBEB41BA2147ABA60018D718 /* WithdrawalCell.m */,
 			);
 			path = cell;
+			sourceTree = "<group>";
+		};
+		DBF86B0F21621618002BBD2C /* 彩票根模块 */ = {
+			isa = PBXGroup;
+			children = (
+				DBF86B142162164F002BBD2C /* CPRootVc.h */,
+				DBF86B152162164F002BBD2C /* CPRootVc.m */,
+			);
+			path = "彩票根模块";
+			sourceTree = "<group>";
+		};
+		DBF86B1021621619002BBD2C /* 娱乐城根模块 */ = {
+			isa = PBXGroup;
+			children = (
+				DBF86B1121621640002BBD2C /* YLCRootVc.h */,
+				DBF86B1221621640002BBD2C /* YLCRootVc.m */,
+			);
+			path = "娱乐城根模块";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2335,6 +2361,7 @@
 				DBEB418D214671100018D718 /* baseWkVc.m in Sources */,
 				04E2E4721FB88A2A00B95285 /* UzysAppearanceConfig.m in Sources */,
 				DB48DEE32154C34400D7B56E /* LBWMainVc.m in Sources */,
+				DBF86B1321621640002BBD2C /* YLCRootVc.m in Sources */,
 				04E2E4731FB88A2A00B95285 /* UzysAssetsPickerController.m in Sources */,
 				04E2E4741FB88A2A00B95285 /* UzysAssetsViewCell.m in Sources */,
 				04E2E4751FB88A2A00B95285 /* UzysGroupPickerView.m in Sources */,
@@ -2408,6 +2435,7 @@
 				DBEB418B214671100018D718 /* baseUiTableView.m in Sources */,
 				DB5EB87321490DF900786CE2 /* ChatRecordCell.m in Sources */,
 				DB5671C72143A0AC00B2ADF8 /* JCHATTimeOutManager.m in Sources */,
+				DBF86B162162164F002BBD2C /* CPRootVc.m in Sources */,
 				DB5675352143A51B00B2ADF8 /* JCHATMessageTableView.m in Sources */,
 				04DE689B1F75565C0058DC32 /* LBToolModel.m in Sources */,
 				DBEB418C214671100018D718 /* basicVc.m in Sources */,

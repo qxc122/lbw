@@ -11,12 +11,22 @@
 #import "HeaderBase.h"
 #import "LBShowRemendView.h"
 #import "LBLoginViewController.h"
-
+#import "JCHATConversationViewController.h"
+#import "ChatRoom.h"
+#import "LBShowBannerView.h"
+#import "zhiboAndWebVc.h"
 @interface baseWkVc ()<WKNavigationDelegate,WKUIDelegate>
 
 @property (weak,nonatomic) UIProgressView *pro1;
 
-@property (assign,nonatomic) BOOL islogSuccessfully;
+
+
+@property(nonatomic, weak)UIButton *guanggPng;
+@property(nonatomic, weak)UIButton *CPButtom;
+@property(nonatomic, weak)UIButton *ChatRoomButton;
+@property(nonatomic, weak)LBShowBannerView *guangaoView;
+@property(nonatomic, strong)zhiboAndWebVc *zhiboAndWebVcvc;
+@property(nonatomic, strong)JCHATConversationViewController *chatRoom;
 @end
 
 @implementation baseWkVc
@@ -60,25 +70,6 @@
     
     [webView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     
-    NSString *reqUrl = @"";
-    if (self.tabBarController.selectedIndex == 1){
-        reqUrl = [ChatTool shareChatTool].basicConfig.WBW;
-        self.title = [ChatTool shareChatTool].basicConfig.tab_cpTitle;
-        self.islogSuccessfully = YES;
-    }else if (self.tabBarController.selectedIndex == 3){
-        reqUrl = [ChatTool shareChatTool].basicConfig.CFLT;
-        if(ISLOGIN){
-            self.islogSuccessfully = NO;
-            NSString *token =  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
-            reqUrl = [reqUrl stringByAppendingString:token];
-        }else{
-            self.islogSuccessfully = YES;
-        }
-        self.title = [ChatTool shareChatTool].basicConfig.tab_ltTitle;
-    }
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
-    [webView loadRequest:request];
 
     [MBProgressHUD showLoadingMessage:@"正在努力加载中..." toView:self.view];
     [self sendFront];
@@ -257,4 +248,5 @@
         [self popSelf];
     }
 }
+
 @end

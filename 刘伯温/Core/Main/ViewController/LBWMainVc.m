@@ -20,6 +20,15 @@
 #import "passAll.h"
 #import "WHC_GestureUnlockScreenVC.h"
 #import "JCHATConversationViewController.h"
+#import "Masonry.h"
+#import "HeaderBase.h"
+#import "LBShowRemendView.h"
+#import "LBLoginViewController.h"
+#import "JCHATConversationViewController.h"
+#import "ChatRoom.h"
+#import "LBShowBannerView.h"
+#import "zhiboAndWebVc.h"
+
 
 #define WindowsSize [UIScreen mainScreen].bounds.size
 
@@ -41,10 +50,16 @@
 @property (nonatomic, strong) passAll *passwordView;
 
 @property (nonatomic, weak) UIButton *live_off_btn;
-
+@property (nonatomic, weak) UIImageView *live_off_PNG;
 
 @property (nonatomic, assign) BOOL isDisplayed;  //公告是否显示过
 @property (nonatomic, assign) NSInteger indexMsg;  //将要显示第几个公告
+
+@property(nonatomic, weak)UIButton *CPButtom;
+@property(nonatomic, weak)UIButton *ChatRoomButton;
+@property(nonatomic, strong)zhiboAndWebVc *zhiboAndWebVcvc;
+@property(nonatomic, strong)JCHATConversationViewController *chatRoom;
+
 @end
 
 
@@ -153,6 +168,11 @@
     
     [self setpassWord];
     
+    
+    UIImageView *live_off_PNG = [[UIImageView alloc]initWithFrame:self.scrollView.frame];
+    self.live_off_PNG = live_off_PNG;
+    [self.view addSubview:live_off_PNG];
+    
     UIButton *live_off_btn = [[UIButton alloc]initWithFrame:self.scrollView.frame];
     self.live_off_btn = live_off_btn;
     [self.view addSubview:live_off_btn];
@@ -161,8 +181,9 @@
         [self setlive_off_btn];
     } else {
         self.live_off_btn.hidden = YES;
+        self.live_off_PNG.hidden = YES;
     }
-
+    [self addBottomView];
 }
 - (void)live_off_btnClick{
     JCHATConversationViewController *vc = [JCHATConversationViewController new];
@@ -327,6 +348,7 @@
             [weakself setlive_off_btn];
         } else {
             weakself.live_off_btn.hidden = YES;
+            weakself.live_off_PNG.hidden = YES;
         }
         if ([ChatTool shareChatTool].basicConfig.notice_msg.count && !weakself.isDisplayed) {
             [weakself DisplayedMsg];
@@ -337,7 +359,7 @@
 }
 - (void)setlive_off_btn{
     self.live_off_btn.hidden = NO;
-    [self.live_off_btn.imageView sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.off_img]];
+    [self.live_off_PNG sd_setImageWithURL:[NSURL URLWithString:[ChatTool shareChatTool].basicConfig.off_img]];
 }
 
 - (void)DisplayedMsg{
@@ -387,5 +409,74 @@
     
     //    [UIApplication sharedApplication].keyWindow.rootViewController = [[LBLoginViewController alloc] initWithNibName:@"LBLoginViewController" bundle:nil];
     [WHC_GestureUnlockScreenVC removeGesturePassword];
+}
+
+- (void)addBottomView{
+    UIButton *ChatRoomButton = [UIButton buttonWithType:0];
+    self.ChatRoomButton= ChatRoomButton;
+    ChatRoomButton.imageView.contentMode = UIViewContentModeScaleToFill;
+    [ChatRoomButton setBackgroundImage:[UIImage imageNamed:IM_VIEW_swith_WEB] forState:0];
+    [ChatRoomButton setBackgroundImage:[UIImage imageNamed:IM_VIEW_swith_WEB] forState:UIControlStateHighlighted];
+    [ChatRoomButton addTarget:self action:@selector(ChatRoomButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:ChatRoomButton];
+    [ChatRoomButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-(SCREENWIDTH/5-width_zhibo)*0.5);
+        make.bottom.equalTo(self.view).offset(-10-49);
+        make.width.equalTo(@(width_zhibo));
+        make.height.equalTo(@(width_zhibo));
+    }];
+    
+    UIButton *likeButton = [UIButton buttonWithType:0];
+    self.CPButtom= likeButton;
+    likeButton.imageView.contentMode = UIViewContentModeScaleToFill;
+    [likeButton setBackgroundImage:[UIImage imageNamed:zhiboAndWebVcToWeb] forState:0];
+    [likeButton setBackgroundImage:[UIImage imageNamed:zhiboAndWebVcToWeb] forState:UIControlStateHighlighted];
+    [likeButton addTarget:self action:@selector(likeBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:likeButton];
+    [likeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-(SCREENWIDTH/5-width_zhibo)*0.5);
+        make.bottom.equalTo(ChatRoomButton.mas_top).offset(-15);
+        make.width.equalTo(@(width_zhibo));
+        make.height.equalTo(@(width_zhibo));
+    }];
+}
+
+- (void)likeBtnClick{
+    UIViewController *zhiboAndWebVcvc;
+    for (UIViewController *tmp  in self.navigationController.childViewControllers) {
+        if ([tmp isKindOfClass:[zhiboAndWebVc class]]) {
+            zhiboAndWebVcvc = tmp;
+            break;
+        }
+    }
+    if (zhiboAndWebVcvc) {
+        [self.navigationController popToViewController:zhiboAndWebVcvc animated:YES];
+    } else {
+        if (!self.zhiboAndWebVcvc) {
+            self.zhiboAndWebVcvc =[zhiboAndWebVc new];
+        }
+        [self.navigationController pushViewController:self.zhiboAndWebVcvc animated:YES];
+    }
+}
+
+
+#pragma mark 打开聊天室
+- (void)ChatRoomButtonClick{
+    UIViewController *chatRoom;
+    for (UIViewController *tmp  in self.navigationController.childViewControllers) {
+        if ([tmp isKindOfClass:[JCHATConversationViewController class]]) {
+            chatRoom = tmp;
+            break;
+        }
+    }
+    if (chatRoom) {
+        [self.navigationController popToViewController:chatRoom animated:YES];
+    } else {
+        if (!self.chatRoom) {
+            self.chatRoom = [JCHATConversationViewController new];
+            self.chatRoom.gotoZhiBoVc = YES;
+        }
+        [self.navigationController pushViewController:self.chatRoom animated:YES];
+    }
 }
 @end

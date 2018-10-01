@@ -77,6 +77,7 @@
 @interface LBGetVerCodeModel : NSObject
 
 @property (nonatomic, copy)NSString *payfor_url;
+@property (nonatomic, strong)NSString *ratioCJ;
 
 @property (nonatomic, copy)NSString *freeTimes;
 @property (nonatomic, copy)NSString *appxy;

@@ -36,9 +36,13 @@
         bannerImageView.clipsToBounds = YES;
         [self addSubview:bannerImageView];
         CGFloat leftPading = 40;
-        CGFloat showViewWidth = kFullWidth-leftPading*2;
-        CGFloat showViewHeight = showViewWidth*1.5;
-        bannerImageView.frame = CGRectMake((kFullWidth-showViewWidth)/2, (kFullHeight-showViewHeight)/2, showViewWidth, showViewHeight);
+        CGFloat TopPading = 40;
+        [bannerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self).offset(leftPading);
+            make.right.equalTo(self).offset(-leftPading);
+            make.top.equalTo(self).offset(TopPading);
+            make.bottom.equalTo(self).offset(-TopPading);
+        }];
         
         LBGetAdvListModelAll *data =  [NSKeyedUnarchiver unarchiveObjectWithFile:PATH_guanggao];
         NSString *urrl;
@@ -69,7 +73,12 @@
         self.close = close;
         [close setImage:[UIImage imageNamed:ZHIBOGUANBI] forState:UIControlStateNormal];
         [bannerImageView addSubview:close];
-        close.frame = CGRectMake(bannerImageView.width-50, 10, 40, 40);
+        [close mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(bannerImageView).offset(10);
+            make.right.equalTo(bannerImageView).offset(-10);
+            make.width.equalTo(@40);
+            make.height.equalTo(@40);
+        }];
         [close addTarget:self action:@selector(closeView) forControlEvents:UIControlEventTouchUpInside];
         UILabel *timeLabel = [UILabel new];
         self.timeLabel = timeLabel;
@@ -79,7 +88,12 @@
         timeLabel.text = [NSString stringWithFormat:@"%@S",timeStr];
         timeLabel.backgroundColor = [UIColor lightGrayColor];
         [bannerImageView addSubview:timeLabel];
-        timeLabel.frame = CGRectMake(bannerImageView.width-50, 10, 40, 20);
+        [timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(bannerImageView).offset(10);
+            make.right.equalTo(bannerImageView).offset(-10);
+            make.width.equalTo(@40);
+            make.height.equalTo(@20);
+        }];
         if ([self.isNeedDaoJiShi isEqualToString:@"1"]) {
             self.timeLabel.hidden = YES;
             self.close.hidden = NO;

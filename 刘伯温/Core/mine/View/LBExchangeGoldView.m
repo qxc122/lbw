@@ -9,11 +9,11 @@
 #import "LBExchangeGoldView.h"
 #import "VBHttpsTool.h"
 #import "LBShowRemendView.h"
-@interface LBExchangeGoldView ()
+@interface LBExchangeGoldView ()<UITextFieldDelegate>
 @property (nonatomic, copy)CancelBlock cancelBlock;
 @property (nonatomic, copy)EnterBlock enterBlock;
 @property (nonatomic,strong)UITextField *textField;
-
+@property (nonatomic,weak)UILabel *titleLabel;
 @end
 @implementation LBExchangeGoldView
 
@@ -50,7 +50,9 @@
     showView.clipsToBounds = YES;
     
     UILabel *titleLabel = [UILabel new];
-    titleLabel.text = titleText;
+    self.titleLabel = titleLabel;
+    titleLabel.text = [NSString stringWithFormat:@"兑换%d个金币,您可以得到%.2f元",[Integral intValue],[Integral intValue]*[[ChatTool shareChatTool].basicConfig.ratioCJ floatValue]/100];
+//    NSString *ttt = [ChatTool shareChatTool].basicConfig.ratioCJ;
     titleLabel.font = CustomUIFont(19);
     titleLabel.textColor = [UIColor blackColor];
     [showView  addSubview:titleLabel];
@@ -58,6 +60,7 @@
     
     
     UITextField *textField = [UITextField new];
+    textField.userInteractionEnabled = NO;
     textField.font = CustomUIFont(16);
     textField.textColor = [UIColor blackColor];
     [showView  addSubview:(self.textField=textField)];

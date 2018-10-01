@@ -13,4 +13,5 @@
 @interface baseWkVc : basicVc
 @property (nonatomic,weak) WKWebView *webView;
 @property (nonatomic,strong) id url;
+@property (assign,nonatomic) BOOL islogSuccessfully;
 @end

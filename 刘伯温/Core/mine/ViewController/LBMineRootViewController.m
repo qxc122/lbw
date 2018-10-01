@@ -69,11 +69,16 @@
     };
     
     headView.clickGoldBlock = ^{
-        [LBExchangeGoldView showRemendViewText:@"当前金币可以兑换成金额，是否需要兑换？" andTitleText:@"兑换" andEnterText:@"确定" andCancelText:@"取消" andEnterBlock:^{
-            [weakSelf getMyInfo];
-        } andCancelBlock:^{
-            
-        }];
+        int teee = [Integral intValue];
+        if (teee) {
+            [LBExchangeGoldView showRemendViewText:@"当前金币可以兑换成金额，是否需要兑换？" andTitleText:@"兑换" andEnterText:@"确定" andCancelText:@"取消" andEnterBlock:^{
+                [weakSelf getMyInfo];
+            } andCancelBlock:^{
+                
+            }];
+        } else {
+            [MBProgressHUD showPrompt:@"你暂时没有可以兑换的金币~" toView:weakSelf.view];
+        }
     };
     headView.moneyButtonBlock = ^{
         walletVc *VC = [walletVc new];

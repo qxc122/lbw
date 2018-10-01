@@ -113,11 +113,25 @@
     bottomDescLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
     [self.view  addSubview:bottomDescLabel];
     
+    [self addTopView];
     [self AddguangaoView];
     [self.guangaoView show];
-    [self addTopView];
     [self AddGesture];
+    [self addBackBtn];
     NSLog(@"准备链接中");
+}
+
+#pragma mark 添加返回按钮
+- (void)addBackBtn{
+    UIButton * backBtn = [UIButton buttonWithType:(UIButtonTypeCustom)];
+    backBtn.frame = CGRectMake(0, 30.0f, 40.0f, 40.0f);
+    [backBtn setImage:[UIImage imageNamed:@"action_back"] forState:(UIControlStateNormal)];
+    [backBtn addTarget:self action:@selector(popSelf) forControlEvents:(UIControlEventTouchUpInside)];
+    backBtn.layer.shadowColor = [UIColor blackColor].CGColor;
+    backBtn.layer.shadowOffset = CGSizeMake(0, 0);
+    backBtn.layer.shadowOpacity = 0.5;
+    backBtn.layer.shadowRadius = 1;
+    [self.view addSubview:backBtn];
 }
 - (void)setIconUrl:(NSString *)iconUrl{
     _iconUrl = iconUrl;
@@ -152,18 +166,8 @@
         make.top.equalTo(self.topView.mas_bottom);
     }];
     
-    // 返回
-    UIButton * backBtn = [UIButton buttonWithType:(UIButtonTypeCustom)];
-    backBtn.frame = CGRectMake(0, 30.0f, 40.0f, 40.0f);
-    [backBtn setImage:[UIImage imageNamed:@"action_back"] forState:(UIControlStateNormal)];
-    [backBtn addTarget:self action:@selector(popSelf) forControlEvents:(UIControlEventTouchUpInside)];
-    backBtn.layer.shadowColor = [UIColor blackColor].CGColor;
-    backBtn.layer.shadowOffset = CGSizeMake(0, 0);
-    backBtn.layer.shadowOpacity = 0.5;
-    backBtn.layer.shadowRadius = 1;
-    [topView addSubview:backBtn];
     
-    UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(backBtn.right+10, backBtn.top, 40, 40)];
+    UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(40+10, 30, 40, 40)];
     iconImageView.layer.cornerRadius = iconImageView.width/2;
     iconImageView.clipsToBounds = YES;
     [topView addSubview:iconImageView];
@@ -573,7 +577,7 @@
 }
 
 - (void )AddguangaoView{
-    LBShowBannerView *guangaoView =[LBShowBannerView new];
+    LBShowBannerView *guangaoView =[[LBShowBannerView alloc]initWithFrame:self.view.frame];
 //    kWeakSelf(self);
 //    guangaoView.doneSomething = ^{
 //        [weakself setTopBtnEnable:YES];

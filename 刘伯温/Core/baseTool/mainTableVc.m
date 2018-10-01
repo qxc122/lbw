@@ -15,6 +15,8 @@
 #import "LBShowRemendView.h"
 #import "LBLoginViewController.h"
 #import "LBWMainVc.h"
+#import "YLCRootVc.h"
+#import "CPRootVc.h"
 @interface mainTableVc ()<UITabBarControllerDelegate>
 @property (nonatomic,strong) NSString *appUrl;
 //@property (nonatomic,strong) LBWMainVc *mainVC;
@@ -75,15 +77,15 @@
 //    self.mainVC =mainVC;
 //    mainVC.isaidong = self.isaidong;
     [self setChildVC:mainVC title:@"VIP俱乐" image:@"tab_live" selectedImage:@"tab_live_press"];
-    
-    baseWkVc *webVC3 = [baseWkVc new];
+
+    YLCRootVc *webVC3 = [YLCRootVc new];
     [self setChildVC:webVC3 title:@"娱乐城" image:@"tab_lbw" selectedImage:@"tab_lbw_press"];
     
     JCHATConversationViewController *webVC = [JCHATConversationViewController new];
     webVC.gotoZhiBoVc = YES;
     [self setChildVC:webVC title:@"聊天室" image:@"tab_lt" selectedImage:@"tab_lt_press"];
     
-    baseWkVc *webVC2 = [baseWkVc new];
+    CPRootVc *webVC2 = [CPRootVc new];
     [self setChildVC:webVC2 title:@"彩票" image:@"tab_cp" selectedImage:@"tab_cp_press"];
     
     LBMineRootViewController *mineVC = [LBMineRootViewController new];
