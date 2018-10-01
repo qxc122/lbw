@@ -77,6 +77,10 @@
         make.height.equalTo(@(width));
         make.width.equalTo(@(width));
     }];
+    
+    if ([[ChatTool shareChatTool].basicConfig.live_of isEqualToString:@"1"]) {
+        btn0.hidden = YES;
+    }
 }
 - (void)sendFront{
     [self.view bringSubviewToFront:self.btn1];

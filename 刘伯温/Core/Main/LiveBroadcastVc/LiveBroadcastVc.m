@@ -103,6 +103,16 @@
     }];
     [NOAnchor addTarget:self action:@selector(popSelf) forControlEvents:UIControlEventTouchUpInside];
     NOAnchor.hidden = YES;
+    
+    UILabel *bottomDescLabel = [UILabel new];
+    self.bottomDescLabel = bottomDescLabel;
+    
+    bottomDescLabel.text = [ChatTool shareChatTool].basicConfig.liveTipMsg;
+    bottomDescLabel.font = CustomUIFont(14);
+    bottomDescLabel.textColor =[UIColor whiteColor];
+    bottomDescLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+    [self.view  addSubview:bottomDescLabel];
+    
     [self AddguangaoView];
     [self.guangaoView show];
     [self addTopView];
@@ -132,20 +142,11 @@
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kFullWidth, 80)];
     topView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
     [self.view addSubview:(self.topView=topView)];
-    
-    UILabel *bottomDescLabel = [UILabel new];
-    self.bottomDescLabel = bottomDescLabel;
-    
-    bottomDescLabel.text = [ChatTool shareChatTool].basicConfig.liveTipMsg;
-    bottomDescLabel.font = CustomUIFont(14);
-    bottomDescLabel.textColor =[UIColor whiteColor];
-    bottomDescLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
-    
-    [self.view  addSubview:bottomDescLabel];
-    bottomDescLabel.numberOfLines = 0;
-    bottomDescLabel.textAlignment = NSTextAlignmentCenter;
-    bottomDescLabel.numberOfLines = 0;
-    [bottomDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+
+    self.bottomDescLabel.numberOfLines = 0;
+    self.bottomDescLabel.textAlignment = NSTextAlignmentCenter;
+    self.bottomDescLabel.numberOfLines = 0;
+    [self.bottomDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(0);
         make.right.equalTo(self.view).offset(0);
         make.top.equalTo(self.topView.mas_bottom);

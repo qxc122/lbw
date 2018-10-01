@@ -107,7 +107,8 @@
 @property (nonatomic,copy)NSString *live_of;
 
 @property (nonatomic,strong)NSArray *notice_msg;
-@property (nonatomic,copy)NSString *off_img;
+@property (nonatomic,strong)NSString *off_img;
+@property (nonatomic,strong)NSString *room_msg;
 
 @property (nonatomic,copy)NSString *live_adv_user;
 @property (nonatomic,copy)NSString *live_adv_vip_user;

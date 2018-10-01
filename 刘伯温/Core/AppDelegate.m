@@ -18,7 +18,6 @@
 #import <JMessage/JMessage.h>
 #import "IQKeyboardManager.h"
 #import "mainTableVc.h"
-#import "AdvertisingVc.h"
 #import "windosView.h"
 @interface AppDelegate ()<CLLocationManagerDelegate,UNUserNotificationCenterDelegate>
 @property (nonatomic, strong) CLLocationManager * locationManager;

@@ -14,7 +14,6 @@
 #import "WHC_GestureUnlockScreenVC.h"
 #import "LBShowRemendView.h"
 #import "LBLoginViewController.h"
-#import "AdvertisingVc.h"
 #import "LBWMainVc.h"
 @interface mainTableVc ()<UITabBarControllerDelegate>
 @property (nonatomic,strong) NSString *appUrl;
@@ -183,19 +182,5 @@
         NSURL *url = [NSURL URLWithString:self.appUrl];
         [[UIApplication sharedApplication] openURL:url];
     }
-}
-
-
-
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    NSMutableArray *muArry =[self.navigationController.viewControllers mutableCopy];
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isKindOfClass:[AdvertisingVc class]]) {
-            [muArry removeObject:vc];
-            break;
-        }
-    }
-    self.navigationController.viewControllers = muArry;
 }
 @end

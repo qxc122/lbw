@@ -24,6 +24,9 @@
 #import "ChatRecordCell.h"
 #import "mainTableVc.h"
 #import "NSString+AES.h"
+#import <JhtMarquee/JhtVerticalMarquee.h>
+#import <JhtMarquee/JhtHorizontalMarquee.h>
+
 @interface JCHATConversationViewController ()<ChatToolJMSGMessageDelegate> {
 @private
     NSMutableDictionary *_allMessageDic; //缓存所有的message model
@@ -32,7 +35,7 @@
 @property(weak, nonatomic) UIButton *btn0;
 @property(weak, nonatomic) UIButton *btn1;
 @property(weak, nonatomic) UIButton *btn2;
-
+@property (nonatomic, weak) JhtHorizontalMarquee *horizontalMarquee;
 @property(weak, nonatomic) UIButton *maskBtn;
 
 @property(strong, nonatomic) webAddIMVc *CPwebVc;
@@ -74,6 +77,8 @@
 
     if ([self.zhibojian isEqualToString:@"1"]) {
         [self zhibojianSet];
+    }else{
+        [self setPaoMaDeng];
     }
     if (self.sendPng) {
         [self changePngForaddButton];
@@ -83,6 +88,7 @@
     [ChatTool shareChatTool].delegate = self;
     self.conversation = [ChatTool shareChatTool].conversation;
     self.moreViewContainer.hidden = YES;
+
 }
 #pragma  mark 聊天室连接成功之间添加蒙板
 - (void)TipsInChatRoomConnection{
@@ -171,7 +177,12 @@
         btn0.restorationIdentifier = zhiboAndWebVcPNG;
         [btn0 setImage:[UIImage imageNamed:zhiboAndWebVcPNG] forState:UIControlStateNormal];
         [btn0 addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if ([[ChatTool shareChatTool].basicConfig.live_of isEqualToString:@"1"]) {
+            btn0.hidden = YES;
+        }
     }
+    
     
     CGFloat width = 40;
     
@@ -273,6 +284,8 @@
     }
     [ChatTool shareChatTool].delegate = self;
     self.conversation = [ChatTool shareChatTool].conversation;
+    
+    [_horizontalMarquee marqueeOfSettingWithState:MarqueeStart_H];
 }
 
 - (void)ChatToolonSendMessageResponse:(JMSGMessage *)message error:(NSError *)error{
@@ -316,6 +329,7 @@
   [[JCHATAudioPlayerHelper shareInstance] stopAudio];
 
   [[JCHATAudioPlayerHelper shareInstance] setDelegate:nil];
+    [_horizontalMarquee marqueeOfSettingWithState:MarqueeShutDown_H];
 }
 
 #pragma mark --释放内存
@@ -522,11 +536,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
   return NSOrderedSame;
 }
 
-- (void)AlertToSendImage:(NSNotification *)notification {
-  UIImage *img = notification.object;
-  [self prepareImageMessage:img];
-}
-
 #pragma mark --排序conversation
 - (NSMutableArray *)sortMessage:(NSMutableArray *)messageArr {
   NSArray *sortResultArr = [messageArr sortedArrayUsingFunction:sortMessageType context:nil];
@@ -616,59 +625,6 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
         [MBProgressHUD showError:@"您暂时没有权限发图" toView:self.view];
     }
 }
-
-#pragma mark - ZYQAssetPickerController Delegate
-//-(void)assetPickerController:(ZYQAssetPickerController *)picker didFinishPickingAssets:(NSArray *)assets{
-//  for (int i=0; i<assets.count; i++) {
-//    ALAsset *asset=assets[i];
-//    UIImage *tempImg=[UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage];
-//    [self prepareImageMessage:tempImg];
-//    [self dropToolBarNoAnimate];
-//  }
-//}
-#pragma mark - HMPhotoPickerViewController Delegate
-- (void)JCHATPhotoPickerViewController:(JCHATPhotoSelectViewController *)PhotoPickerVC selectedPhotoArray:(NSArray *)selected_photo_array {
-  for (UIImage *image in selected_photo_array) {
-    [self prepareImageMessage:image];
-  }
-  [self dropToolBarNoAnimate];
-}
-#pragma mark - UIImagePickerController Delegate
-//相机,相册Finish的代理
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-  NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-  
-  if ([mediaType isEqualToString:@"public.movie"]) {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [MBProgressHUD showMessage:@"不支持视频发送" view:self.view];
-    return;
-  }
-  UIImage *image;
-  image = [info objectForKey:UIImagePickerControllerOriginalImage];
-  [self prepareImageMessage:image];
-  [self dropToolBarNoAnimate];
-  [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark --发送图片
-//- (void)prepareImageMessage:(UIImage *)img {
-//  DDLogDebug(@"Action - prepareImageMessage");
-//  img = [img resizedImageByWidth:upLoadImgWidth];
-//
-//  JMSGMessage* message = nil;
-//  JCHATChatModel *model = [[JCHATChatModel alloc] init];
-//  JMSGImageContent *imageContent = [[JMSGImageContent alloc] initWithImageData:UIImagePNGRepresentation(img)];
-//  if (imageContent) {
-//    message = [_conversation createMessageWithContent:imageContent];
-//    [[JCHATSendMsgManager ins] addMessage:message withConversation:_conversation];
-//    [self addmessageShowTimeData:message.timestamp];
-//    [model setChatModelWith:message conversationType:_conversation];
-//    [_imgDataArr addObject:model];
-//    model.photoIndex = [_imgDataArr count] - 1;
-//    [model setupImageSize];
-//    [self addMessage:model];
-//  }
-//}
 
 #pragma mark --
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -1014,6 +970,28 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
         else {
             return 49;
         }
+    }
+}
+
+#pragma mark 设置跑马灯
+- (void)setPaoMaDeng{
+    if (!self.horizontalMarquee && [ChatTool shareChatTool].basicConfig.room_msg.length) {
+        JhtHorizontalMarquee * horizontalMarquee = [[JhtHorizontalMarquee alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 20) withSingleScrollDuration:[ChatTool shareChatTool].basicConfig.msg.length*0.15];
+        horizontalMarquee.backgroundColor = BackGroundColor;
+        self.horizontalMarquee = horizontalMarquee;
+        horizontalMarquee.textColor = [UIColor redColor];
+        horizontalMarquee.font = [UIFont systemFontOfSize:14];
+        [self.view addSubview:horizontalMarquee];
+        
+        CGFloat widthNULL = 3.8;
+        NSString *msg = [ChatTool shareChatTool].basicConfig.room_msg;
+        CGSize tmp = [msg sizeWithFont:[UIFont systemFontOfSize:14] andMaxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+        if (tmp.width < kScreenWidth) {
+            for (NSInteger index = 0; index<((kScreenWidth-tmp.width)/widthNULL)+5; index++) {
+                msg = [msg stringByAppendingString:@" "];
+            }
+        }
+        self.horizontalMarquee.text = msg;
     }
 }
 
@@ -1578,5 +1556,8 @@ NSInteger sortMessageType(id object1,id object2,void *cha) {
 }
 
 // ---------------------------------- Private methods
+
+
+
 
 @end

@@ -16,4 +16,6 @@
 - (BOOL)isMobileNumber;
 
 + (NSDictionary *)dictionaryWithJsonString:(NSMutableString *)jsonString;
+- (CGSize)sizeWithFont:(UIFont*)font   andMaxSize:(CGSize)size;
 @end
+

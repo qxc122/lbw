@@ -278,7 +278,6 @@
 		DB5676E62143BB5500B2ADF8 /* yuyin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DB56762B2143BB5000B2ADF8 /* yuyin@2x.png */; };
 		DB5676E72143BB5500B2ADF8 /* zhaopian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DB56762C2143BB5000B2ADF8 /* zhaopian@2x.png */; };
 		DB5EB87321490DF900786CE2 /* ChatRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB87221490DF900786CE2 /* ChatRecordCell.m */; };
-		DB5EB877214912EE00786CE2 /* AdvertisingVc.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB876214912EE00786CE2 /* AdvertisingVc.m */; };
 		DB5EB87B214A56EA00786CE2 /* ChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5EB87A214A56EA00786CE2 /* ChatRoom.m */; };
 		DB9A1926215F504900C3B693 /* windosView.m in Sources */ = {isa = PBXBuildFile; fileRef = DB9A1925215F504900C3B693 /* windosView.m */; };
 		DBBA46DC214BF3AF00E8E77B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DBBA46DB214BF3AF00E8E77B /* libc++.tbd */; };
@@ -742,8 +741,6 @@
 		DB56762C2143BB5000B2ADF8 /* zhaopian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zhaopian@2x.png"; sourceTree = "<group>"; };
 		DB5EB87121490DF900786CE2 /* ChatRecordCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRecordCell.h; sourceTree = "<group>"; };
 		DB5EB87221490DF900786CE2 /* ChatRecordCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRecordCell.m; sourceTree = "<group>"; };
-		DB5EB875214912EE00786CE2 /* AdvertisingVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdvertisingVc.h; sourceTree = "<group>"; };
-		DB5EB876214912EE00786CE2 /* AdvertisingVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvertisingVc.m; sourceTree = "<group>"; };
 		DB5EB879214A56EA00786CE2 /* ChatRoom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoom.h; sourceTree = "<group>"; };
 		DB5EB87A214A56EA00786CE2 /* ChatRoom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoom.m; sourceTree = "<group>"; };
 		DB9A1924215F504900C3B693 /* windosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = windosView.h; sourceTree = "<group>"; };
@@ -1685,15 +1682,6 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
-		DB5EB874214912C000786CE2 /* 广告控制器 */ = {
-			isa = PBXGroup;
-			children = (
-				DB5EB875214912EE00786CE2 /* AdvertisingVc.h */,
-				DB5EB876214912EE00786CE2 /* AdvertisingVc.m */,
-			);
-			path = "广告控制器";
-			sourceTree = "<group>";
-		};
 		DB5EB878214A56AF00786CE2 /* 自定义聊天室 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1886,7 +1874,6 @@
 			isa = PBXGroup;
 			children = (
 				DB5EB878214A56AF00786CE2 /* 自定义聊天室 */,
-				DB5EB874214912C000786CE2 /* 广告控制器 */,
 				DB5EB86C21490D5F00786CE2 /* 聊天记录 */,
 				DBEB419821468D120018D718 /* webAddIMVc.h */,
 				DBEB419921468D120018D718 /* webAddIMVc.m */,
@@ -2469,7 +2456,6 @@
 				DBEB419A21468D120018D718 /* webAddIMVc.m in Sources */,
 				DB5671C22143A0AC00B2ADF8 /* JCHATAlertToSendImage.m in Sources */,
 				DBEB41B72147AB5A0018D718 /* bankCell.m in Sources */,
-				DB5EB877214912EE00786CE2 /* AdvertisingVc.m in Sources */,
 				DB5671C52143A0AC00B2ADF8 /* JCHATSendMsgManager.m in Sources */,
 				DBEA957C2148F36D0047A764 /* zhiboAndWebVc.m in Sources */,
 				04C29C481FB758200019E5EA /* UIButton+SSEdgeInsets.m in Sources */,

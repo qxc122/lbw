@@ -71,7 +71,6 @@ UITextViewDelegate>{
 @property(nonatomic, assign) CGFloat previousTextViewContentHeight;
 
 - (void)setupView;
-- (void)prepareImageMessage:(UIImage *)img;
 
 
 @property(strong, nonatomic) NSString *zhibojian; //在直播间的标志
@@ -83,4 +82,5 @@ UITextViewDelegate>{
 
 
 @property(assign, nonatomic) BOOL gotoZhiBoVc; //是否需要跳转到直播间的按钮  //默认为NO 不需要
+
 @end
